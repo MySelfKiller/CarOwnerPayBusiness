@@ -296,7 +296,7 @@ class PersonalFragment : Fragment() {
                     if (userBean.type == 1) {
                         jumpUrl.append("https://www.ws101.cn/sslm/static/nav/index.html#/upgrade?token=")
                     } else {
-                        jumpUrl.append("https://www.ws101.cn/sslm/static/index.html#/purchase?token=")
+                        jumpUrl.append("https://www.ws101.cn/sslm/static/nav/index.html#/purchase?token=")
                     }
                     val randomNum = System.currentTimeMillis()
                     jumpUrl.append(KWApplication.instance.token).append("&").append(randomNum)

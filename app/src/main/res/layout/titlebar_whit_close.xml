@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@drawable/btn_close" />
+            app:tint="@color/colorAccent"
+            android:src="@drawable/btn_close" />
     </LinearLayout>
 
 
@@ -63,7 +64,7 @@
             android:ellipsize="end"
             android:text="标题"
             android:textStyle="bold"
-            android:textColor="@color/black1"/>
+            android:textColor="@color/colorAccent"/>
     </LinearLayout>
 
     <LinearLayout

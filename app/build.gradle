@@ -22,7 +22,7 @@ android {
         minSdk 21
         targetSdk 31
         versionCode 1
-        versionName "1.0.7"
+        versionName "1.0.0"
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
             abiFilters  'armeabi-v8a', 'armeabi', 'armeabi-v7a'
@@ -40,12 +40,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    dexOptions{
-        preDexLibraries false
-        incremental false
-//        javaMaxHeapSize "2048m"
-        javaMaxHeapSize "4g"
-    }
+//    dexOptions{
+//        preDexLibraries false
+//        incremental false
+////        javaMaxHeapSize "2048m"
+//        javaMaxHeapSize "4g"
+//    }
 
     buildTypes {
         release {
@@ -86,9 +86,9 @@ android {
             def date = new Date()
             def formattedDate = date.format('yyyyMMddHHmm')
             if (variant.buildType.name.equals('release')) {
-                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
+                fileName = "CarOwnerBusiness_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
             } else if (variant.buildType.name.equals('debug')) {
-                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
+                fileName = "CarOwnerBusiness_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
             }
             outputFileName = fileName
         }
