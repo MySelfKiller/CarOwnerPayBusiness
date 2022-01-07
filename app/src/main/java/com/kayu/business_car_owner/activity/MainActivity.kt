@@ -1,5 +1,6 @@
 package com.kayu.business_car_owner.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
@@ -46,6 +47,8 @@ import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
 import com.kayu.business_car_owner.update.UpdateInfo
 import com.kayu.utils.*
+import com.kayu.utils.callback.Callback
+import com.kayu.utils.permission.EasyPermissions
 import java.io.File
 import java.lang.Exception
 import java.util.ArrayList
@@ -311,6 +314,47 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
         ReqUtil.requestPostJSON(UpdateCallBack(reqInfo))
     }
 
+    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
+//        String[] perms = {Manifest.permission.CAMERA};
+        performCodeWithPermission(
+            1,
+            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+            perms,
+            object : PermissionCallback {
+                override fun hasPermission(allPerms: List<Array<String>>) {
+                    callback.onSuccess()
+                }
+
+                override fun noPermission(
+                    deniedPerms: List<String>?,
+                    grantedPerms: List<String?>?,
+                    hasPermanentlyDenied: Boolean?
+                ) {
+                    EasyPermissions.goSettingsPermissions(
+                        this@MainActivity,
+                        1,
+                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+                        Constants.RC_PERMISSION_BASE
+                    )
+                }
+
+                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
+                    val dialog: MessageDialog =
+                        MessageDialog.build((this@MainActivity as AppCompatActivity?)!!)
+                    dialog.setTitle("需要获取以下权限")
+                    dialog.setMessage(getString(resId))
+                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
+                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
+                            callback.onGranted()
+                            return false
+                        }
+                    })
+                    dialog.setCancelable(false)
+                    dialog.show()
+                }
+            })
+    }
+
     fun updateDialog(isMustUpdate: Boolean, apkName: String) {
         val file: File = File(
             KWApplication.instance.dataPath + File.separator + "apk" + File.separator + apkName
@@ -334,7 +378,15 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
             messageDialog.setCancelable(!isMustUpdate)
             messageDialog.setOkButton { baseDialog: BaseDialog?, v: View? ->
                 messageDialog.doDismiss()
-                installApk(file.getAbsolutePath())
+                permissionsCheck(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    R.string.permiss_write_store1,
+                    object : Callback {
+                        public override fun onSuccess() {
+                            installApk(file.getAbsolutePath())
+                        }
+                        public override fun onError() {}
+                    })
                 false
             }
         } else {
@@ -354,21 +406,30 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
             messageDialog.setCancelable(false)
             messageDialog.setOkButton { baseDialog, v ->
                 messageDialog.doDismiss()
-                val userSettings: SharedPreferences =
-                    getSharedPreferences(Constants.SharedPreferences_name, 0)
-                val editor: SharedPreferences.Editor = userSettings.edit()
-                editor.putString("update_md5", md5)
-                editor.apply()
-                editor.commit()
-                initCallBack()
-                showProgressDialog(isMustUpdate)
-                InstallUtils.with(this@MainActivity) //必须-下载地址
-                    .setApkUrl(updateInfo!!.url) //非必须-下载保存的文件的完整路径+name.apk
-                    .setApkPath(
-                        KWApplication.instance.dataPath + File.separator + "apk" + File.separator + apkName
-                    ) //非必须-下载回调
-                    .setCallBack(downloadCallBack) //开始下载
-                    .startDownload()
+                permissionsCheck(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    R.string.permiss_write_store1,
+                    object : Callback {
+                        public override fun onSuccess() {
+                            val userSettings: SharedPreferences =
+                                getSharedPreferences(Constants.SharedPreferences_name, 0)
+                            val editor: SharedPreferences.Editor = userSettings.edit()
+                            editor.putString("update_md5", md5)
+                            editor.apply()
+                            editor.commit()
+                            initCallBack()
+                            showProgressDialog(isMustUpdate)
+                            InstallUtils.with(this@MainActivity) //必须-下载地址
+                                .setApkUrl(updateInfo!!.url) //非必须-下载保存的文件的完整路径+name.apk
+                                .setApkPath(
+                                    KWApplication.instance.dataPath + File.separator + "apk" + File.separator + apkName
+                                ) //非必须-下载回调
+                                .setCallBack(downloadCallBack) //开始下载
+                                .startDownload()
+                        }
+                        public override fun onError() {}
+                    })
+
                 false
             }
         }
