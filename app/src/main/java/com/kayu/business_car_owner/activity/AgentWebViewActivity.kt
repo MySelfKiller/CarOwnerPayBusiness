@@ -1,0 +1,209 @@
+package com.kayu.business_car_owner.activity
+
+import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.CookieManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.widget.LinearLayout
+import android.widget.TextView
+import com.kayu.utils.status_bar_set.StatusBarUtil
+import com.just.agentweb.AgentWeb
+import com.just.agentweb.DefaultWebClient
+import com.just.agentweb.WebChromeClient
+import com.just.agentweb.WebViewClient
+import com.kayu.business_car_owner.R
+import com.kayu.utils.*
+
+class AgentWebViewActivity constructor() : BaseActivity() {
+    //    public static final String URL = "https://www.baidu.com";
+    private var url: String? = null
+    private var from: String? = null
+    private val titleName: String = "加载中..."
+    private var title_name: TextView? = null
+    private var mAgentWeb: AgentWeb? = null
+    private var mLinearLayout: LinearLayout? = null
+    public override fun onConfigurationChanged(newConfig: Configuration) {
+        //非默认值
+        if (newConfig.fontScale != 1f) {
+            getResources()
+        }
+        super.onConfigurationChanged(newConfig)
+    }
+
+    public override fun getResources(): Resources { //还原字体大小
+        val res: Resources? = super.getResources()
+        //非默认值
+        if (res!!.getConfiguration().fontScale != 1f) {
+            val newConfig: Configuration = Configuration()
+            newConfig.setToDefaults() //设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics())
+        }
+        return (res)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //        StatusBarUtil.setRootViewFitsSystemWindows(this, true);
+        //设置状态栏透明
+//        StatusBarUtil.setTranslucentStatus(this);
+        StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.white))
+        setContentView(R.layout.activity_agent_web)
+        val intent: Intent = getIntent()
+        url = intent.getStringExtra("url")
+        //        titleName = intent.getStringExtra("title");
+        from = intent.getStringExtra("from")
+        //        title = intent.getStringExtra("title");
+        findViewById<View>(R.id.title_back_btu).setOnClickListener(object : NoMoreClickListener() {
+            override fun OnMoreClick(view: View) {
+                finish()
+            }
+
+            override fun OnMoreErrorClick() {}
+        })
+        val back_tv: TextView = findViewById(R.id.title_back_tv)
+        title_name = findViewById(R.id.title_name_tv)
+
+//        if (!StringUtil.isEmpty(titleName)){
+        title_name?.setText(titleName)
+        //        }else {
+//            title_name.setText("");
+//        }
+        if (StringUtil.isEmpty(from)) {
+            from = "返回"
+        }
+        back_tv.setText(from)
+        mLinearLayout = findViewById<View>(R.id.container) as LinearLayout?
+        initWebView()
+    }
+
+    private fun initWebView() {
+
+//        WebSettings webSettings = wvWebView.getSettings();
+//        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setBlockNetworkImage(false);
+//        //支持插件
+////        webSettings.setPluginsEnabled(true);
+//
+////设置自适应屏幕，两者合用
+//        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+//        webSettings.setLoadWithOverviewMode(true); // //和setUseWideViewPort(true)一起解决网页自适应问题
+//
+////缩放操作
+//        webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
+//        webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
+//        webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+//        webSettings.setDomStorageEnabled(true);
+//
+////其他细节操作
+//        webSettings.setAllowFileAccess(true); //设置可以访问文件
+//        webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
+//        webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
+//        webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+//
+////        webSettings.setPluginState(WebSettings.PluginState.ON);
+//
+//
+//        webSettings.setAppCacheEnabled(true);//是否使用缓存
+//
+//        //启用数据库
+//        webSettings.setDatabaseEnabled(true);
+//
+////设置定位的数据库路径
+//        String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+//        webSettings.setGeolocationDatabasePath(dir);
+//
+////启用地理定位
+//        webSettings.setGeolocationEnabled(true);
+//        webSettings.setSupportMultipleWindows(true);
+//        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+//
+//        // android 5.0及以上默认不支持Mixed Content
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+////            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+//            //或者
+//            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+//        }
+        mAgentWeb = AgentWeb.with(this) //
+            .setAgentWebParent(
+                (mLinearLayout)!!,
+                -1,
+                LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            ) //传入AgentWeb的父控件。
+            .useDefaultIndicator(
+                getResources().getColor(R.color.colorAccent),
+                3
+            ) //设置进度条颜色与高度，-1为默认值，高度为2，单位为dp。
+            .setWebChromeClient(mWebChromeClient)
+            .setWebViewClient(mWebViewClient)
+            .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK) //严格模式 Android 4.2.2 以下会放弃注入对象 ，使用AgentWebView没影响。
+            .setMainFrameErrorView(
+                R.layout.agentweb_error_page,
+                -1
+            ) //参数1是错误显示的布局，参数2点击刷新控件ID -1表示点击整个布局都刷新， AgentWeb 3.0.0 加入。
+            .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.DISALLOW) //打开其他页面时，弹窗质询用户前往其他应用 AgentWeb 3.0.0 加入。
+            .interceptUnkownUrl() //拦截找不到相关页面的Url AgentWeb 3.0.0 加入。
+            .createAgentWeb() //创建AgentWeb。
+            .ready() //设置 WebSettings
+            .go(url) //WebView载入该url地址的页面并显示。
+        //        mAgentWeb.getJsInterfaceHolder().addJavaObject("androidMethod", new LocalJavascriptInterface(this,jsHandler));
+        mAgentWeb?.agentWebSettings?.webSettings
+    }
+
+    private val mWebViewClient: WebViewClient = object : WebViewClient() {
+        public override fun shouldOverrideUrlLoading(
+            view: WebView,
+            request: WebResourceRequest
+        ): Boolean {
+            return super.shouldOverrideUrlLoading(view, request)
+        }
+
+        public override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+        }
+
+        public override fun onPageFinished(view: WebView, url: String) {
+            super.onPageFinished(view, url)
+            LogUtil.e("AgentWebView", "onPageFinished-----title:" + view.getTitle())
+            title_name!!.postDelayed(Runnable({ title_name!!.setText(view.getTitle()) }), 100)
+            val cookieManager: CookieManager = CookieManager.getInstance()
+            val CookieStr: String = cookieManager.getCookie(url)
+            //            lastOpenUrl = url;
+            LogUtil.e("AgentWebView", "onPageFinished: " + url)
+            LogUtil.e("AgentWebView", "Cookies = " + CookieStr)
+        }
+    }
+    private val mWebChromeClient: WebChromeClient = object : WebChromeClient() {
+        public override fun onReceivedTitle(view: WebView, title: String) {
+            super.onReceivedTitle(view, title)
+            if (StringUtil.isEmpty(titleName)) {
+                title_name!!.setText(title)
+            }
+        }
+    }
+
+    public override fun onResume() {
+        mAgentWeb!!.getWebLifeCycle().onResume() //恢复
+        super.onResume()
+    }
+
+    public override fun onPause() {
+        mAgentWeb!!.getWebLifeCycle()
+            .onPause() //暂停应用内所有WebView ， 调用mWebView.resumeTimers();/mAgentWeb.getWebLifeCycle().onResume(); 恢复。
+        super.onPause()
+    }
+
+    public override fun onDestroy() {
+        mAgentWeb!!.getWebLifeCycle().onDestroy()
+        super.onDestroy()
+    }
+}

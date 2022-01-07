@@ -1,0 +1,190 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+def keyDir = ""
+if (isWindows()){
+    keyDir = "C:\\Users\\Killer\\Documents\\business_car_owner\\app\\key\\"
+}else {
+//    keyDir = "/Users/hm/AndroidStudioProjects/CarOwnerPayClient/app/key/"
+    keyDir = "../app/key/"
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        applicationId "com.kayu.business_car_owner"
+        minSdk 21
+        targetSdk 31
+        versionCode 1
+        versionName "1.0.7"
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters  'armeabi-v8a', 'armeabi', 'armeabi-v7a'
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "ac1ce55e64a147f973e57d58", //Portal上注册的包名对应的 appKey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+
+        multiDexEnabled true
+
+        renderscriptTargetApi 17
+        renderscriptSupportModeEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    dexOptions{
+        preDexLibraries false
+        incremental false
+//        javaMaxHeapSize "2048m"
+        javaMaxHeapSize "4g"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keyDir+'key_kawan.jks')
+//            storeFile file('/Users/killer/StudioProjects/CourseKaYuApp/app/key/key_kawan.jks')
+            storePassword 'android'
+            keyAlias = 'kawan'
+            keyPassword 'android'
+            v1SigningEnabled = true
+            v2SigningEnabled = true
+        }
+        debug {
+            storeFile file(keyDir+'key_kawan.jks')
+            storePassword 'android'
+            keyAlias 'kawan'
+            keyPassword 'android'
+        }
+    }
+
+    //配置自定义打包名称
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileName
+            def date = new Date()
+            def formattedDate = date.format('yyyyMMddHHmm')
+            if (variant.buildType.name.equals('release')) {
+                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
+            } else if (variant.buildType.name.equals('debug')) {
+                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
+            }
+            outputFileName = fileName
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+            multiDexEnabled true
+            debuggable true
+            jniDebuggable true
+//            applicationIdSuffix ".release"
+            buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
+            buildConfigField "String", "BASE_URL", '"https://www.ws101.cn/sslm/spv/"'  //正式环境
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+            jniDebuggable true
+            minifyEnabled false
+            shrinkResources false
+//            applicationIdSuffix ".debug"
+            buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
+            buildConfigField "String", "BASE_URL", '"https://www.ws101.cn/sslm/spv/"'  //正式环境
+//            buildConfigField "String", "BASE_URL", '"http://192.168.0.116:9090/"'  //测试环境
+
+        }
+    }
+
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.hjq:toast:8.8'
+    implementation 'com.just.agentweb:agentweb-androidx:4.1.4'
+
+    implementation 'com.pangle.cn:ads-sdk-pro:4.0.0.6'// 穿山甲广告
+    implementation 'com.qq.e.union:union:4.410.1280' // 普通版本  腾讯广告
+
+//    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+//    implementation 'com.kongzue.dialog_v3x:dialog:3.2.4'
+    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
+//    implementation 'com.github.GrenderG:Toasty:1.4.2'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+
+    implementation "com.squareup.leakcanary:leakcanary-android-no-op:1.5.4"
+
+//    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
+
+    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖
+    implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
+    implementation  'com.scwang.smart:refresh-header-radar:2.0.1'       //雷达刷新头
+    implementation  'com.scwang.smart:refresh-header-falsify:2.0.1'     //虚拟刷新头
+    implementation  'com.scwang.smart:refresh-header-material:2.0.1'    //谷歌刷新头
+    implementation  'com.scwang.smart:refresh-header-two-level:2.0.1'   //二级刷新头
+    implementation  'com.scwang.smart:refresh-footer-ball:2.0.1'        //球脉冲加载
+    implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
+
+    implementation project(':banner')
+    implementation project(path: ':utils')
+    implementation project(path: ':pagerlayoutmanager')
+    implementation project(path: ':GroupAdapter')
+    implementation project(path: ':FlycoTabLayout_Lib')
+    implementation project(path: ':form_verify')
+    implementation project(path: ':library_update')
+    implementation project(path: ':dialog')
+
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation 'com.facebook.fresco:fresco:0.10.0'
+}

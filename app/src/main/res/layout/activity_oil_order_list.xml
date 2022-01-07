@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/slight_white3"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".activity.OilOrderListActivity">
+
+    <include layout="@layout/titlebar_white"/>
+
+    <com.flyco.tablayout.SegmentTabLayout
+        android:id="@+id/oil_order_list_ctl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_35"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/solid_tab_bg"
+        app:tl_indicator_margin_bottom="@dimen/dp_3"
+        app:tl_indicator_margin_left="@dimen/dp_3"
+        app:tl_indicator_margin_right="@dimen/dp_3"
+        app:tl_indicator_margin_top="@dimen/dp_3"
+        app:tl_tab_space_equal="true"
+        app:tl_iconVisible="false"
+        app:tl_indicator_anim_enable="true"
+        app:tl_indicator_bounce_enable="false"
+        app:tl_indicator_color="#096aff"
+        app:tl_indicator_color_end="#42a5f5"
+        app:tl_indicator_corner_radius="@dimen/dp_5"
+        app:tl_indicator_style="BLOCK"
+        app:tl_textBold="NONE"
+        app:tl_textSelectColor="@color/white"
+        app:tl_textUnselectColor="@color/select_text_color"
+        app:tl_textsize="@dimen/sp_14" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/oil_order_list_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
