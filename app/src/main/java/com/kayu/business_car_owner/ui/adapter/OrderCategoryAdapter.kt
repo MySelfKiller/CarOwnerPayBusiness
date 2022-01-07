@@ -54,7 +54,7 @@ class OrderCategoryAdapter     //        this.mContext = mContent;
         //    Log.i("GCS", "onCreateViewHolder");
         mContext = parent.context
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_category_root_lay, parent, false)
+        val view = inflater.inflate(R.layout.item_category2_root_lay, parent, false)
         return MyViewHolder(view)
     }
 
