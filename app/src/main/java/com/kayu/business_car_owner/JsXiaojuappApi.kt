@@ -13,27 +13,7 @@ import java.nio.channels.CompletionHandler
  * 配置青桔js调用信息
  */
 class JsXiaojuappApi(private val mContext: Context, private val mHandler: Handler) {
-    //
-    //    @JavascriptInterface
-    //    public void getLocation(String args, CompletionHandler callBack) {
-    ////        callBack.completed();
-    //
-    //    }
-    //
-    //    @JavascriptInterface
-    //    public void launchNav(String args) {
-    //    }
-    //
-    //    @JavascriptInterface
-    //    public void setReferer(String args) {
-    //        LogUtil.e("qingju", "JsXiaojuappApi setReferer==" + args);
-    //        try {
-    //            JSONObject jsonObject = new JSONObject(args);
-    //            String referer = jsonObject.getString("Referer");
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //    }
+
     @JavascriptInterface
     fun getLocation(args: Any?, handler: CompletionHandler<*, *>?) {
         // handler.complete("");

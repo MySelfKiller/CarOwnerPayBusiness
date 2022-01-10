@@ -150,7 +150,7 @@ class ActivationActivity : BaseActivity() {
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ActivationActivity
         //        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
-        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/active/getCaptSms/"
+        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/getRgSmsCapt/"
         reqInfo.parser = NormalParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("", phone_et!!.getText().toString().trim({ it <= ' ' }))
@@ -184,7 +184,7 @@ class ActivationActivity : BaseActivity() {
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ActivationActivity
         //        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
-        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/active/recharge"
+        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/recharge"
         reqInfo.parser = LoginDataParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap["phone"] = phone_et!!.getText().toString().trim({ it <= ' ' })

@@ -3,35 +3,7 @@ package com.kayu.business_car_owner.model
 import com.google.gson.annotations.SerializedName
 
 class ItemOilOrderBean {
-    /**
-     * orderId : ZF2231103562009251EXx01
-     * paySn : CZBH582788473319401
-     * phone : 176****9252
-     * orderTime : 2020-09-25 14:37:08
-     * payTime : 2020-09-25 14:37:26
-     * refundTime : null
-     * gasName : 众诚连锁卫星加油站
-     * province : 吉林省
-     * city : 长春市
-     * county : 朝阳区
-     * gunNo : 2
-     * oilNo : 0#
-     * amountPay : 0.10
-     * amountGun : 0.10
-     * amountDiscounts : 0.00
-     * orderStatusName : 已支付
-     * couponMoney : 0.00
-     * couponId : -1
-     * couponCode : null
-     * litre : 0.02
-     * payType : 微信支付
-     * priceUnit : 5.89
-     * priceOfficial : 6.88
-     * priceGun : 5.99
-     * orderSource : 车友团
-     * qrCode4PetroChina : null
-     * amountServiceCharge : 0.00
-     */
+
     @SerializedName("id") //主键ID
     var id: Long? = null
 

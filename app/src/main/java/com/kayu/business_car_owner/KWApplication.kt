@@ -669,7 +669,7 @@ class KWApplication() : MultiDexApplication() {
         urls: Array<String>
     ): SpannableString {
         val messSB = StringBuilder()
-        messSB.append("感谢您选择车友团特权APP！\n我们非常重视您的个信息和隐私安全。为了更好的保障您的个人权益，在您使用我们的产品前，请务必审慎阅读《")
+        messSB.append("感谢您选择省省联盟APP！\n我们非常重视您的个信息和隐私安全。为了更好的保障您的个人权益，在您使用我们的产品前，请务必审慎阅读《")
         val title1Index = messSB.length - 1
         messSB.append(titles[1])
         val title1End = messSB.length + 1

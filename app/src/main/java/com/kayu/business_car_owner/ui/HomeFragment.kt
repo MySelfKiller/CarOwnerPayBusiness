@@ -595,9 +595,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
             return
         }
         regTips = try {
-            //{
-            // "content": "{\"title\":\"免费办理会员\",\"desc\":\"成为会员，立享全球超百项特权\",\"regBtn\":\"立即免费办理\",\"pastTitle\":\"已办理车友团特权卡\",\"pastBtn\":\"激活车友团特权卡\",\"regTips\":\"成为特权卡会员,每年立省1000元#去办卡\"}",
-            //}
             val contentJSon = JSONObject(regDialogTip.content)
             contentJSon.getString("regTips")
         } catch (e: JSONException) {
