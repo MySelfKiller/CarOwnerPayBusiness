@@ -23,7 +23,7 @@ import com.kayu.business_car_owner.R
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 
-class CustomerActivity constructor() : BaseActivity() {
+class CustomerActivity : BaseActivity() {
     private var save_btn: TextView? = null
     private var mainViewModel: MainViewModel? = null
     private var qrcode_iv: ImageView? = null

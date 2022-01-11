@@ -184,6 +184,7 @@ dependencies {
     implementation project(path: ':form_verify')
     implementation project(path: ':library_update')
     implementation project(path: ':dialog')
+    implementation project(path: ':permissionx')
 
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'com.facebook.fresco:fresco:0.10.0'

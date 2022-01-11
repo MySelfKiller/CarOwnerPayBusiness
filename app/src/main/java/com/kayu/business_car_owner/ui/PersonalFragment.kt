@@ -292,11 +292,12 @@ class PersonalFragment : Fragment() {
             }
             web_info_tv!!.setOnClickListener(object : NoMoreClickListener() {
                 override fun OnMoreClick(view: View) {
-                    val jumpUrl = StringBuilder()
-                    if (userBean.type == 1) {
-                        jumpUrl.append("https://www.ws101.cn/sslm/static/nav/index.html#/upgrade?token=")
+                    val target = userBean.equityUrl
+                    val jumpUrl = StringBuilder().append(target)
+                    if (target.contains("?")) {
+                        jumpUrl.append("&token=")
                     } else {
-                        jumpUrl.append("https://www.ws101.cn/sslm/static/nav/index.html#/purchase?token=")
+                        jumpUrl.append("?token=")
                     }
                     val randomNum = System.currentTimeMillis()
                     jumpUrl.append(KWApplication.instance.token).append("&").append(randomNum)

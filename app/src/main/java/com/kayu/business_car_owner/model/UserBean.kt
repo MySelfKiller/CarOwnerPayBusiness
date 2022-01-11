@@ -93,4 +93,7 @@ class UserBean {
     @SerializedName("busTitle")
     var busTitle //已为你节省xxx元
             : String = ""
+    @SerializedName("equityUrl")
+    var equityUrl //权益中心跳转链接
+            : String = ""
 }
