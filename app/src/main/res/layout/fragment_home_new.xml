@@ -47,7 +47,7 @@
                         app:layout_constraintEnd_toEndOf="parent"/>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_165"
                         app:cardElevation="@dimen/dp_0"
@@ -97,36 +97,20 @@
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <com.flyco.tablayout.SegmentTabLayout
-                                android:id="@+id/list_ctl"
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_img_title_rv"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp_35"
-                                android:layout_gravity="center"
-                                android:layout_marginHorizontal="@dimen/dp_15"
-                                android:layout_marginTop="@dimen/dp_15"
-                                android:background="@drawable/solid_tab_bg"
-                                android:visibility="gone"
-                                app:tl_indicator_margin_bottom="@dimen/dp_3"
-                                app:tl_indicator_margin_left="@dimen/dp_3"
-                                app:tl_indicator_margin_right="@dimen/dp_3"
-                                app:tl_indicator_margin_top="@dimen/dp_3"
-                                app:tl_tab_space_equal="true"
-                                app:tl_iconVisible="false"
-                                app:tl_indicator_anim_enable="true"
-                                app:tl_indicator_bounce_enable="false"
-                                app:tl_indicator_color="@color/startColor_btn"
-                                app:tl_indicator_color_end="@color/endColor_btn"
-                                app:tl_indicator_corner_radius="@dimen/dp_5"
-                                app:tl_indicator_style="BLOCK"
-                                app:tl_textBold="NONE"
-                                app:tl_textSelectColor="@color/white"
-                                app:tl_textUnselectColor="@color/select_text_color"
-                                app:tl_textsize="@dimen/sp_14" />
-
-                            <com.kayu.utils.view.AdaptiveHeightViewPager
-                                android:id="@+id/list_vp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/dp_5"/>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_sort_title_rv"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp_200" />
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/dp_5"/>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/home_category2_rv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
@@ -227,12 +211,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <com.scwang.smart.refresh.footer.ClassicsFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srlAccentColor="@color/black"
-            app:srlClassicsSpinnerStyle="FixedBehind"
-            app:srlPrimaryColor="@color/white" />
+<!--        <com.scwang.smart.refresh.footer.ClassicsFooter-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:srlAccentColor="@color/black"-->
+<!--            app:srlClassicsSpinnerStyle="FixedBehind"-->
+<!--            app:srlPrimaryColor="@color/white" />-->
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 

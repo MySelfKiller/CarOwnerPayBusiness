@@ -12,7 +12,7 @@
     <item android:state_focused="true">
         <shape>
             <solid android:color="@color/deep_blue2" />
-            <corners android:radius="@dimen/dp_6" />
+            <corners android:radius="@dimen/dp_4" />
             <stroke android:color="@color/endColor_btn"
                 android:width="@dimen/dp_1"/>
         </shape>

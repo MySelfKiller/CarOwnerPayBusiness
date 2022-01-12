@@ -33,6 +33,7 @@ import com.kayu.business_car_owner.text_banner.TextBannerView
 import com.kayu.utils.view.AdaptiveHeightViewPager
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
 import com.flyco.tablayout.SegmentTabLayout
 import com.kayu.business_car_owner.activity.MessageActivity
@@ -44,10 +45,11 @@ import com.kayu.business_car_owner.activity.GasStationListActivity
 import com.kayu.business_car_owner.activity.CarWashListActivity
 import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
+import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
-import com.kayu.business_car_owner.ui.adapter.CategoryRootAdapter
 import com.kayu.utils.location.CoordinateTransformUtil
 import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
+import com.kayu.business_car_owner.ui.adapter.*
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.LocationCallback
@@ -55,42 +57,22 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.StringBuilder
-import java.util.ArrayList
+import java.util.*
 
 class HomeFragmentNew
     (private val navigation: BottomNavigationView) : Fragment() {
     private var mainViewModel: MainViewModel? = null
     private var banner: Banner? = null
     private var category_rv: RecyclerView? = null
+    private var img_title_rv: RecyclerView? = null
+    private var sort_title_rv: RecyclerView? = null
+    private var category2_rv: RecyclerView? = null
     private var hostTextBanner: TextBannerView? = null
     private var refreshLayout: RefreshLayout? = null
-    var isLoadmore = false
     var isRefresh = false
     private var pageIndex = 0
-    var isFirstLoad = true
-    private var slidingTabLayout: SegmentTabLayout? = null
-    private var mViewPager: AdaptiveHeightViewPager? = null
-    private val mTabEntities = ArrayList<CustomTabEntity>()
-    private val mFragments = ArrayList<Fragment>()
-    private val callback: Callback = object : Callback {
-        override fun onSuccess() {
-            if (isRefresh) {
-                refreshLayout!!.finishRefresh()
-                isRefresh = false
-            }
-            if (isLoadmore) {
-                refreshLayout!!.finishLoadMore()
-                isLoadmore = false
-            }
-        }
-
-        override fun onError() {
-            pageIndex = 1
-        }
-    }
     private var location_tv: TextView? = null
     private var notify_show: TextView? = null
-    private var adapter: PagerAdapter? = null
     private var title_lay_bg: LinearLayout? = null
     private var scrollView: FadingScrollView? = null
     override fun onCreateView(
@@ -122,20 +104,21 @@ class HomeFragmentNew
         scrollView?.setFadingView(title_lay_bg)
         scrollView?.setFadingHeightView(banner)
         category_rv = view.findViewById(R.id.home_category_rv)
+        img_title_rv = view.findViewById(R.id.home_img_title_rv)
+        sort_title_rv = view.findViewById(R.id.home_sort_title_rv)
+        category2_rv = view.findViewById(R.id.home_category2_rv)
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner)
-        slidingTabLayout = view.findViewById(R.id.list_ctl)
-        mViewPager = view.findViewById(R.id.list_vp)
         refreshLayout = view.findViewById<View>(R.id.refreshLayout) as RefreshLayout
         //        refreshLayout.setEnableNestedScroll(false);
         refreshLayout!!.setEnableAutoLoadMore(false)
-        refreshLayout!!.setEnableLoadMore(true)
+        refreshLayout!!.setEnableLoadMore(false)
         refreshLayout!!.setEnableLoadMoreWhenContentNotFull(true) //是否在列表不满一页时候开启上拉加载功能
         refreshLayout!!.setEnableOverScrollBounce(true) //是否启用越界回弹
         refreshLayout!!.setEnableOverScrollDrag(true)
         refreshLayout!!.setOnRefreshListener(OnRefreshListener { //                if (!isHasLocation){
 //                    return;
 //                }
-            if (isRefresh || isLoadmore) return@OnRefreshListener
+            if (isRefresh) return@OnRefreshListener
             isRefresh = true
             pageIndex = 1
             if (mHasLoadedOnce) {
@@ -145,47 +128,6 @@ class HomeFragmentNew
             initListView()
             mHasLoadedOnce = true
         })
-        refreshLayout!!.setOnLoadMoreListener(OnLoadMoreListener {
-            if (isRefresh || isLoadmore) return@OnLoadMoreListener
-            isLoadmore = true
-            pageIndex = pageIndex + 1
-            loadChildData()
-        })
-//        mTabEntities.add(TabEntity("加油", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close))
-//        mTabEntities.add(TabEntity("洗车", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close))
-        mFragments.add(HomeGasStationFragment(mViewPager, 0, callback))
-        mFragments.add(HomeCarWashFragment(mViewPager, 1, callback))
-        adapter = MyPagerAdapter(childFragmentManager, mFragments)
-        mViewPager?.setAdapter(adapter)
-        val mTitles_3 = arrayOf("加油", "洗车")
-        slidingTabLayout?.setTabData(mTitles_3)
-        slidingTabLayout?.setOnTabSelectListener(object : OnTabSelectListener {
-            override fun onTabSelect(position: Int) {
-                mViewPager?.setCurrentItem(position)
-                fragIndex = position
-            }
-
-            override fun onTabReselect(position: Int) {}
-        })
-        mViewPager?.setOffscreenPageLimit(2)
-        mViewPager?.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                fragIndex = position
-                slidingTabLayout?.setCurrentTab(position)
-                mViewPager?.resetHeight(position)
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
-
-//        checkLocation();
         LocationManagerUtil.self?.setLocationListener (object: LocationCallback{
             //                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
             override fun onLocationChanged(location: AMapLocation) {
@@ -261,7 +203,6 @@ class HomeFragmentNew
         }
     }
 
-    private var fragIndex = 0
     private fun initListView() {
         mainViewModel!!.getSysParameter(requireContext(), 10)
             .observe(requireActivity(), Observer { systemParam ->
@@ -273,45 +214,13 @@ class HomeFragmentNew
                 editor.putString(Constants.system_args, systemParam.content)
                 editor.apply()
                 editor.commit()
-                try {
-                    val jsonObject = JSONObject(systemParam.content)
-                    val showGas = jsonObject.optInt("gas")
-                    val showCarWash = jsonObject.optInt("carwash")
-                    if (showGas == 1 && showCarWash == 1) {
-                        slidingTabLayout!!.visibility = View.VISIBLE
-                        mViewPager!!.currentItem = fragIndex
-                        slidingTabLayout!!.currentTab = fragIndex
-                        mViewPager!!.isScrollble = true
-                    } else if (showGas == 0 && showCarWash == 0) {
-                        slidingTabLayout!!.visibility = View.GONE
-                        mViewPager!!.visibility = View.GONE
-                    } else {
-                        slidingTabLayout!!.visibility = View.GONE
-                        if (showCarWash == 1) {
-                            fragIndex = 1
-                            mViewPager!!.currentItem = fragIndex
-                            mViewPager!!.isScrollble = false
-                        } else if (showGas == 1) {
-                            fragIndex = 0
-                            mViewPager!!.currentItem = fragIndex
-                            mViewPager!!.isScrollble = false
-                        }
-                    }
-                    loadChildData()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
             })
         if (isRefresh) {
             refreshLayout!!.finishRefresh()
             isRefresh = false
         }
-        if (isLoadmore) {
-            refreshLayout!!.finishLoadMore()
-            isLoadmore = false
-        }
     }
-
+    private val category2Beans :MutableList<CategoryBean> = arrayListOf()
     private var hasShow = false
     private var hasClose = false
     private fun initView() {
@@ -356,7 +265,7 @@ class HomeFragmentNew
                 banner!!.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                     .setIndicatorGravity(BannerConfig.RIGHT)
                     .setImageLoader(BannerImageLoader())
-                    .setImages(urlList) //                .setBannerTitles(titles)
+                    .setImages(urlList)
                     .setDelayTime(2000)
                     .start()
                     .setOnPageChangeListener(object : OnPageChangeListener {
@@ -368,10 +277,6 @@ class HomeFragmentNew
                         }
 
                         override fun onPageSelected(position: Int) {
-//                                if (getUserVisibleHint()) {
-//                                    title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
-//                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
-//                                }
                         }
 
                         override fun onPageScrollStateChanged(state: Int) {}
@@ -426,6 +331,7 @@ class HomeFragmentNew
                 if (null == categoryBeans) return@Observer
                 for (list in categoryBeans) {
                     for (categoryBean in list) {
+                        category2Beans.add(categoryBean)
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.instance.isGasPublic = categoryBean.isPublic
                         }
@@ -436,20 +342,12 @@ class HomeFragmentNew
                 }
                 val mColumns = 1
                 val mRows = categoryBeans.size
-                //                if (categoryBeans.size() <= 4) {
-//                    mColumns = 4;
-//                    mRows = 1;
-//
-//                } else {
-//                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
-//                    mColumns = 4;
-//                }
                 val layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(
-                        R.dimen.dp_84
+                        R.dimen.dp_90
                     ) * mRows
                 )
-                layoutParams.topMargin = resources.getDimensionPixelSize(R.dimen.dp_14)
+                layoutParams.topMargin = resources.getDimensionPixelSize(R.dimen.dp_10)
                 category_rv!!.layoutParams = layoutParams
                 val mLayoutManager =
                     PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager.HORIZONTAL)
@@ -483,7 +381,7 @@ class HomeFragmentNew
                                 sb.append(target)
                                 //                                sb.append("https://www.ky808.cn/carfriend/static/alone/demo.html"); //测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
-                                    if (target!!.contains("?")) {
+                                    if (target.contains("?")) {
                                         sb.append("&token=")
                                     } else {
                                         sb.append("?token=")
@@ -513,68 +411,56 @@ class HomeFragmentNew
                     override fun onDetailCallBack(position: Int, obj: Any?) {}
                 })
                 category_rv!!.adapter = categoryAdapter
+
+                //TODO 需要接入后台数据
+                img_title_rv!!.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+                val ddd = arrayListOf<Any>()
+                ddd.add("")
+                ddd.add("")
+                ddd.add("")
+                img_title_rv!!.adapter = ImgTitleAdapter(ddd,object :ItemCallback{
+                    override fun onItemCallback(position: Int, obj: Any?) {
+                        ToastUtils.show("暂无数据")
+                    }
+
+                    override fun onDetailCallBack(position: Int, obj: Any?) {
+                    }
+
+                })
+
+                sort_title_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
+                val ccc = arrayListOf<Any>()
+                ccc.add("热门")
+                ccc.add("影音娱乐")
+                ccc.add("美食饮品")
+                ccc.add("生活服务")
+                ccc.add("口碑榜单")
+                category2_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
+                val category2Adapter = Category2Adapter(category2Beans, object : ItemCallback {
+                    override fun onItemCallback(position: Int, obj: Any?) {
+                    }
+
+                    override fun onDetailCallBack(position: Int, obj: Any?) {
+                    }
+                })
+                category2_rv!!.adapter = category2Adapter
+                    sort_title_rv!!.adapter = SortTitleAdapter(ccc,object: ItemCallback{
+                    override fun onItemCallback(position: Int, obj: Any?) {
+                        category2Adapter.removeAllData()
+                        for (index in 1..position+1) {
+                            category2Adapter.addAllData(category2Beans)
+                        }
+
+                    }
+
+                    override fun onDetailCallBack(position: Int, obj: Any?) {
+
+                    }
+
+                })
+
             })
 
-
-        // 设置滚动辅助工具
-//        PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
-//        pageSnapHelper.attachToRecyclerView(category_rv);
-    }
-
-    private fun loadChildData() {
-        if (isFirstLoad) {
-            for (x in mFragments.indices) {
-                if (mFragments[x] is HomeGasStationFragment) {
-                    val homeGasStationFragment = mFragments[x] as HomeGasStationFragment
-                    homeGasStationFragment.reqData(
-                        refreshLayout,
-                        pageIndex,
-                        isRefresh,
-                        isLoadmore,
-                        latitude,
-                        longitude
-                    )
-                }
-                if (mFragments[x] is HomeCarWashFragment) {
-                    val homeCarWashFragment = mFragments[x] as HomeCarWashFragment
-                    val bddfsdfs = CoordinateTransformUtil.gcj02tobd09(longitude, latitude)
-                    homeCarWashFragment.reqData(
-                        refreshLayout,
-                        pageIndex,
-                        isRefresh,
-                        isLoadmore,
-                        bddfsdfs[1],
-                        bddfsdfs[0],
-                        cityName
-                    )
-                }
-            }
-            isFirstLoad = false
-        } else {
-            if (fragIndex == 0) {
-                val homeGasStationFragment = mFragments[fragIndex] as HomeGasStationFragment
-                homeGasStationFragment.reqData(
-                    refreshLayout,
-                    pageIndex,
-                    isRefresh,
-                    isLoadmore,
-                    latitude,
-                    longitude
-                )
-            } else if (fragIndex == 1) {
-                val homeCarWashFragment = mFragments[fragIndex] as HomeCarWashFragment
-                val bddfsdfs = CoordinateTransformUtil.gcj02tobd09(longitude, latitude)
-                homeCarWashFragment.reqData(
-                    refreshLayout,
-                    pageIndex,
-                    isRefresh,
-                    isLoadmore,
-                    bddfsdfs[1],
-                    bddfsdfs[0],
-                    cityName
-                )
-            }
-        }
     }
 
     private var latitude = 0.0

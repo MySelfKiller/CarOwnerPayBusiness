@@ -33,8 +33,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kayu.business_car_owner.R
 import com.kayu.utils.*
 
-class CategoryAdapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallback?) :
-    RecyclerView.Adapter<CategoryAdapter.MyViewHolder>() {
+class Category2Adapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallback?) :
+    RecyclerView.Adapter<Category2Adapter.MyViewHolder>() {
     var dataList: MutableList<CategoryBean>? = ArrayList()
     private val itemCallback: ItemCallback?
     fun addAllData(dataList: List<CategoryBean>?) {
@@ -52,19 +52,19 @@ class CategoryAdapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallba
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         //    Log.i("GCS", "onCreateViewHolder");
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_category_lay, parent, false)
+        val view = inflater.inflate(R.layout.item_category2_lay, parent, false)
         return MyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.tv_title.text = dataList!![position].title
-        holder.tv_title_sub.text = dataList!![position].remark
-        if (!StringUtil.isEmpty(dataList!![position].tag)) {
-            holder.tv_tag.text = dataList!![position].tag
-            holder.tv_tag.visibility = View.VISIBLE
-        } else {
-            holder.tv_tag.visibility = View.GONE
-        }
+//        holder.tv_title_sub.text = dataList!![position].remark
+//        if (!StringUtil.isEmpty(dataList!![position].tag)) {
+//            holder.tv_tag.text = dataList!![position].tag
+//            holder.tv_tag.visibility = View.VISIBLE
+//        } else {
+//            holder.tv_tag.visibility = View.GONE
+//        }
         KWApplication.instance.loadImg(dataList!![position].icon, holder.tv_img)
         holder.itemView.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
@@ -81,14 +81,14 @@ class CategoryAdapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallba
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tv_title: TextView
-        var tv_title_sub: TextView
-        var tv_tag: TextView
+//        var tv_title_sub: TextView
+//        var tv_tag: TextView
         var tv_img: ImageView
 
         init {
             tv_title = itemView.findViewById(R.id.item_cate_text)
-            tv_tag = itemView.findViewById(R.id.item_cate_tag)
-            tv_title_sub = itemView.findViewById(R.id.item_cate_text_sub)
+//            tv_tag = itemView.findViewById(R.id.item_cate_tag)
+//            tv_title_sub = itemView.findViewById(R.id.item_cate_text_sub)
             tv_img = itemView.findViewById(R.id.item_cate_img)
         }
     }
