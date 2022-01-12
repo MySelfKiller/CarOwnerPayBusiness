@@ -371,7 +371,7 @@ class HomeFragment
                             val sb = StringBuilder()
                             sb.append(target)
                             if (StringUtil.equals(bannerBeans[position].type, "KY_H5")) {
-                                if (target!!.contains("?")) { //KYCityName KYLat KYLon
+                                if (target.contains("?")) {
                                     sb.append("&token=")
                                 } else {
                                     sb.append("?token=")
@@ -451,7 +451,7 @@ class HomeFragment
                                 val sb = StringBuilder()
                                 sb.append(target)
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
-                                    if (target!!.contains("?")) {
+                                    if (target.contains("?")) {
                                         sb.append("&token=")
                                     } else {
                                         sb.append("?token=")
@@ -483,10 +483,6 @@ class HomeFragment
             })
 
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun loadChildData() {

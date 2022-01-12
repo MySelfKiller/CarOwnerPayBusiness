@@ -378,7 +378,7 @@ class HomeFragmentNew
                     })
                 banner!!.setOnBannerListener(OnBannerListener { position ->
                     val target = bannerBeans[position].href
-                    val isPublic = bannerBeans[position].isPublic!!
+                    val isPublic = bannerBeans[position].isPublic
                     val userRole = KWApplication.instance.userRole
                     if (userRole == -2 && isPublic == 0) {
                         KWApplication.instance.showRegDialog(requireContext())
@@ -394,7 +394,7 @@ class HomeFragmentNew
                             val sb = StringBuilder()
                             sb.append(target)
                             if (StringUtil.equals(bannerBeans[position].type, "KY_H5")) {
-                                if (target!!.contains("?")) { //KYCityName KYLat KYLon
+                                if (target.contains("?")) {
                                     sb.append("&token=")
                                 } else {
                                     sb.append("?token=")
@@ -519,10 +519,6 @@ class HomeFragmentNew
         // 设置滚动辅助工具
 //        PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
 //        pageSnapHelper.attachToRecyclerView(category_rv);
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun loadChildData() {
