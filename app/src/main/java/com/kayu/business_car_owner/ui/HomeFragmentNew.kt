@@ -57,10 +57,7 @@ import org.json.JSONObject
 import java.lang.StringBuilder
 import java.util.ArrayList
 
-class HomeFragmentNew     //    private List<Fragment> subFragmentList;
-//    private double distance;//距离/km
-//    private int sort;//排序方式
-//    private int oilNo;//油号类型
+class HomeFragmentNew
     (private val navigation: BottomNavigationView) : Fragment() {
     private var mainViewModel: MainViewModel? = null
     private var banner: Banner? = null

@@ -57,10 +57,7 @@ import org.json.JSONObject
 import java.lang.StringBuilder
 import java.util.ArrayList
 
-class HomeFragment     //    private List<Fragment> subFragmentList;
-//    private double distance;//距离/km
-//    private int sort;//排序方式
-//    private int oilNo;//油号类型
+class HomeFragment
     (private val navigation: BottomNavigationView) : Fragment() {
     private var mainViewModel: MainViewModel? = null
     private var banner: Banner? = null
@@ -73,7 +70,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
     var isFirstLoad = true
     private var slidingTabLayout: SegmentTabLayout? = null
     private var mViewPager: AdaptiveHeightViewPager? = null
-    private val mTabEntities = ArrayList<CustomTabEntity>()
     private val mFragments = ArrayList<Fragment>()
     private val callback: Callback = object : Callback {
         override fun onSuccess() {
@@ -129,20 +125,16 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
         slidingTabLayout = view.findViewById(R.id.list_ctl)
         mViewPager = view.findViewById(R.id.list_vp)
         refreshLayout = view.findViewById<View>(R.id.refreshLayout) as RefreshLayout
-        //        refreshLayout.setEnableNestedScroll(false);
         refreshLayout!!.setEnableAutoLoadMore(false)
         refreshLayout!!.setEnableLoadMore(true)
         refreshLayout!!.setEnableLoadMoreWhenContentNotFull(true) //是否在列表不满一页时候开启上拉加载功能
         refreshLayout!!.setEnableOverScrollBounce(true) //是否启用越界回弹
         refreshLayout!!.setEnableOverScrollDrag(true)
-        refreshLayout!!.setOnRefreshListener(OnRefreshListener { //                if (!isHasLocation){
-//                    return;
-//                }
+        refreshLayout!!.setOnRefreshListener(OnRefreshListener {
             if (isRefresh || isLoadmore) return@OnRefreshListener
             isRefresh = true
             pageIndex = 1
             if (mHasLoadedOnce) {
-//                    LogUtil.e("HomeFragment----","----setOnRefreshListener---mHasLoadedOnce");
                 initView()
             }
             initListView()
@@ -154,8 +146,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
             pageIndex = pageIndex + 1
             loadChildData()
         })
-//        mTabEntities.add(TabEntity("加油", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close))
-//        mTabEntities.add(TabEntity("洗车", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close))
         mFragments.add(HomeGasStationFragment(mViewPager, 0, callback))
         mFragments.add(HomeCarWashFragment(mViewPager, 1, callback))
         adapter = MyPagerAdapter(childFragmentManager, mFragments)
@@ -190,7 +180,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
 
 //        checkLocation();
         LocationManagerUtil.self?.setLocationListener (object: LocationCallback{
-            //                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
             override fun onLocationChanged(location: AMapLocation) {
                 latitude = location.latitude
                 longitude = location.longitude
@@ -198,7 +187,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                 location_tv?.setText(cityName)
                 isHasLocation = true
                 if (!hasAutoRefresh) {
-//                    LogUtil.e("HomeFragment----","----onLocationChanged--- hasAutoRefresh----" );
                     isRefresh = true
                     pageIndex = 1
                     initListView()
@@ -217,9 +205,7 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
     override fun onStart() {
         super.onStart()
         if (!userVisibleHint) return
-        //        LogUtil.e("HomeFragment----","----onStart---");
         if (!mHasLoadedOnce) {
-//            LogUtil.e("HomeFragment----","----onStart---mHasLoadedOnce");
             initView()
             if (isHasLocation) {
                 isRefresh = true
@@ -227,18 +213,14 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                 initListView()
                 mHasLoadedOnce = true
                 hasAutoRefresh = true
-                //            LogUtil.e("HomeFragment----","----onStart---isHasLocation");
             }
         }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        //        LogUtil.e("HomeFragment----","----setUserVisibleHint---");
         if (isVisibleToUser && isCreated) {
-//            LogUtil.e("HomeFragment----","----setUserVisibleHint---isCreated");
             if (!mHasLoadedOnce) {
-//                LogUtil.e("HomeFragment----","----setUserVisibleHint---mHasLoadedOnce");
                 initView()
                 if (isHasLocation) {
                     isRefresh = true
@@ -246,7 +228,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                     initListView()
                     mHasLoadedOnce = true
                     hasAutoRefresh = true
-                    //                LogUtil.e("HomeFragment----","----setUserVisibleHint---isHasLocation");
                 }
             }
         }
@@ -320,7 +301,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
     private fun initView() {
         mainViewModel!!.getRegDialogTip(requireContext()).observe(requireActivity(), { systemParam ->
             KWApplication.instance.regDialogTip = systemParam
-            //KWApplication.getInstance().userRole == -2 &&
             if (null != KWApplication.instance.regDialogTip && KWApplication.instance.userRole == -2 && !hasShow) {
                 showApplyCardDialog(activity, context, navigation)
                 hasShow = true
@@ -336,7 +316,7 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
         })
         mainViewModel!!.getNotifyList(requireContext()).observe(
             requireActivity(),
-            { strings -> //                List<String> hostBannerData = new ArrayList<>();
+            { strings ->
                 if (null != strings && strings.size > 0) {
                     hostTextBanner!!.setDatas(strings)
                 }
@@ -354,12 +334,10 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                     }
                     urlList.add(item.img)
                 }
-                //                title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
-//                StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(0).bgColor));
                 banner!!.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                     .setIndicatorGravity(BannerConfig.RIGHT)
                     .setImageLoader(BannerImageLoader())
-                    .setImages(urlList) //                .setBannerTitles(titles)
+                    .setImages(urlList)
                     .setDelayTime(2000)
                     .start()
                     .setOnPageChangeListener(object : OnPageChangeListener {
@@ -371,17 +349,13 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                         }
 
                         override fun onPageSelected(position: Int) {
-//                                if (getUserVisibleHint()) {
-//                                    title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
-//                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
-//                                }
                         }
 
                         override fun onPageScrollStateChanged(state: Int) {}
                     })
                 banner!!.setOnBannerListener(OnBannerListener { position ->
                     val target = bannerBeans[position].href
-                    val isPublic = bannerBeans[position].isPublic!!
+                    val isPublic = bannerBeans[position].isPublic
                     val userRole = KWApplication.instance.userRole
                     if (userRole == -2 && isPublic == 0) {
                         KWApplication.instance.showRegDialog(requireContext())
@@ -439,14 +413,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                 }
                 val mColumns = 1
                 val mRows = categoryBeans.size
-                //                if (categoryBeans.size() <= 4) {
-//                    mColumns = 4;
-//                    mRows = 1;
-//
-//                } else {
-//                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
-//                    mColumns = 4;
-//                }
                 val layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(
                         R.dimen.dp_84
@@ -484,7 +450,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                                 val intent = Intent(context, WebViewActivity::class.java)
                                 val sb = StringBuilder()
                                 sb.append(target)
-                                //                                sb.append("https://www.ky808.cn/carfriend/static/alone/demo.html"); //测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
                                     if (target!!.contains("?")) {
                                         sb.append("&token=")
@@ -499,7 +464,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
                                     sb.append(",")
                                     sb.append(latitude)
                                 }
-                                //                                intent.putExtra("url", "http://192.168.3.32:8080/#/index");
                                 intent.putExtra("url", sb.toString())
                                 intent.putExtra("from", "首页")
                                 startActivity(intent)
@@ -519,9 +483,6 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
             })
 
 
-        // 设置滚动辅助工具
-//        PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
-//        pageSnapHelper.attachToRecyclerView(category_rv);
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
