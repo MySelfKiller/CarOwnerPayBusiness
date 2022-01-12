@@ -57,7 +57,7 @@ import org.json.JSONObject
 import java.lang.StringBuilder
 import java.util.ArrayList
 
-class HomeFragment     //    private List<Fragment> subFragmentList;
+class HomeFragmentNew     //    private List<Fragment> subFragmentList;
 //    private double distance;//距离/km
 //    private int sort;//排序方式
 //    private int oilNo;//油号类型
@@ -102,7 +102,7 @@ class HomeFragment     //    private List<Fragment> subFragmentList;
     ): View? {
         LogUtil.e("HomeFragment----", "----onCreateView---")
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_home_new, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

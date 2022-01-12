@@ -30,7 +30,6 @@ import com.maning.updatelibrary.InstallUtils.DownloadCallBack
 import com.daimajia.numberprogressbar.NumberProgressBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kongzue.dialog.v3.CustomDialog
-import com.kayu.business_car_owner.ui.HomeFragment
 import com.kayu.business_car_owner.ui.PersonalFragment
 import com.kayu.business_car_owner.ui.adapter.BottomNavigationViewHelper
 import com.kayu.business_car_owner.update.UpdateInfoParse
@@ -45,6 +44,7 @@ import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.ui.HomeFragmentNew
 import com.kayu.business_car_owner.update.UpdateInfo
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
@@ -106,7 +106,7 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
     private val fragments: List<Fragment>
         private get() {
             val list: MutableList<Fragment> = ArrayList()
-            navigation?.let { HomeFragment(it) }?.let { list.add(it) }
+            navigation?.let { HomeFragmentNew(it) }?.let { list.add(it) }
             list.add(PersonalFragment())
             return list
         }
