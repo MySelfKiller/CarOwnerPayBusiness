@@ -9,15 +9,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.model.ProductSortBean
 import com.kayu.utils.ItemCallback
 
 class SortTitleAdapter(
-    private val dataList: MutableList<Any>?,
+    private val dataList: MutableList<ProductSortBean>?,
     private val callback: ItemCallback,
 ) : RecyclerView.Adapter<SortTitleAdapter.SortTitleHolder>() {
     private var context: Context? = null
     @SuppressLint("NotifyDataSetChanged")
-    fun addAllData(dataList: MutableList<Any>?) {
+    fun addAllData(dataList: MutableList<ProductSortBean>?) {
         this.dataList?.addAll(dataList!!)
         notifyDataSetChanged()
     }
@@ -38,7 +39,7 @@ class SortTitleAdapter(
             selectedView = viewHolder
 //            callback.onItemCallback(i, "")
         }
-        viewHolder.nameText.text = dataList?.get(i) as String
+        viewHolder.nameText.text = dataList!![i].name
         viewHolder.nameText.setOnClickListener {
 
             if (!viewHolder.nameText.isSelected) {

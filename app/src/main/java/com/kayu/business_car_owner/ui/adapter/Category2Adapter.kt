@@ -31,13 +31,14 @@ import com.kayu.business_car_owner.model.CategoryBean
 import com.kayu.business_car_owner.KWApplication
 import androidx.recyclerview.widget.RecyclerView
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.model.Product
 import com.kayu.utils.*
 
-class Category2Adapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallback?) :
+class Category2Adapter(data: MutableList<Product>?, itemCallback: ItemCallback?) :
     RecyclerView.Adapter<Category2Adapter.MyViewHolder>() {
-    var dataList: MutableList<CategoryBean>? = ArrayList()
+    var dataList: MutableList<Product>? = ArrayList()
     private val itemCallback: ItemCallback?
-    fun addAllData(dataList: List<CategoryBean>?) {
+    fun addAllData(dataList: List<Product>?) {
         this.dataList!!.addAll(dataList!!)
         notifyDataSetChanged()
     }
@@ -57,7 +58,7 @@ class Category2Adapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallb
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        holder.tv_title.text = dataList!![position].title
+        holder.tv_title.text = dataList!![position].name
 //        holder.tv_title_sub.text = dataList!![position].remark
 //        if (!StringUtil.isEmpty(dataList!![position].tag)) {
 //            holder.tv_tag.text = dataList!![position].tag
@@ -65,7 +66,7 @@ class Category2Adapter(data: MutableList<CategoryBean>?, itemCallback: ItemCallb
 //        } else {
 //            holder.tv_tag.visibility = View.GONE
 //        }
-        KWApplication.instance.loadImg(dataList!![position].icon, holder.tv_img)
+        KWApplication.instance.loadImg(dataList!![position].logo, holder.tv_img)
         holder.itemView.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 itemCallback?.onItemCallback(position, dataList!![position])

@@ -6,40 +6,17 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Message
 import com.hjq.toast.ToastUtils
-import com.kayu.business_car_owner.model.SystemParam
-import com.kayu.business_car_owner.model.UserBean
-import com.kayu.business_car_owner.model.BannerBean
-import com.kayu.business_car_owner.model.OilStationBean
-import com.kayu.business_car_owner.model.WashStationBean
-import com.kayu.business_car_owner.model.ParamOilBean
-import com.kayu.business_car_owner.model.ParamWashBean
-import com.kayu.business_car_owner.model.WebBean
 import com.kayu.business_car_owner.http.parser.UserDataParse
 import com.kayu.business_car_owner.http.parser.WebDataParse
 import com.kayu.business_car_owner.http.parser.NormalStringParse
 import com.kayu.business_car_owner.http.parser.NormalIntParse
-import com.kayu.business_car_owner.data_parser.ParameterDataParser
-import com.kayu.business_car_owner.data_parser.StationDetailDataParser
-import com.kayu.business_car_owner.model.RefundInfo
-import com.kayu.business_car_owner.data_parser.RefundInfoDataParser
-import com.kayu.business_car_owner.model.WashOrderDetailBean
-import com.kayu.business_car_owner.data_parser.WashOrderDetailDataParser
-import com.kayu.business_car_owner.model.WashStationDetailBean
-import com.kayu.business_car_owner.data_parser.WashStationDetailDataParser
-import com.kayu.business_car_owner.data_parser.ParamOilDataParser
-import com.kayu.business_car_owner.data_parser.ParamWashDataParser
-import com.kayu.business_car_owner.data_parser.StationListDataParser
-import com.kayu.business_car_owner.data_parser.WashStationListDataParser
-import com.kayu.business_car_owner.data_parser.BannerDataParse
 import com.kayu.business_car_owner.http.parser.NormalStringListParse
-import com.kayu.business_car_owner.model.SysOrderBean
-import com.kayu.business_car_owner.data_parser.SysOrderDataParse
-import com.kayu.business_car_owner.model.CategoryBean
-import com.kayu.business_car_owner.data_parser.CategoryDataParse
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kayu.business_car_owner.data_parser.*
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.model.*
 import com.kayu.utils.*
 import java.util.HashMap
 
@@ -708,11 +685,84 @@ class MainViewModel : ViewModel() {
                 } else {
                     ToastUtils.show(resInfo.msg)
                 }
-                bannerListData!!.setValue(myTeamData)
+                bannerListData!!.value = myTeamData
                 super.handleMessage(msg)
             }
         }
         val callback: ResponseCallback = ResponseCallback(reques)
+        ReqUtil.setReqInfo(reques)
+        ReqUtil.requestGetJSON(callback)
+    }
+
+    private var popNaviListData //热门导航数据
+            : MutableLiveData<MutableList<PopNaviBean>?>? = null
+    /**
+     * 获取热门导航列表数据
+     * @return
+     */
+    fun getPopNaviList(mContext: Context): LiveData<MutableList<PopNaviBean>?> {
+        popNaviListData = MutableLiveData()
+        loadPopNaviList(mContext)
+        return popNaviListData!!
+    }
+
+    @SuppressLint("HandlerLeak")
+    private fun loadPopNaviList(mContext: Context) {
+        val reques = RequestInfo()
+        reques.context = mContext
+        reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_POP_NAVI
+        reques.parser = PopNaviDataParse()
+        reques.handler = object : Handler() {
+            public override fun handleMessage(msg: Message) {
+                val resInfo: ResponseInfo = msg.obj as ResponseInfo
+                var myTeamData: MutableList<PopNaviBean>? = null
+                if (resInfo.status == 1) {
+                    myTeamData = resInfo.responseData as MutableList<PopNaviBean>?
+                } else {
+                    ToastUtils.show(resInfo.msg)
+                }
+                popNaviListData!!.value = myTeamData
+                super.handleMessage(msg)
+            }
+        }
+        val callback = ResponseCallback(reques)
+        ReqUtil.setReqInfo(reques)
+        ReqUtil.requestGetJSON(callback)
+    }
+
+
+    private var productSortListData //热门导航数据
+            : MutableLiveData<MutableList<ProductSortBean>?>? = null
+    /**
+     * 获取热门导航列表数据
+     * @return
+     */
+    fun getProductSortList(mContext: Context): LiveData<MutableList<ProductSortBean>?> {
+        productSortListData = MutableLiveData()
+        loadProductSortList(mContext)
+        return productSortListData!!
+    }
+
+    @SuppressLint("HandlerLeak")
+    private fun loadProductSortList(mContext: Context) {
+        val reques = RequestInfo()
+        reques.context = mContext
+        reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_PRO_LIST
+        reques.parser = ProductSortDataParse()
+        reques.handler = object : Handler() {
+            public override fun handleMessage(msg: Message) {
+                val resInfo: ResponseInfo = msg.obj as ResponseInfo
+                var myTeamData: MutableList<ProductSortBean>? = null
+                if (resInfo.status == 1) {
+                    myTeamData = resInfo.responseData as MutableList<ProductSortBean>?
+                } else {
+                    ToastUtils.show(resInfo.msg)
+                }
+                productSortListData!!.value = myTeamData
+                super.handleMessage(msg)
+            }
+        }
+        val callback = ResponseCallback(reques)
         ReqUtil.setReqInfo(reques)
         ReqUtil.requestGetJSON(callback)
     }

@@ -14,9 +14,11 @@ object HttpConfig {
     const val INTERFACE_SET_PASSWORD = "" //设置密码
     const val INTERFACE_RESET_PASSWORD = "" //重置密码
     const val CLOSE_WEB_VIEW = "https://www.kakayuy.com/close"
-    const val INTERFACE_GET_CATEGORY = "api/v1/nav/list" //获取项目类别列表
+    const val INTERFACE_GET_CATEGORY = "api/v1/nav/list" //获取首页项目类别列表
     const val INTERFACE_GET_FILTER = "api/v1/gas/getfilter" //获取加油站条件
-    const val INTERFACE_GET_BANNER = "api/v1/banner/list" //获取Banner列表
+    const val INTERFACE_GET_BANNER = "api/v1/banner/list" //获取首页Banner列表
+    const val INTERFACE_GET_POP_NAVI = "api/v1/nav-high/queryList" //获取首页热门导航列表
+    const val INTERFACE_GET_PRO_LIST = "api/v1/hc-product/queryList" //获取首页产品分类及列表
     const val INTERFACE_GET_ACCOUNT_REMINDER = "api/parameter/getAccTitle" //获取账户提示语
     const val INTERFACE_GET_EXCHANGE = "api/v1/user/recharge" //兑换充值
     const val INTERFACE_GET_NOTIFY_LIST = "api/v1/notify/list" //获取消息列表

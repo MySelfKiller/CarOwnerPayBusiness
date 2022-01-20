@@ -32,6 +32,7 @@ import com.youth.banner.Banner
 import com.kayu.business_car_owner.text_banner.TextBannerView
 import com.kayu.utils.view.AdaptiveHeightViewPager
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
@@ -47,6 +48,9 @@ import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
 import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.model.PopNaviBean
+import com.kayu.business_car_owner.model.Product
+import com.kayu.business_car_owner.model.ProductSortBean
 import com.kayu.utils.location.CoordinateTransformUtil
 import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
 import com.kayu.business_car_owner.ui.adapter.*
@@ -220,7 +224,6 @@ class HomeFragmentNew
             isRefresh = false
         }
     }
-    private val category2Beans :MutableList<CategoryBean> = arrayListOf()
     private var hasShow = false
     private var hasClose = false
     private fun initView() {
@@ -325,13 +328,113 @@ class HomeFragmentNew
                     }
                 })
             })
+        mainViewModel!!.getPopNaviList(requireContext()).observe(requireActivity(), Observer<MutableList<PopNaviBean>?> { popNaviBeanlist->
+            if (popNaviBeanlist == null) {
+                return@Observer
+            }
+            img_title_rv!!.layoutManager = GridLayoutManager(requireContext(),3)
+            img_title_rv!!.adapter = ImgTitleAdapter(popNaviBeanlist,object :ItemCallback{
+                override fun onItemCallback(position: Int, obj: Any?) {
+                    val popNaviBean = obj as PopNaviBean
+                    val url = popNaviBean.url
+                    if (!StringUtil.isEmpty(url)) {
+                        val intent = Intent(context, WebViewActivity::class.java)
+                        val sb = StringBuilder()
+                        sb.append(url)
+                        if (url.contains("?")) {
+                            sb.append("&token=")
+                        } else {
+                            sb.append("?token=")
+                        }
+                        sb.append(KWApplication.instance.token)
+                        sb.append("&locationName=")
+                        sb.append(cityName)
+                        sb.append("&selectLocation=")
+                        sb.append(longitude)
+                        sb.append(",")
+                        sb.append(latitude)
+                        intent.putExtra("url", sb.toString())
+                        intent.putExtra("from", "首页")
+                        startActivity(intent)
+                    } else {
+                        MessageDialog.show(
+                            (requireContext() as AppCompatActivity),
+                            "温馨提示",
+                            "功能未开启，敬请期待"
+                        )
+                    }
+                }
+
+                override fun onDetailCallBack(position: Int, obj: Any?) {
+                }
+
+            })
+
+        })
+
+        mainViewModel!!.getProductSortList(requireContext()).observe(requireActivity(), {
+            if (it == null) {
+                return@observe
+            }
+            sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(),4)
+            category2_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
+            val category2Adapter = Category2Adapter(it[0].products, object : ItemCallback {
+                override fun onItemCallback(position: Int, obj: Any?) {
+                    val product = obj as Product
+                    val url = product.link
+                    if (!StringUtil.isEmpty(url)) {
+                        val intent = Intent(context, WebViewActivity::class.java)
+                        val sb = StringBuilder()
+                        sb.append(url)
+                        if (url.contains("?")) {
+                            sb.append("&token=")
+                        } else {
+                            sb.append("?token=")
+                        }
+                        sb.append(KWApplication.instance.token)
+                        sb.append("&id=").append(product.id)
+                        sb.append("&locationName=")
+                        sb.append(cityName)
+                        sb.append("&selectLocation=")
+                        sb.append(longitude)
+                        sb.append(",")
+                        sb.append(latitude)
+                        intent.putExtra("url", sb.toString())
+                        intent.putExtra("from", "首页")
+                        startActivity(intent)
+                    } else {
+                        MessageDialog.show(
+                            (requireContext() as AppCompatActivity),
+                            "温馨提示",
+                            "功能未开启，敬请期待"
+                        )
+                    }
+                }
+
+                override fun onDetailCallBack(position: Int, obj: Any?) {
+                }
+            })
+            category2_rv!!.adapter = category2Adapter
+            sort_title_rv!!.adapter = SortTitleAdapter(it,object: ItemCallback{
+                override fun onItemCallback(position: Int, obj: Any?) {
+                    category2Adapter.removeAllData()
+                    category2Adapter.addAllData((obj as ProductSortBean).products)
+
+                }
+
+                override fun onDetailCallBack(position: Int, obj: Any?) {
+
+                }
+
+            })
+        })
+
         mainViewModel!!.getCategoryList(requireContext()).observe(
             requireActivity(),
             Observer<MutableList<MutableList<CategoryBean>>?> { categoryBeans ->
                 if (null == categoryBeans) return@Observer
                 for (list in categoryBeans) {
                     for (categoryBean in list) {
-                        category2Beans.add(categoryBean)
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.instance.isGasPublic = categoryBean.isPublic
                         }
@@ -411,54 +514,6 @@ class HomeFragmentNew
                     override fun onDetailCallBack(position: Int, obj: Any?) {}
                 })
                 category_rv!!.adapter = categoryAdapter
-
-                //TODO 需要接入后台数据
-                img_title_rv!!.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-                val ddd = arrayListOf<Any>()
-                ddd.add("")
-                ddd.add("")
-                ddd.add("")
-                img_title_rv!!.adapter = ImgTitleAdapter(ddd,object :ItemCallback{
-                    override fun onItemCallback(position: Int, obj: Any?) {
-                        ToastUtils.show("暂无数据")
-                    }
-
-                    override fun onDetailCallBack(position: Int, obj: Any?) {
-                    }
-
-                })
-
-                sort_title_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
-                val ccc = arrayListOf<Any>()
-                ccc.add("热门")
-                ccc.add("影音娱乐")
-                ccc.add("美食饮品")
-                ccc.add("生活服务")
-                ccc.add("口碑榜单")
-                category2_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
-                val category2Adapter = Category2Adapter(category2Beans, object : ItemCallback {
-                    override fun onItemCallback(position: Int, obj: Any?) {
-                    }
-
-                    override fun onDetailCallBack(position: Int, obj: Any?) {
-                    }
-                })
-                category2_rv!!.adapter = category2Adapter
-                    sort_title_rv!!.adapter = SortTitleAdapter(ccc,object: ItemCallback{
-                    override fun onItemCallback(position: Int, obj: Any?) {
-                        category2Adapter.removeAllData()
-                        for (index in 1..position+1) {
-                            category2Adapter.addAllData(category2Beans)
-                        }
-
-                    }
-
-                    override fun onDetailCallBack(position: Int, obj: Any?) {
-
-                    }
-
-                })
-
             })
 
     }

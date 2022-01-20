@@ -9,15 +9,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.model.PopNaviBean
 import com.kayu.utils.ItemCallback
 
 class ImgTitleAdapter(
-    private val dataList: MutableList<Any>?,
+    private val dataList: MutableList<PopNaviBean>?,
     private val callback: ItemCallback,
 ) : RecyclerView.Adapter<ImgTitleAdapter.ImgTitleHolder>() {
     @SuppressLint("NotifyDataSetChanged")
-    fun addAllData(dataList: MutableList<Any>?) {
+    fun addAllData(dataList: MutableList<PopNaviBean>?) {
         this.dataList?.addAll(dataList!!)
         notifyDataSetChanged()
     }
@@ -29,9 +31,9 @@ class ImgTitleAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ImgTitleHolder, i: Int) {
-
+        KWApplication.instance.loadImg(dataList!![i].logo, viewHolder.nameText)
         viewHolder.nameText.setOnClickListener {
-            callback.onItemCallback(i, dataList!![i])
+            callback.onItemCallback(i, dataList[i])
         }
     }
 
