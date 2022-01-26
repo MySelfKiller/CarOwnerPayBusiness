@@ -8,10 +8,6 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.amap.api.location.AMapLocationQualityReport
 import kotlin.jvm.Synchronized
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.BinaryBitmap
-import com.google.zxing.common.HybridBinarizer
-import com.google.zxing.common.GlobalHistogramBinarizer
 import java.lang.Exception
 
 class LocationManagerUtil private constructor(private val context: Context) {
@@ -29,9 +25,7 @@ class LocationManagerUtil private constructor(private val context: Context) {
                 context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             val network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-            return if (gps || network) {
-                true
-            } else false
+            return gps || network
         }
     var listener: LocationCallback? = null
     fun setLocationListener(listener: LocationCallback?) {

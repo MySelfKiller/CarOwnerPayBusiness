@@ -4,9 +4,7 @@ import android.R
 import android.app.Activity
 import android.content.Context
 import android.graphics.Point
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
-import kotlin.Throws
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
