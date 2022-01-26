@@ -118,7 +118,7 @@ android {
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
 //            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
             buildConfigField "String", "BASE_URL", '"https://www.ws101.cn/sslm/spv/"'  //正式环境
-//            buildConfigField "String", "BASE_URL", '"http://192.168.0.116:9090/"'  //测试环境
+//            buildConfigField "String", "BASE_URL", '"http://192.168.3.31:9090/sslm/spv/"'  //测试环境
 
         }
     }

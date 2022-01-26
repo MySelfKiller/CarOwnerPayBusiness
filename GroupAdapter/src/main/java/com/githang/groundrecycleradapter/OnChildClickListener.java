@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2018. Xi'an iRain IOT Technology service CO., Ltd (ShenZhen). All Rights Reserved.
- */
-
 package com.githang.groundrecycleradapter;
 
 import android.view.View;

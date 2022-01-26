@@ -20,7 +20,7 @@
         android:bottomRightRadius="@dimen/dp_10"/>
 
     <gradient
-    android:startColor="#E8F5FF"
+    android:startColor="#F2F9FF"
     android:endColor="#F6FBFF"
     android:angle="270"/>
 
