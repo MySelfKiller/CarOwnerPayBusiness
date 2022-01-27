@@ -341,18 +341,28 @@ class HomeFragmentNew
                         val intent = Intent(context, WebViewActivity::class.java)
                         val sb = StringBuilder()
                         sb.append(url)
-                        if (url.contains("?")) {
-                            sb.append("&token=")
-                        } else {
-                            sb.append("?token=")
+                        if (!popNaviBean.type.isNullOrEmpty()) {
+                            if (StringUtil.equals(popNaviBean.type, "KY_GAS")) {
+                                startActivity(Intent(context, GasStationListActivity::class.java))
+                            } else if (StringUtil.equals(popNaviBean.type, "KY_WASH")) {
+                                startActivity(Intent(context, CarWashListActivity::class.java))
+                            } else {
+                                if (StringUtil.equals(popNaviBean.type, "KY_H5")) {
+                                    if (url.contains("?")) {
+                                        sb.append("&token=")
+                                    } else {
+                                        sb.append("?token=")
+                                    }
+                                    sb.append(KWApplication.instance.token)
+                                    sb.append("&locationName=")
+                                    sb.append(cityName)
+                                    sb.append("&selectLocation=")
+                                    sb.append(longitude)
+                                    sb.append(",")
+                                    sb.append(latitude)
+                                }
+                            }
                         }
-                        sb.append(KWApplication.instance.token)
-                        sb.append("&locationName=")
-                        sb.append(cityName)
-                        sb.append("&selectLocation=")
-                        sb.append(longitude)
-                        sb.append(",")
-                        sb.append(latitude)
                         intent.putExtra("url", sb.toString())
                         intent.putExtra("from", "首页")
                         startActivity(intent)
@@ -372,12 +382,13 @@ class HomeFragmentNew
 
         })
 
-        mainViewModel!!.getProductSortList(requireContext()).observe(requireActivity(), {
+        mainViewModel!!.getProductSortList(requireContext()).observe(requireActivity()) {
             if (it == null) {
                 return@observe
             }
-            sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(),4)
-            category2_rv!!.layoutManager = StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL)
+            sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(), 4)
+            category2_rv!!.layoutManager =
+                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
             val category2Adapter = Category2Adapter(it[0].products, object : ItemCallback {
                 override fun onItemCallback(position: Int, obj: Any?) {
                     val product = obj as Product
@@ -415,7 +426,7 @@ class HomeFragmentNew
                 }
             })
             category2_rv!!.adapter = category2Adapter
-            sort_title_rv!!.adapter = SortTitleAdapter(it,object: ItemCallback{
+            sort_title_rv!!.adapter = SortTitleAdapter(it, object : ItemCallback {
                 override fun onItemCallback(position: Int, obj: Any?) {
                     category2Adapter.removeAllData()
                     category2Adapter.addAllData((obj as ProductSortBean).products)
@@ -427,7 +438,7 @@ class HomeFragmentNew
                 }
 
             })
-        })
+        }
 
         mainViewModel!!.getCategoryList(requireContext()).observe(
             requireActivity(),

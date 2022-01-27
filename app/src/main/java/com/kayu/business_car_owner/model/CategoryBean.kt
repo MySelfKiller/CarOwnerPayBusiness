@@ -8,29 +8,29 @@ class CategoryBean {
      * "href": null,
      * "title": "金融技术"
      */
-    var id //主键
+    val id //主键
             : Long = 0
 
-    var title //主键
+    val title //主键
             : String = ""
 
-    var icon //图标加载url
+    val icon //图标加载url
             : String = ""
 
-    var tag //小标签
+    val tag //小标签
             : String = ""
 
-    var remark //小标题
+    val remark //小标题
             : String = ""
 
-    var href //H5跳转链接
+    val href //H5跳转链接
             : String = ""
 
     //"type": "KY_H5"
 
-    var type //跳转类型
+    val type //跳转类型
             : String = ""
 
-    var isPublic //是否公开
+    val isPublic //是否公开
             : Int = 0
 }

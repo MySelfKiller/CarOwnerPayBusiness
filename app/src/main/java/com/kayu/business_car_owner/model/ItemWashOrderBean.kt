@@ -28,54 +28,54 @@ class ItemWashOrderBean {
      */
 
     @SerializedName("shopCode")
-    var shopCode: String = ""
+    val shopCode: String = ""
 
 
     @SerializedName("realAmount")
-    var realAmount: Double? = null
+    val realAmount: Double = 0.00
 
 
     @SerializedName("address")
-    var address: String = ""
+    val address: String = ""
 
 
     @SerializedName("latitude")
-    var latitude: String = ""
+    val latitude: String = ""
 
 
     @SerializedName("shopName")
-    var shopName: String = ""
+    val shopName: String = ""
 
 
     @SerializedName("state")
-    var state //状态筛选(暂定) 0:待支付 1:已支付待使用 2:已取消 3:已使用 4:退款中 5:已退款 6:支付失败、7:退款失败
+    val state //状态筛选(暂定) 0:待支付 1:已支付待使用 2:已取消 3:已使用 4:退款中 5:已退款 6:支付失败、7:退款失败
             : Int = -1
 
 
     @SerializedName("telephone")
-    var telephone: String = ""
+    val telephone: String = ""
 
 
     @SerializedName("id")
-    var id: Long? = null
+    val id: Long? = null
 
 
     @SerializedName("busTime")
-    var busTime: String = ""
+    val busTime: String = ""
 
 
     @SerializedName("serviceName")
-    var serviceName: String = ""
+    val serviceName: String = ""
 
 
     @SerializedName("doorPhotoUrl")
-    var doorPhotoUrl: String = ""
+    val doorPhotoUrl: String = ""
 
 
     @SerializedName("longitude")
-    var longitude: String = ""
+    val longitude: String = ""
 
 
     @SerializedName("surplusDay")
-    var surplusDay: Int = 0
+    val surplusDay: Int = 0
 }

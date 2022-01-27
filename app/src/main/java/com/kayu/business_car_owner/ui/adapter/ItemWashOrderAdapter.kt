@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.kayu.business_car_owner.R
+import com.kayu.utils.AppUtil
 import com.kayu.utils.ItemCallback
 
 class ItemWashOrderAdapter(
@@ -74,7 +75,7 @@ class ItemWashOrderAdapter(
                 else -> "暂无"
             }
             vh.order_state.text = orderState
-            vh.order_price.text = oilOrderData.realAmount.toString()
+            vh.order_price.text = AppUtil.getStringDouble(oilOrderData.realAmount)
             vh.wash_type.text = oilOrderData.serviceName.split("-".toRegex()).toTypedArray()[0]
             if (oilOrderData.state == 4 || oilOrderData.state == 6 || oilOrderData.state == 7) {
                 vh.open_time.visibility = View.GONE

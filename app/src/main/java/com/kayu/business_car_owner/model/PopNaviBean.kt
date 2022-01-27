@@ -1,9 +1,10 @@
 package com.kayu.business_car_owner.model
 
 data class PopNaviBean(
-    var logo : String,
-    var id :Int,
-    var tag : String,
-    var title : String,
-    var url : String,
+    val logo : String,
+    val id :Int,
+    val tag : String,
+    val title : String,
+    val url : String,
+    val type : String
 )

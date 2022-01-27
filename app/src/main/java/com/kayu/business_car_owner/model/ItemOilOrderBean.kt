@@ -5,67 +5,67 @@ import com.google.gson.annotations.SerializedName
 class ItemOilOrderBean {
 
     @SerializedName("id") //主键ID
-    var id: Long? = null
+    val id: Long = 0L
 
 
     @SerializedName("gasName")
-    var gasName //油站名称
-            : String? = null
+    val gasName //油站名称
+            : String = ""
 
 
     @SerializedName("orderNo")
-    var orderNo //订单号
-            : String? = null
+    val orderNo //订单号
+            : String = ""
 
 
     @SerializedName("payType")
-    var payType //支付方式
-            : String? = null
+    val payType //支付方式
+            : String = ""
 
 
     @SerializedName("oilNo")
-    var oilNo //油号
-            : String? = null
+    val oilNo //油号
+            : String = ""
 
 
     @SerializedName("gunNo")
-    var gunNo //枪号
-            : String? = null
+    val gunNo //枪号
+            : String = ""
 
 
     @SerializedName("totalAmt")
-    var totalAmt //订单总金额/元
-            : Double? = null
+    val totalAmt //订单总金额/元
+            : Double = 0.00
 
     @SerializedName("disAmt")
-    var disAmt //优惠金额/元
-            : Double? = null
+    val disAmt //优惠金额/元
+            : Double = 0.00
 
 
     @SerializedName("payAmt")
-    var payAmt //支付金额/元
-            : Double? = null
+    val payAmt //支付金额/元
+            : Double = 0.00
 
     @SerializedName("couponAmt")
-    var couponAmt //优惠券金额/元
-            : Double? = null
+    val couponAmt //优惠券金额/元
+            : Double = 0.00
 
 
     @SerializedName("createTime")
-    var createTime //创建时间
-            : String? = null
+    val createTime //创建时间
+            : String = ""
 
 
     @SerializedName("state")
-    var state //订单状态 0:未支付、1:已支付、2:已取消 3:已退款、4:待退款、5:退款失败
+    val state //订单状态 0:未支付、1:已支付、2:已取消 3:已退款、4:待退款、5:退款失败
             : Int? = null
 
     @SerializedName("liter")
-    var liter //加油量 单位（升）
-            : Int? = null
+    val liter //加油量 单位（升）
+            : Int = 0
 
 
     @SerializedName("qrCode")
-    var qrCode //订单二维码图片
-            : String? = null
+    val qrCode //订单二维码图片
+            : String = ""
 }

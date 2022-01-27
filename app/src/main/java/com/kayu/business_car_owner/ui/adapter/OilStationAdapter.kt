@@ -14,6 +14,7 @@ import com.kayu.business_car_owner.model.OilStationBean
 import com.kayu.utils.DoubleUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.kayu.business_car_owner.R
+import com.kayu.utils.AppUtil
 import com.kayu.utils.ItemCallback
 import java.util.ArrayList
 
@@ -74,12 +75,12 @@ class OilStationAdapter(
             vh.name.text = oilStationBean.gasName
             vh.location.text = oilStationBean.gasAddress
             vh.distance.setText(oilStationBean.distance.toString() + "km")
-            vh.oil_price.text = "￥" + oilStationBean.priceYfq
-            vh.oil_price_full.text = "￥" + oilStationBean.priceGun
+            vh.oil_price.text = "￥" + AppUtil.getStringDouble(oilStationBean.priceYfq)
+            vh.oil_price_full.text = "￥" + AppUtil.getStringDouble(oilStationBean.priceGun)
             vh.oil_rebate.text = oilStationBean.gunDiscount + "折"
             vh.oil_rebate.visibility = View.VISIBLE
             vh.oil_price_sub.text =
-                "降" + DoubleUtils.sub(oilStationBean.priceGun, oilStationBean.priceYfq) + "元"
+                "降" + AppUtil.getStringDouble(DoubleUtils.sub(oilStationBean.priceGun, oilStationBean.priceYfq)) + "元"
             vh.mView.setOnClickListener(object : NoMoreClickListener() {
                 override fun OnMoreClick(view: View) {
                     itemCallback.onItemCallback(i, oilStationBean)

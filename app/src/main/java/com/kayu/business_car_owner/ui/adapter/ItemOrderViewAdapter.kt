@@ -73,10 +73,9 @@ class ItemOrderViewAdapter(
             vh.pay_model.text = oilOrderData.payType
             vh.pay_time.text = oilOrderData.createTime
             vh.oil_info.text = oilOrderData.oilNo + "(" + oilOrderData.gunNo + "号枪)"
-            vh.full_price.text = oilOrderData.totalAmt.toString() //订单总金额
-            vh.rebate_price.text =
-                (oilOrderData.totalAmt!! - oilOrderData.payAmt!!).toString() //优惠金额
-            vh.sale_price.text = oilOrderData.payAmt.toString() //实际支付金额
+            vh.full_price.text = AppUtil.getStringDouble(oilOrderData.totalAmt) //订单总金额
+            vh.rebate_price.text = AppUtil.getStringDouble((oilOrderData.totalAmt - oilOrderData.payAmt)) //优惠金额
+            vh.sale_price.text = AppUtil.getStringDouble(oilOrderData.payAmt) //实际支付金额
             if (!StringUtil.isEmpty(oilOrderData.qrCode)) {
                 vh.qr_btn.visibility = View.VISIBLE
                 vh.qr_btn.setOnClickListener(object : NoMoreClickListener() {
