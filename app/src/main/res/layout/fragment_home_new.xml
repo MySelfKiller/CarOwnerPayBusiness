@@ -107,7 +107,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/dp_10"
-                                android:layout_marginBottom="@dimen/dp_10"
+                                android:layout_marginVertical="@dimen/dp_10"
                                 android:orientation="vertical"
                                 android:background="@drawable/home_product_bg_shape">
                                 <androidx.recyclerview.widget.RecyclerView
