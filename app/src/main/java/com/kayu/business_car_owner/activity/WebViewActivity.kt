@@ -440,7 +440,7 @@ class WebViewActivity : BaseActivity() {
                         e.printStackTrace()
                         ToastUtils.show("未安装相应的客户端")
                     }
-                    return false
+                    return true
                 }
             }
 

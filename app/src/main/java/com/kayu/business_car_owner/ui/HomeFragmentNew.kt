@@ -3,6 +3,7 @@ package com.kayu.business_car_owner.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,16 +12,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import com.flyco.tablayout.listener.CustomTabEntity
-import com.flyco.tablayout.TabEntity
-import com.flyco.tablayout.listener.OnTabSelectListener
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import androidx.viewpager.widget.PagerAdapter
-import com.kayu.business_car_owner.activity.MyPagerAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.kayu.business_car_owner.model.CategoryBean
 import com.kayu.business_car_owner.KWApplication
 import androidx.fragment.app.Fragment
@@ -30,13 +26,11 @@ import com.kayu.business_car_owner.activity.WebViewActivity
 import com.kayu.business_car_owner.activity.MainViewModel
 import com.youth.banner.Banner
 import com.kayu.business_car_owner.text_banner.TextBannerView
-import com.kayu.utils.view.AdaptiveHeightViewPager
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
-import com.flyco.tablayout.SegmentTabLayout
 import com.kayu.business_car_owner.activity.MessageActivity
 import com.kayu.utils.location.LocationManagerUtil
 import com.youth.banner.BannerConfig
@@ -46,16 +40,13 @@ import com.kayu.business_car_owner.activity.GasStationListActivity
 import com.kayu.business_car_owner.activity.CarWashListActivity
 import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
-import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.model.PopNaviBean
 import com.kayu.business_car_owner.model.Product
 import com.kayu.business_car_owner.model.ProductSortBean
-import com.kayu.utils.location.CoordinateTransformUtil
 import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
 import com.kayu.business_car_owner.ui.adapter.*
 import com.kayu.utils.*
-import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.LocationCallback
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import org.json.JSONException
@@ -227,14 +218,14 @@ class HomeFragmentNew
     private var hasShow = false
     private var hasClose = false
     private fun initView() {
-        mainViewModel!!.getRegDialogTip(requireContext()).observe(requireActivity(), { systemParam ->
+        mainViewModel!!.getRegDialogTip(requireContext()).observe(requireActivity()) { systemParam ->
             KWApplication.instance.regDialogTip = systemParam
             //KWApplication.getInstance().userRole == -2 &&
             if (null != KWApplication.instance.regDialogTip && KWApplication.instance.userRole == -2 && !hasShow) {
                 showApplyCardDialog(activity, context, navigation)
                 hasShow = true
             }
-        })
+        }
         mainViewModel!!.getNotifyNum(requireContext()).observe(requireActivity(), Observer { integer ->
             if (null == integer) return@Observer
             if (integer == 0) {
@@ -244,12 +235,11 @@ class HomeFragmentNew
             }
         })
         mainViewModel!!.getNotifyList(requireContext()).observe(
-            requireActivity(),
-            { strings -> //                List<String> hostBannerData = new ArrayList<>();
-                if (null != strings && strings.size > 0) {
-                    hostTextBanner!!.setDatas(strings)
-                }
-            })
+            requireActivity()) { strings -> //                List<String> hostBannerData = new ArrayList<>();
+            if (null != strings && strings.size > 0) {
+                hostTextBanner!!.setDatas(strings)
+            }
+        }
         mainViewModel!!.getBannerList(requireContext())
             .observe(requireActivity(), Observer { bannerBeans ->
                 if (null == bannerBeans) return@Observer
@@ -292,39 +282,20 @@ class HomeFragmentNew
                         KWApplication.instance.showRegDialog(requireContext())
                         return@OnBannerListener
                     }
-                    if (StringUtil.equals(bannerBeans[position].type, "KY_GAS")) {
-                        startActivity(Intent(context, GasStationListActivity::class.java))
-                    } else if (StringUtil.equals(bannerBeans[position].type, "KY_WASH")) {
-                        startActivity(Intent(context, CarWashListActivity::class.java))
-                    } else {
-                        if (!StringUtil.isEmpty(target)) {
-                            val intent = Intent(context, WebViewActivity::class.java)
-                            val sb = StringBuilder()
-                            sb.append(target)
-                            if (StringUtil.equals(bannerBeans[position].type, "KY_H5")) {
-                                if (target.contains("?")) {
-                                    sb.append("&token=")
-                                } else {
-                                    sb.append("?token=")
-                                }
-                                sb.append(KWApplication.instance.token)
-                                sb.append("&locationName=")
-                                sb.append(cityName)
-                                sb.append("&selectLocation=")
-                                sb.append(longitude)
-                                sb.append(",")
-                                sb.append(latitude)
+                    if (!bannerBeans[position].type.isNullOrEmpty()) {
+                        when {
+                            StringUtil.equals(bannerBeans[position].type, "KY_GAS") -> {
+                                startActivity(Intent(context, GasStationListActivity::class.java))
                             }
-                            intent.putExtra("url", sb.toString())
-                            intent.putExtra("from", "首页")
-                            startActivity(intent)
-                        } else {
-                            MessageDialog.show(
-                                (requireContext() as AppCompatActivity),
-                                "温馨提示",
-                                "功能未开启，敬请期待"
-                            )
+                            StringUtil.equals(bannerBeans[position].type, "KY_WASH") -> {
+                                startActivity(Intent(context, CarWashListActivity::class.java))
+                            }
+                            else -> {
+                                judgeURL2Jump(target,bannerBeans[position].type)
+                            }
                         }
+                    } else {
+                        judgeURL2Jump(target,null)
                     }
                 })
             })
@@ -337,41 +308,20 @@ class HomeFragmentNew
                 override fun onItemCallback(position: Int, obj: Any?) {
                     val popNaviBean = obj as PopNaviBean
                     val url = popNaviBean.url
-                    if (!StringUtil.isEmpty(url)) {
-                        val intent = Intent(context, WebViewActivity::class.java)
-                        val sb = StringBuilder()
-                        sb.append(url)
-                        if (!popNaviBean.type.isNullOrEmpty()) {
-                            if (StringUtil.equals(popNaviBean.type, "KY_GAS")) {
+                    if (!popNaviBean.type.isNullOrEmpty()) {
+                        when {
+                            StringUtil.equals(popNaviBean.type, "KY_GAS") -> {
                                 startActivity(Intent(context, GasStationListActivity::class.java))
-                            } else if (StringUtil.equals(popNaviBean.type, "KY_WASH")) {
+                            }
+                            StringUtil.equals(popNaviBean.type, "KY_WASH") -> {
                                 startActivity(Intent(context, CarWashListActivity::class.java))
-                            } else {
-                                if (StringUtil.equals(popNaviBean.type, "KY_H5")) {
-                                    if (url.contains("?")) {
-                                        sb.append("&token=")
-                                    } else {
-                                        sb.append("?token=")
-                                    }
-                                    sb.append(KWApplication.instance.token)
-                                    sb.append("&locationName=")
-                                    sb.append(cityName)
-                                    sb.append("&selectLocation=")
-                                    sb.append(longitude)
-                                    sb.append(",")
-                                    sb.append(latitude)
-                                }
+                            }
+                            else -> {
+                                judgeURL2Jump(url,popNaviBean.type)
                             }
                         }
-                        intent.putExtra("url", sb.toString())
-                        intent.putExtra("from", "首页")
-                        startActivity(intent)
                     } else {
-                        MessageDialog.show(
-                            (requireContext() as AppCompatActivity),
-                            "温馨提示",
-                            "功能未开启，敬请期待"
-                        )
+                        judgeURL2Jump(url,null)
                     }
                 }
 
@@ -388,7 +338,7 @@ class HomeFragmentNew
             }
             sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(), 4)
             category2_rv!!.layoutManager =
-                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+                StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL)
             val category2Adapter = Category2Adapter(it[0].products, object : ItemCallback {
                 override fun onItemCallback(position: Int, obj: Any?) {
                     val product = obj as Product
@@ -484,42 +434,22 @@ class HomeFragmentNew
                             return
                         }
                         val target = categoryBean.href
-                        if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
-                            startActivity(Intent(context, GasStationListActivity::class.java))
-                        } else if (StringUtil.equals(categoryBean.type, "KY_WASH")) {
-                            startActivity(Intent(context, CarWashListActivity::class.java))
-                        } else {
-                            if (!StringUtil.isEmpty(target)) {
-                                val intent = Intent(context, WebViewActivity::class.java)
-                                val sb = StringBuilder()
-                                sb.append(target)
-                                //                                sb.append("https://www.ky808.cn/carfriend/static/alone/demo.html"); //测试视屏广告链接
-                                if (StringUtil.equals(categoryBean.type, "KY_H5")) {
-                                    if (target.contains("?")) {
-                                        sb.append("&token=")
-                                    } else {
-                                        sb.append("?token=")
-                                    }
-                                    sb.append(KWApplication.instance.token)
-                                    sb.append("&locationName=")
-                                    sb.append(cityName)
-                                    sb.append("&selectLocation=")
-                                    sb.append(longitude)
-                                    sb.append(",")
-                                    sb.append(latitude)
+                        if (!categoryBean.type.isNullOrEmpty()) {
+                            when {
+                                StringUtil.equals(categoryBean.type, "KY_GAS") -> {
+                                    startActivity(Intent(context, GasStationListActivity::class.java))
                                 }
-                                //                                intent.putExtra("url", "http://192.168.3.32:8080/#/index");
-                                intent.putExtra("url", sb.toString())
-                                intent.putExtra("from", "首页")
-                                startActivity(intent)
-                            } else {
-                                MessageDialog.show(
-                                    (requireContext() as AppCompatActivity),
-                                    "温馨提示",
-                                    "功能未开启，敬请期待"
-                                )
+                                StringUtil.equals(categoryBean.type, "KY_WASH") -> {
+                                    startActivity(Intent(context, CarWashListActivity::class.java))
+                                }
+                                else -> {
+                                    judgeURL2Jump(target,categoryBean.type)
+                                }
                             }
+                        } else {
+                            judgeURL2Jump(target,null)
                         }
+
                     }
 
                     override fun onDetailCallBack(position: Int, obj: Any?) {}
@@ -527,6 +457,42 @@ class HomeFragmentNew
                 category_rv!!.adapter = categoryAdapter
             })
 
+    }
+
+    /**
+     *验证url并调整相应的activity
+     */
+    private fun judgeURL2Jump(url:String?, type: String?) {
+        if (!url.isNullOrEmpty()) {
+            val intent = Intent(context, WebViewActivity::class.java)
+            val sb = StringBuilder()
+            sb.append(url)
+            if (!type.isNullOrEmpty()) {
+                if (StringUtil.equals(type, "KY_H5")) {
+                    if (url.contains("?")) {
+                        sb.append("&token=")
+                    } else {
+                        sb.append("?token=")
+                    }
+                    sb.append(KWApplication.instance.token)
+                    sb.append("&locationName=")
+                    sb.append(cityName)
+                    sb.append("&selectLocation=")
+                    sb.append(longitude)
+                    sb.append(",")
+                    sb.append(latitude)
+                }
+            }
+            intent.putExtra("url", sb.toString())
+            intent.putExtra("from", "首页")
+            startActivity(intent)
+        } else {
+            MessageDialog.show(
+                (requireContext() as AppCompatActivity),
+                "温馨提示",
+                "功能未开启，敬请期待"
+            )
+        }
     }
 
     private var latitude = 0.0

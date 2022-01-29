@@ -295,9 +295,8 @@ object ReqUtil {
     init {
 //        OkHttpClient. = new OkHttpClient.Builder();
         //请求超时设置
-        headerMap["terminal"] = "app"
+        headerMap["terminal"] = "AndroidClient"
         headerMap["Referer"] = HttpConfig.HOST
-        Referer@ http@ //192.168.0.112:8081/
         httpClient = OkHttpManager.httpClient
     }
 }

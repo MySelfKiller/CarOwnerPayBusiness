@@ -8,13 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="@dimen/dp_8"
         android:layout_marginHorizontal="@dimen/dp_4">
         <TextView
             android:id="@+id/item_type_tv"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_32"
+            android:layout_height="@dimen/dp_28"
             android:text="热门"
             android:textColor="@color/black1"
             android:ellipsize="middle"
