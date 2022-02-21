@@ -42,8 +42,6 @@ class SetPasswordActivity constructor() : BaseActivity() {
         isSetPwd = intent.getBooleanExtra("isSetPwd", false)
 
         //标题栏
-        val title_lay: LinearLayout = findViewById(R.id.title_lay)
-        //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
         val title_name: TextView = findViewById(R.id.title_name_tv)
         title_name.setText(title)
         val back_lay: LinearLayout = findViewById(R.id.title_back_btu)

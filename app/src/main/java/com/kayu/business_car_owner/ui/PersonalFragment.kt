@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
+import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
 import com.kongzue.dialog.v3.TipGifDialog
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -55,6 +56,7 @@ class PersonalFragment : Fragment() {
     //    private ImageView user_card_bg;
     private var income_lay: LinearLayout? = null
     private var user_expAmt: TextView? = null
+    private var user_reacharge: TextView? = null
     private var user_rewad: TextView? = null
     private var category_rv: RecyclerView? = null
     override fun onCreateView(
@@ -75,6 +77,7 @@ class PersonalFragment : Fragment() {
         user_name = view.findViewById(R.id.personal_user_name)
         //累计节省
         user_expAmt = view.findViewById(R.id.personal_user_expAmt)
+        user_reacharge = view.findViewById(R.id.personal_recharge)
         explain_content = view.findViewById(R.id.personal_explain_content)
 
         //收益
@@ -255,6 +258,37 @@ class PersonalFragment : Fragment() {
                             val json3 = jsonObject.optJSONObject("3")
                             tipStr = json3.getString("tip")
                             btnStr = json3.getString("btn")
+                        }
+
+                        if ( !StringUtil.isEmpty(jsonObject.getString("name"))) {
+                            user_reacharge?.text = jsonObject.getString("name")
+                            user_reacharge?.setOnClickListener(object : NoMoreClickListener() {
+                                override fun OnMoreClick(view: View) {
+                                    val target = jsonObject.getString("url")
+                                    if (StringUtil.isEmpty(target)) {
+                                        ToastUtils.show("链接不存在！")
+                                        return
+                                    }
+                                    val jumpUrl = StringBuilder().append(target)
+                                    if (target.contains("?")) {
+                                        jumpUrl.append("&token=")
+                                    } else {
+                                        jumpUrl.append("?token=")
+                                    }
+                                    val randomNum = System.currentTimeMillis()
+                                    jumpUrl.append(KWApplication.instance.token).append("&").append(randomNum)
+                                    val intent = Intent(context, WebViewActivity::class.java)
+                                    intent.putExtra("url", jumpUrl.toString())
+                                    requireActivity().startActivity(intent)
+                                }
+
+                                override fun OnMoreErrorClick() {
+                                }
+
+                            })
+                            user_reacharge?.visibility = View.VISIBLE
+                        } else {
+                            user_reacharge?.visibility = View.GONE
                         }
                         user_tip!!.text = tipStr
                         web_info_tv!!.text = btnStr
