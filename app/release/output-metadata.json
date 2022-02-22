@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.kayu.business_car_owner",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 3,
+      "versionName": "1.0.2",
+      "outputFile": "CarOwnerBusiness_1.0.2_release_202202221645.apk"
+    }
+  ],
+  "elementType": "File"
+}

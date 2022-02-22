@@ -259,37 +259,50 @@ class PersonalFragment : Fragment() {
                             tipStr = json3.getString("tip")
                             btnStr = json3.getString("btn")
                         }
+                        mainViewModel!!.getSysParameter(requireContext(), 10)
+                            .observe(requireActivity(), Observer { systemParam ->
+                                if (null == systemParam) return@Observer
+                                val isOnline = systemParam.blank1
+                                //todo isOnline 是判断正在上线审核标志
+                                if (!StringUtil.equals(isOnline, "isOnline")) {
+                                    if (!StringUtil.isEmpty(jsonObject.getString("name"))) {
+                                        user_reacharge?.text = jsonObject.getString("name")
+                                        user_reacharge?.setOnClickListener(object :
+                                            NoMoreClickListener() {
+                                            override fun OnMoreClick(view: View) {
+                                                val target = jsonObject.getString("url")
+                                                if (StringUtil.isEmpty(target)) {
+                                                    ToastUtils.show("链接不存在！")
+                                                    return
+                                                }
+                                                val jumpUrl = StringBuilder().append(target)
+                                                if (target.contains("?")) {
+                                                    jumpUrl.append("&token=")
+                                                } else {
+                                                    jumpUrl.append("?token=")
+                                                }
+                                                val randomNum = System.currentTimeMillis()
+                                                jumpUrl.append(KWApplication.instance.token)
+                                                    .append("&").append(randomNum)
+                                                val intent =
+                                                    Intent(context, WebViewActivity::class.java)
+                                                intent.putExtra("url", jumpUrl.toString())
+                                                requireActivity().startActivity(intent)
+                                            }
 
-                        if ( !StringUtil.isEmpty(jsonObject.getString("name"))) {
-                            user_reacharge?.text = jsonObject.getString("name")
-                            user_reacharge?.setOnClickListener(object : NoMoreClickListener() {
-                                override fun OnMoreClick(view: View) {
-                                    val target = jsonObject.getString("url")
-                                    if (StringUtil.isEmpty(target)) {
-                                        ToastUtils.show("链接不存在！")
-                                        return
-                                    }
-                                    val jumpUrl = StringBuilder().append(target)
-                                    if (target.contains("?")) {
-                                        jumpUrl.append("&token=")
+                                            override fun OnMoreErrorClick() {
+                                            }
+
+                                        })
+                                        user_reacharge?.visibility = View.VISIBLE
                                     } else {
-                                        jumpUrl.append("?token=")
+                                        user_reacharge?.visibility = View.GONE
                                     }
-                                    val randomNum = System.currentTimeMillis()
-                                    jumpUrl.append(KWApplication.instance.token).append("&").append(randomNum)
-                                    val intent = Intent(context, WebViewActivity::class.java)
-                                    intent.putExtra("url", jumpUrl.toString())
-                                    requireActivity().startActivity(intent)
+                                }else {
+                                    user_reacharge?.visibility = View.GONE
                                 }
-
-                                override fun OnMoreErrorClick() {
-                                }
-
                             })
-                            user_reacharge?.visibility = View.VISIBLE
-                        } else {
-                            user_reacharge?.visibility = View.GONE
-                        }
+
                         user_tip!!.text = tipStr
                         web_info_tv!!.text = btnStr
                     } catch (e: JSONException) {
