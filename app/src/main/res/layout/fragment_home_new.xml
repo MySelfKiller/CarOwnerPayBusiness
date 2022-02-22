@@ -96,14 +96,21 @@
                                     app:setTextSize="@dimen/sp_11" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
-
+                            <com.kayu.utils.view.AdaptiveHeightViewPager
+                                android:id="@+id/list_vp"
+                                android:visibility="gone"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dp_200" />
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/home_img_title_rv"
+                                android:visibility="visible"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/dp_5"/>
 
                             <LinearLayout
+                                android:id="@+id/home_child_lay"
+                                android:visibility="visible"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/dp_10"
@@ -223,12 +230,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-<!--        <com.scwang.smart.refresh.footer.ClassicsFooter-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:srlAccentColor="@color/black"-->
-<!--            app:srlClassicsSpinnerStyle="FixedBehind"-->
-<!--            app:srlPrimaryColor="@color/white" />-->
+        <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlAccentColor="@color/black"
+            app:srlClassicsSpinnerStyle="FixedBehind"
+            app:srlPrimaryColor="@color/white" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 

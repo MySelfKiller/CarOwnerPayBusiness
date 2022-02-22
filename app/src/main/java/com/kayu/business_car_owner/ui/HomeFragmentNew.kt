@@ -3,7 +3,6 @@ package com.kayu.business_car_owner.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
@@ -22,32 +20,32 @@ import com.kayu.business_car_owner.KWApplication
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.kayu.business_car_owner.activity.WebViewActivity
-import com.kayu.business_car_owner.activity.MainViewModel
 import com.youth.banner.Banner
 import com.kayu.business_car_owner.text_banner.TextBannerView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.viewpager.widget.PagerAdapter
 import com.amap.api.location.AMapLocation
-import com.kayu.business_car_owner.activity.MessageActivity
 import com.kayu.utils.location.LocationManagerUtil
 import com.youth.banner.BannerConfig
-import com.kayu.business_car_owner.activity.BannerImageLoader
 import com.youth.banner.listener.OnBannerListener
-import com.kayu.business_car_owner.activity.GasStationListActivity
-import com.kayu.business_car_owner.activity.CarWashListActivity
 import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.activity.*
 import com.kayu.business_car_owner.model.PopNaviBean
 import com.kayu.business_car_owner.model.Product
 import com.kayu.business_car_owner.model.ProductSortBean
 import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
 import com.kayu.business_car_owner.ui.adapter.*
 import com.kayu.utils.*
+import com.kayu.utils.callback.Callback
+import com.kayu.utils.location.CoordinateTransformUtil
 import com.kayu.utils.location.LocationCallback
+import com.kayu.utils.view.AdaptiveHeightViewPager
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import org.json.JSONException
 import org.json.JSONObject
@@ -69,6 +67,31 @@ class HomeFragmentNew
     private var location_tv: TextView? = null
     private var notify_show: TextView? = null
     private var title_lay_bg: LinearLayout? = null
+    private var home_child_lay: LinearLayout? = null
+    private var pageAdapter: PagerAdapter? = null
+    private var mViewPager: AdaptiveHeightViewPager? = null
+    private var mFragments = ArrayList<Fragment>()
+    private var isOnline = ""
+    var isLoadmore = false
+    var isFirstLoad = true
+//    private var fragIndex = 0
+
+    private val callback: Callback = object : Callback {
+        override fun onSuccess() {
+            if (isRefresh) {
+                refreshLayout!!.finishRefresh()
+                isRefresh = false
+            }
+            if (isLoadmore) {
+                refreshLayout!!.finishLoadMore()
+                isLoadmore = false
+            }
+        }
+
+        override fun onError() {
+            pageIndex = 1
+        }
+    }
     private var scrollView: FadingScrollView? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,14 +122,33 @@ class HomeFragmentNew
         scrollView?.setFadingView(title_lay_bg)
         scrollView?.setFadingHeightView(banner)
         category_rv = view.findViewById(R.id.home_category_rv)
+        mViewPager = view.findViewById(R.id.list_vp)
+        home_child_lay = view.findViewById(R.id.home_child_lay)
         img_title_rv = view.findViewById(R.id.home_img_title_rv)
         sort_title_rv = view.findViewById(R.id.home_sort_title_rv)
         category2_rv = view.findViewById(R.id.home_category2_rv)
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner)
         refreshLayout = view.findViewById<View>(R.id.refreshLayout) as RefreshLayout
         //        refreshLayout.setEnableNestedScroll(false);
-        refreshLayout!!.setEnableAutoLoadMore(false)
-        refreshLayout!!.setEnableLoadMore(false)
+        mFragments.add(HomeCarWashFragment(mViewPager, 0, callback))
+        pageAdapter = MyPagerAdapter(childFragmentManager, mFragments)
+
+        mViewPager?.setAdapter(pageAdapter)
+        mViewPager?.setOffscreenPageLimit(2)
+        mViewPager?.addOnPageChangeListener(object : OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                mViewPager?.resetHeight(position)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
         refreshLayout!!.setEnableLoadMoreWhenContentNotFull(true) //是否在列表不满一页时候开启上拉加载功能
         refreshLayout!!.setEnableOverScrollBounce(true) //是否启用越界回弹
         refreshLayout!!.setEnableOverScrollDrag(true)
@@ -131,7 +173,7 @@ class HomeFragmentNew
                 cityName = location.city
                 location_tv?.setText(cityName)
                 isHasLocation = true
-                if (!hasAutoRefresh) {
+                if (!hasAutoRefresh ) {
 //                    LogUtil.e("HomeFragment----","----onLocationChanged--- hasAutoRefresh----" );
                     isRefresh = true
                     pageIndex = 1
@@ -209,6 +251,118 @@ class HomeFragmentNew
                 editor.putString(Constants.system_args, systemParam.content)
                 editor.apply()
                 editor.commit()
+                //todo 上线应用商店审核作的判断
+                isOnline = systemParam.blank1
+                if (StringUtil.equals(isOnline, "isOnline")) {
+                    refreshLayout!!.setEnableAutoLoadMore(true)
+                    refreshLayout!!.setEnableLoadMore(true)
+                    refreshLayout!!.setOnLoadMoreListener(OnLoadMoreListener {
+                        if (isRefresh || isLoadmore) return@OnLoadMoreListener
+                        isLoadmore = true
+                        pageIndex = pageIndex + 1
+                        loadChildData()
+                    })
+                    mViewPager?.visibility = View.VISIBLE
+                    home_child_lay?.visibility = View.GONE
+                    img_title_rv?.visibility = View.GONE
+                    loadChildData()
+                } else {
+                    refreshLayout!!.setEnableAutoLoadMore(false)
+                    refreshLayout!!.setEnableLoadMore(false)
+                    mViewPager?.visibility = View.GONE
+                    home_child_lay?.visibility = View.VISIBLE
+                    img_title_rv?.visibility = View.VISIBLE
+                    mainViewModel!!.getPopNaviList(requireContext()).observe(requireActivity(), Observer<MutableList<PopNaviBean>?> { popNaviBeanlist->
+                        if (popNaviBeanlist == null) {
+                            return@Observer
+                        }
+                        img_title_rv!!.layoutManager = GridLayoutManager(requireContext(),3)
+                        img_title_rv!!.adapter = ImgTitleAdapter(popNaviBeanlist,object :ItemCallback{
+                            override fun onItemCallback(position: Int, obj: Any?) {
+                                val popNaviBean = obj as PopNaviBean
+                                val url = popNaviBean.url
+                                if (!popNaviBean.type.isNullOrEmpty()) {
+                                    when {
+                                        StringUtil.equals(popNaviBean.type, "KY_GAS") -> {
+                                            startActivity(Intent(context, GasStationListActivity::class.java))
+                                        }
+                                        StringUtil.equals(popNaviBean.type, "KY_WASH") -> {
+                                            startActivity(Intent(context, CarWashListActivity::class.java))
+                                        }
+                                        else -> {
+                                            judgeURL2Jump(url,popNaviBean.type)
+                                        }
+                                    }
+                                } else {
+                                    judgeURL2Jump(url,null)
+                                }
+                            }
+
+                            override fun onDetailCallBack(position: Int, obj: Any?) {
+                            }
+
+                        })
+
+                    })
+
+                    mainViewModel!!.getProductSortList(requireContext()).observe(requireActivity()) {
+                        if (it == null) {
+                            return@observe
+                        }
+                        sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(), 4)
+                        category2_rv!!.layoutManager =
+                            StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL)
+                        val category2Adapter = Category2Adapter(it[0].products, object : ItemCallback {
+                            override fun onItemCallback(position: Int, obj: Any?) {
+                                val product = obj as Product
+                                val url = product.link
+                                if (!StringUtil.isEmpty(url)) {
+                                    val intent = Intent(context, WebViewActivity::class.java)
+                                    val sb = StringBuilder()
+                                    sb.append(url)
+                                    if (url.contains("?")) {
+                                        sb.append("&token=")
+                                    } else {
+                                        sb.append("?token=")
+                                    }
+                                    sb.append(KWApplication.instance.token)
+                                    sb.append("&id=").append(product.id)
+                                    sb.append("&locationName=")
+                                    sb.append(cityName)
+                                    sb.append("&selectLocation=")
+                                    sb.append(longitude)
+                                    sb.append(",")
+                                    sb.append(latitude)
+                                    intent.putExtra("url", sb.toString())
+                                    intent.putExtra("from", "首页")
+                                    startActivity(intent)
+                                } else {
+                                    MessageDialog.show(
+                                        (requireContext() as AppCompatActivity),
+                                        "温馨提示",
+                                        "功能未开启，敬请期待"
+                                    )
+                                }
+                            }
+
+                            override fun onDetailCallBack(position: Int, obj: Any?) {
+                            }
+                        })
+                        category2_rv!!.adapter = category2Adapter
+                        sort_title_rv!!.adapter = SortTitleAdapter(it, object : ItemCallback {
+                            override fun onItemCallback(position: Int, obj: Any?) {
+                                category2Adapter.removeAllData()
+                                category2Adapter.addAllData((obj as ProductSortBean).products)
+
+                            }
+
+                            override fun onDetailCallBack(position: Int, obj: Any?) {
+
+                            }
+
+                        })
+                    }
+                }
             })
         if (isRefresh) {
             refreshLayout!!.finishRefresh()
@@ -299,96 +453,6 @@ class HomeFragmentNew
                     }
                 })
             })
-        mainViewModel!!.getPopNaviList(requireContext()).observe(requireActivity(), Observer<MutableList<PopNaviBean>?> { popNaviBeanlist->
-            if (popNaviBeanlist == null) {
-                return@Observer
-            }
-            img_title_rv!!.layoutManager = GridLayoutManager(requireContext(),3)
-            img_title_rv!!.adapter = ImgTitleAdapter(popNaviBeanlist,object :ItemCallback{
-                override fun onItemCallback(position: Int, obj: Any?) {
-                    val popNaviBean = obj as PopNaviBean
-                    val url = popNaviBean.url
-                    if (!popNaviBean.type.isNullOrEmpty()) {
-                        when {
-                            StringUtil.equals(popNaviBean.type, "KY_GAS") -> {
-                                startActivity(Intent(context, GasStationListActivity::class.java))
-                            }
-                            StringUtil.equals(popNaviBean.type, "KY_WASH") -> {
-                                startActivity(Intent(context, CarWashListActivity::class.java))
-                            }
-                            else -> {
-                                judgeURL2Jump(url,popNaviBean.type)
-                            }
-                        }
-                    } else {
-                        judgeURL2Jump(url,null)
-                    }
-                }
-
-                override fun onDetailCallBack(position: Int, obj: Any?) {
-                }
-
-            })
-
-        })
-
-        mainViewModel!!.getProductSortList(requireContext()).observe(requireActivity()) {
-            if (it == null) {
-                return@observe
-            }
-            sort_title_rv!!.layoutManager = GridLayoutManager(requireContext(), 4)
-            category2_rv!!.layoutManager =
-                StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL)
-            val category2Adapter = Category2Adapter(it[0].products, object : ItemCallback {
-                override fun onItemCallback(position: Int, obj: Any?) {
-                    val product = obj as Product
-                    val url = product.link
-                    if (!StringUtil.isEmpty(url)) {
-                        val intent = Intent(context, WebViewActivity::class.java)
-                        val sb = StringBuilder()
-                        sb.append(url)
-                        if (url.contains("?")) {
-                            sb.append("&token=")
-                        } else {
-                            sb.append("?token=")
-                        }
-                        sb.append(KWApplication.instance.token)
-                        sb.append("&id=").append(product.id)
-                        sb.append("&locationName=")
-                        sb.append(cityName)
-                        sb.append("&selectLocation=")
-                        sb.append(longitude)
-                        sb.append(",")
-                        sb.append(latitude)
-                        intent.putExtra("url", sb.toString())
-                        intent.putExtra("from", "首页")
-                        startActivity(intent)
-                    } else {
-                        MessageDialog.show(
-                            (requireContext() as AppCompatActivity),
-                            "温馨提示",
-                            "功能未开启，敬请期待"
-                        )
-                    }
-                }
-
-                override fun onDetailCallBack(position: Int, obj: Any?) {
-                }
-            })
-            category2_rv!!.adapter = category2Adapter
-            sort_title_rv!!.adapter = SortTitleAdapter(it, object : ItemCallback {
-                override fun onItemCallback(position: Int, obj: Any?) {
-                    category2Adapter.removeAllData()
-                    category2Adapter.addAllData((obj as ProductSortBean).products)
-
-                }
-
-                override fun onDetailCallBack(position: Int, obj: Any?) {
-
-                }
-
-            })
-        }
 
         mainViewModel!!.getCategoryList(requireContext()).observe(
             requireActivity(),
@@ -494,6 +558,21 @@ class HomeFragmentNew
             )
         }
     }
+
+    private fun loadChildData() {
+        var homeCarWashFragment = mFragments[0] as HomeCarWashFragment
+        val bddfsdfs = CoordinateTransformUtil.gcj02tobd09(longitude, latitude)
+        homeCarWashFragment.reqData(
+            refreshLayout,
+            pageIndex,
+            isRefresh,
+            isLoadmore,
+            bddfsdfs[1],
+            bddfsdfs[0],
+            cityName
+        )
+    }
+
 
     private var latitude = 0.0
     private var longitude = 0.0

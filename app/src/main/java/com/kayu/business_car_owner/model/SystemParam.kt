@@ -67,7 +67,7 @@ class SystemParam {
     var force: String = ""
 
     @SerializedName("blank1")
-    var blank1: Any? = null
+    var blank1: String = ""
 
     @SerializedName("blank2")
     var blank2: Any? = null
