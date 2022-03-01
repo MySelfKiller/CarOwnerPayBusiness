@@ -29,7 +29,7 @@ import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.activity.login.LoginAutoActivity
 import com.kayu.utils.*
 
-class SettingsActivity constructor() : BaseActivity() {
+class SettingsActivity : BaseActivity() {
     private var app_version: TextView? = null
     private var app_new_version: TextView? = null
     private var sign_out: Button? = null

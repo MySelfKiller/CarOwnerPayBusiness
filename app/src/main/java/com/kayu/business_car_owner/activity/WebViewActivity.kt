@@ -405,14 +405,14 @@ class WebViewActivity : BaseActivity() {
 
     //                view.loadUrl(url);
                 if (url.startsWith("http:") || url.startsWith("https:")) {
-                    if ((url == HttpConfig.CLOSE_WEB_VIEW)) {
-                        onBackPressed()
-                        return true
+                    return if ((url == HttpConfig.CLOSE_WEB_VIEW)|| url == HttpConfig.CLOSE_WEB_VIEW1) {
+                        this@WebViewActivity.finish()
+                        true
                     } else {
                         headMap.put("Referer", lastOpenUrl)
                         view.loadUrl(url, headMap)
                         lastOpenUrl = url
-                        return false
+                        false
                     }
                 } else {
                     try {

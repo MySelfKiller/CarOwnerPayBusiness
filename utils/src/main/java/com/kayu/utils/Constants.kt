@@ -47,5 +47,5 @@ object Constants {
     const val FLAG_LOAN_BANNER = "loanBanner"
     const val FLAG_ACTIVITY = "activity"
     const val BASE_ID = 1100000
-    const val WX_APP_ID = "wxa0cc46db3c2c4aa4"
+    const val WX_APP_ID = "wx5a7ad977455126cc"
 }

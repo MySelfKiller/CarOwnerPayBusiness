@@ -3,15 +3,15 @@ package com.kayu.business_car_owner.wxapi
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.tencent.mm.opensdk.openapi.IWXAPI
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.tencent.mm.opensdk.modelmsg.SendAuth
-import com.tencent.mm.opensdk.modelbase.BaseResp
-import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
-import com.tencent.mm.opensdk.modelbase.BaseReq
-import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.kayu.utils.*
-import java.lang.Exception
+import com.tencent.mm.opensdk.constants.ConstantsAPI
+import com.tencent.mm.opensdk.modelbase.BaseReq
+import com.tencent.mm.opensdk.modelbase.BaseResp
+import com.tencent.mm.opensdk.modelmsg.SendAuth
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
+
 
 class WXPayEntryActivity : Activity(), IWXAPIEventHandler {
     private var api: IWXAPI? = null
@@ -44,21 +44,23 @@ class WXPayEntryActivity : Activity(), IWXAPIEventHandler {
 
     override fun onReq(baseReq: BaseReq) {}
     override fun onResp(baseResp: BaseResp) {
-        val intent: Intent = Intent(WXShare.Companion.ACTION_SHARE_RESPONSE)
+        val intent = Intent(WXShare.ACTION_SHARE_RESPONSE)
         //        if(Build.VERSION.SDK_INT >= 26){
 //            intent.addFlags(0x01000000);
 //        }
         if (baseResp is SendAuth.Resp) {
             val code = baseResp.code //需要转换一下才可以
-            intent.action = WXShare.Companion.TYPE_LOGIN
-            intent.putExtra(WXShare.Companion.EXTRA_RESULT, code)
+            intent.action = WXShare.TYPE_LOGIN
+            intent.putExtra(WXShare.EXTRA_RESULT, code)
         } else {
             if (baseResp.type == ConstantsAPI.COMMAND_SENDAUTH) {
-                intent.action = WXShare.Companion.TYPE_SHARE
+                intent.action = WXShare.TYPE_SHARE
             } else if (baseResp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
-                intent.action = WXShare.Companion.TYPE_PAY
+                intent.action = WXShare.TYPE_PAY
+            }else if (baseResp.type == ConstantsAPI.COMMAND_LAUNCH_WX_MINIPROGRAM) {
+                intent.action = WXShare.TYPE_OPEN_MINIPROGRAM
             }
-            intent.putExtra(WXShare.Companion.EXTRA_RESULT, WXShare.Response(baseResp))
+            intent.putExtra(WXShare.EXTRA_RESULT, WXShare.Response(baseResp))
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         finish()

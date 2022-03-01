@@ -14,6 +14,7 @@ object HttpConfig {
     const val INTERFACE_SET_PASSWORD = "" //设置密码
     const val INTERFACE_RESET_PASSWORD = "" //重置密码
     const val CLOSE_WEB_VIEW = "https://www.ky808.cn/close"
+    const val CLOSE_WEB_VIEW1 = "https://www.kakayuy.com/close"
     const val INTERFACE_GET_CATEGORY = "api/v1/nav/list" //获取首页项目类别列表
     const val INTERFACE_GET_FILTER = "api/v1/gas/getfilter" //获取加油站条件
     const val INTERFACE_GET_BANNER = "api/v1/banner/list" //获取首页Banner列表

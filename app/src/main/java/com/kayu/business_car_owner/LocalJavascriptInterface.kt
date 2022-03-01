@@ -7,21 +7,22 @@ import android.os.Handler
 import android.view.View
 import android.webkit.JavascriptInterface
 import androidx.appcompat.app.AppCompatActivity
-import com.kayu.business_car_owner.wxapi.WXShare
-import com.kayu.utils.callback.ImageCallback
-import com.kongzue.dialog.v3.MessageDialog
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kongzue.dialog.v3.TipGifDialog
-import com.kayu.business_car_owner.model.WXSharedBean
-import com.kayu.business_car_owner.activity.BaseActivity.PermissionCallback
-import com.kayu.utils.permission.EasyPermissions
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
 import com.kayu.business_car_owner.activity.*
+import com.kayu.business_car_owner.activity.BaseActivity.PermissionCallback
+import com.kayu.business_car_owner.model.WXSharedBean
+import com.kayu.business_car_owner.wxapi.WXShare
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
+import com.kayu.utils.callback.ImageCallback
+import com.kayu.utils.permission.EasyPermissions
+import com.kayu.utils.permission.EasyPermissions.DialogCallback
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
+import com.kongzue.dialog.util.BaseDialog
+import com.kongzue.dialog.v3.MessageDialog
+import com.kongzue.dialog.v3.TipGifDialog
 import org.json.JSONException
 import org.json.JSONObject
+
 
 class LocalJavascriptInterface constructor(
     private val mContext: Context,
@@ -91,6 +92,14 @@ class LocalJavascriptInterface constructor(
 
                 public override fun onError() {}
             })
+    }
+
+    @JavascriptInterface
+    fun openAndMiniProgram(userName: String?,path:String?) {
+        if (userName.isNullOrEmpty() || path.isNullOrEmpty())
+            return
+        val wxShare =  WXShare(mContext)
+        wxShare.openMiniProgram(userName,path)
     }
 
     @JavascriptInterface

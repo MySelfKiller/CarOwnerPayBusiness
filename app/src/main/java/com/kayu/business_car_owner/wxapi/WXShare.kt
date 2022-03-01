@@ -8,25 +8,19 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Parcel
 import android.os.Parcelable
-import com.tencent.mm.opensdk.openapi.IWXAPI
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hjq.toast.ToastUtils
-import com.tencent.mm.opensdk.modelpay.PayReq
-import com.tencent.mm.opensdk.modelmsg.SendAuth
-import com.tencent.mm.opensdk.modelmsg.WXTextObject
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
-import com.tencent.mm.opensdk.modelmsg.WXImageObject
-import com.tencent.mm.opensdk.modelmsg.WXMusicObject
-import com.tencent.mm.opensdk.modelmsg.WXVideoObject
-import com.tencent.mm.opensdk.modelmsg.WXWebpageObject
-import com.tencent.mm.opensdk.modelbase.BaseResp
-import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.kayu.business_car_owner.R
 import com.kayu.utils.*
+import com.tencent.mm.opensdk.modelbase.BaseResp
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
+import com.tencent.mm.opensdk.modelmsg.*
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.lang.Exception
+
 
 class WXShare(context: Context) {
     private val context: Context
@@ -41,6 +35,7 @@ class WXShare(context: Context) {
         filter.addAction(TYPE_LOGIN)
         filter.addAction(TYPE_PAY)
         filter.addAction(TYPE_SHARE)
+        filter.addAction(TYPE_OPEN_MINIPROGRAM)
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver!!, filter)
         //        context.registerReceiver(receiver, filter);
         return this
@@ -99,6 +94,15 @@ class WXShare(context: Context) {
         return this
     }
 
+    fun openMiniProgram(progranID:String, path:String) {
+        val api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID)
+        val req = WXLaunchMiniProgram.Req()
+        req.userName = progranID // 小程序原始id
+        req.path = path ////拉起小程序页面的可带参路径，不填默认拉起小程序首页，对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"。
+        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE // 可选打开 开发版，体验版和正式版
+        api.sendReq(req)
+
+    }
     fun shareText(type: Int, text: String?): WXShare {
         val textObj = WXTextObject()
         textObj.text = text
@@ -293,6 +297,15 @@ class WXShare(context: Context) {
                 if (null != callback) {
                     callback!!.onItemCallback(0, null)
                 }
+            }else if (intent.action == TYPE_OPEN_MINIPROGRAM) {
+                val response: Response? = intent.getParcelableExtra(EXTRA_RESULT)
+                if (null != listener) {
+                    if (response?.errCode == BaseResp.ErrCode.ERR_OK) {
+                        listener!!.onSuccess()
+                    } else {
+                        listener!!.onFail(response!!.errStr)
+                    }
+                }
             }
         }
     }
@@ -363,11 +376,12 @@ class WXShare(context: Context) {
         const val TYPE_LOGIN = "login"
         const val TYPE_SHARE = "share"
         const val TYPE_PAY = "pay"
+        const val TYPE_OPEN_MINIPROGRAM = "openwxproject"
     }
 
     //    private int mTargetScene = SendMessageToWX.Req.WXSceneSession;
     init {
-        api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID, false)
+        api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID)
         this.context = context
     }
 }

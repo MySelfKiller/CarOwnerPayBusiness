@@ -189,7 +189,7 @@ class KWApplication() : MultiDexApplication() {
 //            LogUtil.e("接收退出广告","received local broadcast"+yyy);
             yyy++
             val secondTime = System.currentTimeMillis()
-            if (firstTime == 0L || secondTime - firstTime > 1000 * 10) {
+            if (firstTime == 0L || secondTime - firstTime > 1000 * 30) {
 //                LogUtil.e("强制退出","退出次数"+xxx);
                 xxx += 1
                 firstTime = secondTime
