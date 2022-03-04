@@ -592,65 +592,103 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/wash_station_services"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:gravity="center"
-                android:textSize="@dimen/sp_11"
-                android:textColor="@color/black1"
-                android:layout_marginStart="@dimen/dp_15"
-                android:text="客服"
+            <View
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"/>
+<!--            <TextView-->
+<!--                android:id="@+id/wash_station_services"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="@dimen/sp_11"-->
+<!--                android:textColor="@color/black1"-->
+<!--                android:layout_marginStart="@dimen/dp_15"-->
+<!--                android:text="客服"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
             <TextView
-                android:id="@+id/wash_station_order_list"
+                android:id="@+id/id_ddd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_15"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/black1"
+                android:textStyle="bold"
+                android:text="￥"
+                app:layout_constraintBottom_toTopOf="@id/id_tag_rebate_describe"
+                app:layout_constraintStart_toStartOf="@id/id_tag_rebate_describe"
+                />
+            <TextView
+                android:id="@+id/wash_pay_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/black1"
+                android:textStyle="bold"
+                android:text="0.0"
+                app:layout_constraintBottom_toTopOf="@id/id_tag_rebate_describe"
+                app:layout_constraintStart_toEndOf="@id/id_ddd"
+                />
+            <TextView
+                android:id="@+id/id_tag_rebate_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_10"
                 android:gravity="center"
-                android:textSize="@dimen/sp_11"
-                android:textColor="@color/colorAccent"
-                android:text="我的订单"
-                app:layout_constraintStart_toEndOf="@id/wash_station_services"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/black1"
+                android:text="优惠金抵扣"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+            <TextView
+                android:id="@+id/wash_station_rebate_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥0.0"
+                android:textStyle="bold"
+                android:textSize="@dimen/sp_12"
+                android:textColor="#d1333f"
+                app:layout_constraintStart_toEndOf="@id/id_tag_rebate_describe"
+                app:layout_constraintTop_toTopOf="@id/id_tag_rebate_describe"
+                app:layout_constraintBottom_toBottomOf="@id/id_tag_rebate_describe"/>
             <TextView
                 android:id="@+id/wash_station_pay_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/dp_10"
-                android:layout_marginEnd="@dimen/dp_10"
                 android:textStyle="bold"
-                android:paddingHorizontal="@dimen/dp_80"
-                android:paddingVertical="@dimen/dp_12"
+                android:paddingHorizontal="@dimen/dp_30"
+                android:paddingVertical="@dimen/dp_20"
                 android:textColor="@color/slight_yellow"
-                android:textSize="@dimen/sp_13"
-                android:background="@drawable/wash_btn_shape"
+                android:text="去支付"
+                android:textSize="@dimen/sp_14"
+                android:background="@drawable/wash_btn_shape_defaul"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <TextView
-            android:id="@+id/wash_station_rebate_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingVertical="@dimen/dp_5"
-            android:paddingHorizontal="@dimen/dp_7"
-            android:textSize="@dimen/sp_12"
-            android:textColor="@color/white"
-            app:layout_constraintHorizontal_bias="0.965"
-            app:layout_constraintVertical_bias="0.94"
-            android:background="@drawable/wash_red_tip_shape"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+<!--        <TextView-->
+<!--            android:id="@+id/wash_station_rebate_price"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingVertical="@dimen/dp_5"-->
+<!--            android:paddingHorizontal="@dimen/dp_7"-->
+<!--            android:textSize="@dimen/sp_12"-->
+<!--            android:textColor="@color/white"-->
+<!--            app:layout_constraintHorizontal_bias="0.965"-->
+<!--            app:layout_constraintVertical_bias="0.94"-->
+<!--            android:background="@drawable/wash_red_tip_shape"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

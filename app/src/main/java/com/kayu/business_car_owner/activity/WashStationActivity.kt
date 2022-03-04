@@ -71,6 +71,7 @@ class WashStationActivity constructor() : BaseActivity() {
     private var station_type1_name: TextView? = null
     private var station_type2_name: TextView? = null
     private var station_all_car_name: TextView? = null
+    private var wash_pay_price: TextView? = null
 
     //    public WashStationFragment(String shopCode) {
     //        this.shopCode = shopCode;
@@ -126,40 +127,28 @@ class WashStationActivity constructor() : BaseActivity() {
         station_all_car_sub_price = findViewById(R.id.wash_station_all_car_price_sub)
         rebate_price = findViewById(R.id.wash_station_rebate_price)
         pay_btn = findViewById(R.id.wash_station_pay_btn)
-        val station_order_list: TextView = findViewById(R.id.wash_station_order_list)
-        val station_services: TextView = findViewById(R.id.wash_station_services)
-        val drawable: Drawable = getResources().getDrawable(R.mipmap.ic_order_list)
-        val drawable1: Drawable = getResources().getDrawable(R.mipmap.ic_services)
-        drawable1.setBounds(0, 0, 50, 50)
-        drawable.setBounds(0, 0, 50, 50)
-        drawable.setTint(getResources().getColor(R.color.colorAccent))
-        drawable1.setTint(getResources().getColor(R.color.colorAccent))
+        wash_pay_price = findViewById(R.id.wash_pay_price)
+//        val station_services: TextView = findViewById(R.id.wash_station_services)
+//        val drawable: Drawable = getResources().getDrawable(R.mipmap.ic_order_list)
+//        val drawable1: Drawable = getResources().getDrawable(R.mipmap.ic_services)
+//        drawable1.setBounds(0, 0, 50, 50)
+//        drawable.setBounds(0, 0, 50, 50)
+//        drawable.setTint(getResources().getColor(R.color.colorAccent))
+//        drawable1.setTint(getResources().getColor(R.color.colorAccent))
         //40为设置图片的宽度，20为高度
 
         //（调用方法将图片设置进去）
-        station_order_list.setCompoundDrawables(null, drawable, null, null)
-        station_services.setCompoundDrawables(null, drawable1, null, null)
-        station_order_list.setOnClickListener(object : NoMoreClickListener() {
-            override fun OnMoreClick(view: View) {
-//                FragmentManager fg = getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay, new WashOrderListActivity());
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
-                startActivity(Intent(this@WashStationActivity, WashOrderListActivity::class.java))
-            }
-
-            override fun OnMoreErrorClick() {}
-        })
+//        station_order_list.setCompoundDrawables(null, drawable, null, null)
+//        station_services.setCompoundDrawables(null, drawable1, null, null)
+//        station_order_list.setOnClickListener(object : NoMoreClickListener() {
+//            override fun OnMoreClick(view: View) {
+//                startActivity(Intent(this@WashStationActivity, WashOrderListActivity::class.java))
+//            }
+//
+//            override fun OnMoreErrorClick() {}
+//        })
         pay_btn!!.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-//                FragmentManager fg = WashStationActivity.this.getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay, new WashOrderFragment(selectedListDTO,serviceType));
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 if (null == selectedListDTO) return
                 val intent: Intent = Intent(this@WashStationActivity, WashOrderActivity::class.java)
                 intent.putExtra("selectedListDTO", selectedListDTO)
@@ -179,8 +168,8 @@ class WashStationActivity constructor() : BaseActivity() {
                     val rebatePirce: String =
                         (selectedListDTO!!.price?.toDouble()
                             ?.minus(selectedListDTO!!.finalPrice!!.toDouble())).toString()
-                    pay_btn!!.setText("立即购买￥" + payPrice)
-                    rebate_price!!.setText("立省" + rebatePirce + "元")
+                    wash_pay_price!!.setText(payPrice)
+                    rebate_price!!.setText("￥" + rebatePirce)
                 }
                 if (suv_select_btn!!.isSelected) suv_select_btn!!.isSelected = false
                 if (all_car_select_btn!!.isSelected) all_car_select_btn!!.isSelected = false
@@ -196,8 +185,8 @@ class WashStationActivity constructor() : BaseActivity() {
                     val payPrice: String? = selectedListDTO!!.finalPrice
                     val rebatePirce: String =
                         (selectedListDTO!!.price!!.toDouble() - selectedListDTO!!.finalPrice!!.toDouble()).toString()
-                    pay_btn!!.setText("立即购买￥" + payPrice)
-                    rebate_price!!.setText("立省" + rebatePirce + "元")
+                    wash_pay_price!!.setText( payPrice)
+                    rebate_price!!.setText( "￥"+ rebatePirce)
                 }
                 if (car_select_btn!!.isSelected()) car_select_btn!!.setSelected(false)
                 if (all_car_select_btn!!.isSelected()) all_car_select_btn!!.setSelected(false)
@@ -213,8 +202,8 @@ class WashStationActivity constructor() : BaseActivity() {
                     val payPrice: String = selectedListDTO!!.finalPrice!!
                     val rebatePirce: String =
                         (selectedListDTO!!.price!!.toDouble() - selectedListDTO!!.finalPrice!!.toDouble()).toString()
-                    pay_btn!!.setText("立即购买￥" + payPrice)
-                    rebate_price!!.setText("立省" + rebatePirce + "元")
+                    wash_pay_price!!.setText( payPrice)
+                    rebate_price!!.setText("￥" + rebatePirce)
                 }
                 if (car_select_btn!!.isSelected()) car_select_btn!!.setSelected(false)
                 if (suv_select_btn!!.isSelected()) suv_select_btn!!.setSelected(false)
@@ -355,8 +344,8 @@ class WashStationActivity constructor() : BaseActivity() {
                         serviceType = servicesDTO.name!!
                         val rebatePirce: String =
                             (listDTO.price!!.toDouble() - listDTO.finalPrice!!.toDouble()).toString()
-                        pay_btn!!.setText("立即购买￥" + payPrice)
-                        rebate_price!!.setText("立省" + rebatePirce + "元")
+                        wash_pay_price!!.setText( payPrice)
+                        rebate_price!!.setText("￥" + rebatePirce)
                     }
                     val sdf: Array<String>? = listDTO.serviceName!!.split("-".toRegex()).toTypedArray()
                     var ddd: String? = ""

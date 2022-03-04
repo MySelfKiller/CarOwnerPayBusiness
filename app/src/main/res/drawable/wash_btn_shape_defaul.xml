@@ -5,10 +5,10 @@
 <!--    <solid android:color="@color/colorAccent" />-->
     <!--//定义圆角 -->
 
-    <corners android:topLeftRadius="@dimen/dp_30"
-        android:topRightRadius="@dimen/dp_30"
-        android:bottomLeftRadius="@dimen/dp_30"
-        android:bottomRightRadius="@dimen/dp_30"/>
+<!--    <corners android:topLeftRadius="@dimen/dp_30"-->
+<!--        android:topRightRadius="@dimen/dp_30"-->
+<!--        android:bottomLeftRadius="@dimen/dp_30"-->
+<!--        android:bottomRightRadius="@dimen/dp_30"/>-->
 
     <gradient
         android:startColor="@color/startColor_btn"
