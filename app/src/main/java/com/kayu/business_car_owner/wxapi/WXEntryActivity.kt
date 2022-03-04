@@ -57,6 +57,8 @@ class WXEntryActivity : Activity(), IWXAPIEventHandler {
                 intent.action = WXShare.TYPE_SHARE
             } else if (baseResp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
                 intent.action = WXShare.TYPE_PAY
+            }else if (baseResp.type == ConstantsAPI.COMMAND_LAUNCH_WX_MINIPROGRAM) {
+                intent.action = WXShare.TYPE_OPEN_MINIPROGRAM
             }
             intent.putExtra(WXShare.EXTRA_RESULT, WXShare.Response(baseResp))
         }

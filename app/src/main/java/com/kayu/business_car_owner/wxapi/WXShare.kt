@@ -94,6 +94,9 @@ class WXShare(context: Context) {
         return this
     }
 
+    /**
+     * 打开微信小程序
+     */
     fun openMiniProgram(progranID:String, path:String) {
         val api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID)
         val req = WXLaunchMiniProgram.Req()
@@ -103,6 +106,7 @@ class WXShare(context: Context) {
         api.sendReq(req)
 
     }
+
     fun shareText(type: Int, text: String?): WXShare {
         val textObj = WXTextObject()
         textObj.text = text
