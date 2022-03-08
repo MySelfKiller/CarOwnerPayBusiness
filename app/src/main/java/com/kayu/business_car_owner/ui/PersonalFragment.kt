@@ -319,13 +319,17 @@ class PersonalFragment : Fragment() {
 //            }
             user_name!!.text = userBean.phone
             card_valid!!.text = userBean.idenName
-            user_balance!!.text = userBean.balance.toString()
+
+            if (userBean.balance != 0.0)
+                user_balance!!.text = userBean.balance.toString()
             val sss = userBean.busTitle.split("#".toRegex()).toTypedArray()
             if (sss.size == 2) {
                 explain_content!!.text = sss[0]
                 user_expAmt!!.text = sss[1]
             }
-            user_rewad!!.text = userBean.rewardAmt.toString()
+            if (userBean.rewardAmt != 0.0)
+                user_rewad!!.text = userBean.rewardAmt.toString()
+
             if (!StringUtil.isEmpty(userBean.inviteNo)) {
                 card_num!!.text = "卡号：" + userBean.inviteNo
                 card_num!!.visibility = View.VISIBLE

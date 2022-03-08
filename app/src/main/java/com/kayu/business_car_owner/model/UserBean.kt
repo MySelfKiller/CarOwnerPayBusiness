@@ -61,12 +61,12 @@ class UserBean {
 
     @SerializedName("balance")
     var balance //账户余额/元
-            : Double? = null
+            : Double = 0.00
 
 
     @SerializedName("rewardAmt")
     var rewardAmt //累计收益/元
-            : Double = 0.0
+            : Double = 0.00
 
     @SerializedName("lastLoginTime")
     var lastLoginTime //最后一次登陆时间
@@ -78,7 +78,7 @@ class UserBean {
 
     @SerializedName("expAmt")
     var expAmt //累计节省金额
-            : Double = 0.0
+            : Double = 0.00
 
     @SerializedName("activateTime")
     var activateTime //激活时间

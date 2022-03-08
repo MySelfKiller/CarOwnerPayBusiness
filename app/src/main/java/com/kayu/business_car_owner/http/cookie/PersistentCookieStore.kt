@@ -35,8 +35,10 @@ class PersistentCookieStore(context: Context) {
 //                }
                     cookies[url.host()]!![name] = cookie
                     //                else {
-//                    cookies.get(url.host()).remove(name);
-//                }
+//                    cookies[url.host()]?.remove(name)
+                } else {
+                    cookies[url.host()] = ConcurrentHashMap()
+                    cookies[url.host()]!![name] = cookie
                 }
             }
         } else {
