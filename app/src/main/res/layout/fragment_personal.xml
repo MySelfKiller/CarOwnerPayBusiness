@@ -83,7 +83,7 @@
                                 android:id="@+id/personal_card_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="卡号："
+                                android:text="账号："
                                 android:visibility="invisible"
                                 android:layout_marginTop="@dimen/dp_30"
                                 android:layout_marginBottom="@dimen/dp_7"

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.kayu.business_car_owner.KWApplication
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.model.SysOrderBean
 import com.kayu.business_car_owner.activity.WebViewActivity
@@ -25,7 +24,6 @@ import com.kayu.business_car_owner.R
 import com.kongzue.dialog.v3.TipGifDialog
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.kayu.utils.view.RoundImageView
-import com.kayu.business_car_owner.ui.income.BalanceFragment
 import com.kayu.business_car_owner.activity.CustomerActivity
 import com.kayu.business_car_owner.activity.SettingsActivity
 import com.kayu.business_car_owner.ui.adapter.OrderCategoryAdapter
@@ -59,6 +57,7 @@ class PersonalFragment : Fragment() {
     private var user_reacharge: TextView? = null
     private var user_rewad: TextView? = null
     private var category_rv: RecyclerView? = null
+    private var isOnline = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -191,7 +190,6 @@ class PersonalFragment : Fragment() {
 //        }
         isCreated = true
     }
-
     private var isCreated = false
     private var mHasLoadedOnce = false // 页面已经加载过
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -262,9 +260,11 @@ class PersonalFragment : Fragment() {
                         mainViewModel!!.getSysParameter(requireContext(), 10)
                             .observe(requireActivity(), Observer { systemParam ->
                                 if (null == systemParam) return@Observer
-                                val isOnline = systemParam.blank1
+                                isOnline = systemParam.blank1
                                 //todo isOnline 是判断正在上线审核标志
-                                if (!StringUtil.equals(isOnline, "isOnline")) {
+                                val ion = StringUtil.equals(isOnline, "isOnline")
+                                val uer = KWApplication.instance.userRole == -2
+                                if (!ion && !uer) {
                                     if (!StringUtil.isEmpty(jsonObject.getString("name"))) {
                                         user_reacharge?.text = jsonObject.getString("name")
                                         user_reacharge?.setOnClickListener(object :
@@ -331,7 +331,7 @@ class PersonalFragment : Fragment() {
                 user_rewad!!.text = userBean.rewardAmt.toString()
 
             if (!StringUtil.isEmpty(userBean.inviteNo)) {
-                card_num!!.text = "卡号：" + userBean.inviteNo
+                card_num!!.text = "账号：" + userBean.inviteNo
                 card_num!!.visibility = View.VISIBLE
             } else {
                 card_num!!.visibility = View.INVISIBLE
@@ -364,8 +364,16 @@ class PersonalFragment : Fragment() {
             requireActivity(),
             Observer<MutableList<MutableList<SysOrderBean>>?> { categoryBeans ->
                 if (null == categoryBeans) return@Observer
+                var categoryListNew: MutableList<MutableList<SysOrderBean>> = ArrayList()
+                val categoryBeans1: MutableList<SysOrderBean> = ArrayList()
                 for (list in categoryBeans) {
                     for (categoryBean in list) {
+                        if (StringUtil.equals(categoryBean.title, "加油订单")
+                            || StringUtil.equals(categoryBean.title, "洗车订单")
+//                            || equals(categoryBean.title, "电影订票")
+                        ) {
+                            categoryBeans1.add(categoryBean)
+                        }
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.instance.isGasPublic = categoryBean.isPublic
                         }
@@ -374,8 +382,13 @@ class PersonalFragment : Fragment() {
                         }
                     }
                 }
+                categoryListNew.add(categoryBeans1)
+                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole != -2
+                ) {
+                    categoryListNew = categoryBeans
+                }
                 val mColumns = 1
-                val mRows = categoryBeans.size
+                val mRows = categoryListNew.size
                 //                if (categoryBeans.size() <= 4) {
 //                    mColumns = 4;
 //                    mRows = 1;
@@ -402,15 +415,15 @@ class PersonalFragment : Fragment() {
                     override fun onPageSelect(pageIndex: Int) {}
                 }) // 设置页面变化监听器
                 category_rv!!.layoutManager = mLayoutManager
-                val categoryAdapter = OrderCategoryAdapter(categoryBeans, object : ItemCallback {
+                val categoryAdapter = OrderCategoryAdapter(categoryListNew, object : ItemCallback {
                     override fun onItemCallback(position: Int, obj: Any?) {
                         val categoryBean = obj as SysOrderBean
-                        val userRole = KWApplication.instance.userRole
-                        val isPublic = categoryBean.isPublic
-                        if (userRole == -2 && isPublic == 0) {
-                            KWApplication.instance.showRegDialog(requireContext())
-                            return
-                        }
+//                        val userRole = KWApplication.instance.userRole
+//                        val isPublic = categoryBean.isPublic
+//                        if (userRole == -2 && isPublic == 0) {
+//                            KWApplication.instance.showRegDialog(requireContext())
+//                            return
+//                        }
                         val target = categoryBean.href
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             startActivity(Intent(context, OilOrderListActivity::class.java))

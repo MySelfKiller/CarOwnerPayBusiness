@@ -106,12 +106,12 @@ class WashStationAdapter(
             })
             vh.navi.setOnClickListener(object : NoMoreClickListener() {
                 override fun OnMoreClick(view: View) {
-                    val userRole = KWApplication.instance.userRole
-                    val isPublic = KWApplication.instance.isWashPublic
-                    if (userRole == -2 && isPublic == 0) {
-                        KWApplication.instance.showRegDialog(context!!)
-                        return
-                    }
+//                    val userRole = KWApplication.instance.userRole
+//                    val isPublic = KWApplication.instance.isWashPublic
+//                    if (userRole == -2 && isPublic == 0) {
+//                        KWApplication.instance.showRegDialog(context!!)
+//                        return
+//                    }
                     KWApplication.instance.toNavi(
                         context!!,
                         washStationBean.latitude,

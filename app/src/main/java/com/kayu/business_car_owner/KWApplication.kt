@@ -732,78 +732,78 @@ class KWApplication() : MultiDexApplication() {
     private var pastBtn: String? = null
 
     //    private String url = null;
-    fun showRegDialog(context: Context) {
-        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip!!.content)) {
-        }
-        try {
-            //{
-            // "title": "免费办理会员",
-            // "desc": "成为会员，立享全球超百项特权",
-            // "regBtn": "立即免费办理",
-            // "pastTitle": "已办理熊猫特权卡",
-            // "pastBtn": "激活熊猫特权卡"
-            //}
-            val contentJSon = JSONObject(regDialogTip!!.content)
-            title = contentJSon.getString("title")
-            desc = contentJSon.getString("desc")
-            regBtn = contentJSon.getString("regBtn")
-            pastTitle = contentJSon.getString("pastTitle")
-            pastBtn = contentJSon.getString("pastBtn")
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            return
-        }
-        CustomDialog.show(
-            context as AppCompatActivity?,
-            R.layout.dialog_activition,
-            object : CustomDialog.OnBindView {
-                override fun onBind(dialog: CustomDialog, v: View) {
-                    val dia_title: TextView = v.findViewById(R.id.dia_act_title)
-                    val dia_content: TextView = v.findViewById(R.id.dia_act_context)
-                    val dia_btn_handle: AppCompatButton = v.findViewById(R.id.dia_act_btn_handle)
-                    dia_btn_handle.setOnClickListener(object : NoMoreClickListener() {
-                        override fun OnMoreClick(view: View) {
-                            if (StringUtil.isEmpty(regDialogTip!!.url)) return
-                            val intent: Intent = Intent(context, WebViewActivity::class.java)
-                            intent.putExtra("url", regDialogTip!!.url)
-                            context.startActivity(intent)
-                        }
-
-                        override fun OnMoreErrorClick() {}
-                    })
-                    val dia_title_sub: TextView = v.findViewById(R.id.dia_act_title_sub)
-                    val dia_btn_activ: AppCompatButton = v.findViewById(R.id.dia_act_btn_activ)
-                    if (userRole != -2) {
-                        if (!StringUtil.isEmpty(title)) {
-                            dia_title.text = title
-                        }
-                        if (!StringUtil.isEmpty(desc)) {
-                            dia_content.text = desc
-                        }
-                        if (!StringUtil.isEmpty(regBtn)) {
-                            dia_btn_handle.text = regBtn
-                        }
-                        if (!StringUtil.isEmpty(pastTitle)) {
-                            dia_title_sub.text = pastTitle
-                        }
-                        if (!StringUtil.isEmpty(pastBtn)) {
-                            dia_btn_activ.text = pastBtn
-                        }
-                    }
-                    dia_btn_activ.setOnClickListener(object : NoMoreClickListener() {
-                        override fun OnMoreClick(view: View) {
-                            val intent: Intent = Intent(context, ActivationActivity::class.java)
-                            context.startActivity(intent)
-                        }
-
-                        override fun OnMoreErrorClick() {}
-                    })
-                }
-            }).setFullScreen(false).customLayoutParams = RelativeLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-    }
+//    fun showRegDialog(context: Context) {
+//        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip!!.content)) {
+//        }
+//        try {
+//            //{
+//            // "title": "免费办理会员",
+//            // "desc": "成为会员，立享全球超百项特权",
+//            // "regBtn": "立即免费办理",
+//            // "pastTitle": "已办理熊猫特权卡",
+//            // "pastBtn": "激活熊猫特权卡"
+//            //}
+//            val contentJSon = JSONObject(regDialogTip!!.content)
+//            title = contentJSon.getString("title")
+//            desc = contentJSon.getString("desc")
+//            regBtn = contentJSon.getString("regBtn")
+//            pastTitle = contentJSon.getString("pastTitle")
+//            pastBtn = contentJSon.getString("pastBtn")
+//        } catch (e: JSONException) {
+//            e.printStackTrace()
+//            return
+//        }
+//        CustomDialog.show(
+//            context as AppCompatActivity?,
+//            R.layout.dialog_activition,
+//            object : CustomDialog.OnBindView {
+//                override fun onBind(dialog: CustomDialog, v: View) {
+//                    val dia_title: TextView = v.findViewById(R.id.dia_act_title)
+//                    val dia_content: TextView = v.findViewById(R.id.dia_act_context)
+//                    val dia_btn_handle: AppCompatButton = v.findViewById(R.id.dia_act_btn_handle)
+//                    dia_btn_handle.setOnClickListener(object : NoMoreClickListener() {
+//                        override fun OnMoreClick(view: View) {
+//                            if (StringUtil.isEmpty(regDialogTip!!.url)) return
+//                            val intent: Intent = Intent(context, WebViewActivity::class.java)
+//                            intent.putExtra("url", regDialogTip!!.url)
+//                            context.startActivity(intent)
+//                        }
+//
+//                        override fun OnMoreErrorClick() {}
+//                    })
+//                    val dia_title_sub: TextView = v.findViewById(R.id.dia_act_title_sub)
+//                    val dia_btn_activ: AppCompatButton = v.findViewById(R.id.dia_act_btn_activ)
+//                    if (userRole != -2) {
+//                        if (!StringUtil.isEmpty(title)) {
+//                            dia_title.text = title
+//                        }
+//                        if (!StringUtil.isEmpty(desc)) {
+//                            dia_content.text = desc
+//                        }
+//                        if (!StringUtil.isEmpty(regBtn)) {
+//                            dia_btn_handle.text = regBtn
+//                        }
+//                        if (!StringUtil.isEmpty(pastTitle)) {
+//                            dia_title_sub.text = pastTitle
+//                        }
+//                        if (!StringUtil.isEmpty(pastBtn)) {
+//                            dia_btn_activ.text = pastBtn
+//                        }
+//                    }
+//                    dia_btn_activ.setOnClickListener(object : NoMoreClickListener() {
+//                        override fun OnMoreClick(view: View) {
+//                            val intent: Intent = Intent(context, ActivationActivity::class.java)
+//                            context.startActivity(intent)
+//                        }
+//
+//                        override fun OnMoreErrorClick() {}
+//                    })
+//                }
+//            }).setFullScreen(false).customLayoutParams = RelativeLayout.LayoutParams(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+//    }
 
     //                    aid = Md5Util.getStringMD5(aid);
     val oidImei: String?

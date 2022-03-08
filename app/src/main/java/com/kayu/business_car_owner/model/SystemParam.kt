@@ -66,7 +66,7 @@ class SystemParam {
     @SerializedName("force")
     var force: String = ""
 
-    @SerializedName("blank1")
+    @SerializedName("blank1")//传参带10的时候，返回的是判断是否上线参数
     var blank1: String = ""
 
     @SerializedName("blank2")

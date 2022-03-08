@@ -623,10 +623,10 @@ class LoginAutoActivity : BaseActivity() {
             //        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
 //        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
             val privacy1: PrivacyBean =
-                PrivacyBean("《用户协议》", "https://www.ws101.cn/sslm/static/user_agree.html", "和")
+                PrivacyBean("《用户协议》", "https://www.sslm01.com/sslm/static/user_agree.html", "和")
             val privacy2: PrivacyBean = PrivacyBean(
                 "《隐私政策》",
-                "https://www.ws101.cn/sslm/static/privacy_agree.html",
+                "https://www.sslm01.com/sslm/static/privacy_agree.html",
                 "、"
             )
             listp.add(privacy1)

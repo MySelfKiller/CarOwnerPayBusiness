@@ -355,12 +355,12 @@ class HomeFragment
                     })
                 banner!!.setOnBannerListener(OnBannerListener { position ->
                     val target = bannerBeans[position].href
-                    val isPublic = bannerBeans[position].isPublic
-                    val userRole = KWApplication.instance.userRole
-                    if (userRole == -2 && isPublic == 0) {
-                        KWApplication.instance.showRegDialog(requireContext())
-                        return@OnBannerListener
-                    }
+//                    val isPublic = bannerBeans[position].isPublic
+//                    val userRole = KWApplication.instance.userRole
+//                    if (userRole == -2 && isPublic == 0) {
+//                        KWApplication.instance.showRegDialog(requireContext())
+//                        return@OnBannerListener
+//                    }
                     if (StringUtil.equals(bannerBeans[position].type, "KY_GAS")) {
                         startActivity(Intent(context, GasStationListActivity::class.java))
                     } else if (StringUtil.equals(bannerBeans[position].type, "KY_WASH")) {
@@ -434,12 +434,12 @@ class HomeFragment
                 val categoryAdapter = CategoryRootAdapter(categoryBeans, object : ItemCallback {
                     override fun onItemCallback(position: Int, obj: Any?) {
                         val categoryBean = obj as CategoryBean
-                        val userRole = KWApplication.instance.userRole
-                        val isPublic = categoryBean.isPublic
-                        if (userRole == -2 && isPublic == 0) {
-                            KWApplication.instance.showRegDialog(requireContext())
-                            return
-                        }
+//                        val userRole = KWApplication.instance.userRole
+//                        val isPublic = categoryBean.isPublic
+//                        if (userRole == -2 && isPublic == 0) {
+//                            KWApplication.instance.showRegDialog(requireContext())
+//                            return
+//                        }
                         val target = categoryBean.href
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             startActivity(Intent(context, GasStationListActivity::class.java))

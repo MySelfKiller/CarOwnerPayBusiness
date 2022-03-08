@@ -42,7 +42,7 @@ class ActivationActivity : BaseActivity() {
 //        LinearLayout title_lay = findViewById(R.id.title_lay);
 //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
         val title_name: TextView = findViewById(R.id.title_name_tv)
-        title_name.setText("激活" + getResources().getString(R.string.app_name) + "卡")
+        title_name.setText("激活")
         findViewById<View>(R.id.title_back_btu).setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 onBackPressed()
@@ -150,7 +150,7 @@ class ActivationActivity : BaseActivity() {
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ActivationActivity
         //        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
-        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/getRgSmsCapt/"
+        reqInfo.reqUrl = "https://www.sslm01.com/sslm/spv/api/getRgSmsCapt/"
         reqInfo.parser = NormalParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("", phone_et!!.getText().toString().trim({ it <= ' ' }))
@@ -184,7 +184,7 @@ class ActivationActivity : BaseActivity() {
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ActivationActivity
         //        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
-        reqInfo.reqUrl = "https://www.ws101.cn/sslm/spv/api/recharge"
+        reqInfo.reqUrl = "https://www.sslm01.com/sslm/spv/api/recharge"
         reqInfo.parser = LoginDataParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap["phone"] = phone_et!!.getText().toString().trim({ it <= ' ' })

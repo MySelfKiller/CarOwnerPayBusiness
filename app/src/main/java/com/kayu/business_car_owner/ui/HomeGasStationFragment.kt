@@ -111,12 +111,12 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
                                 startActivityForResult(intent, 111)
                             })
                     } else {
-                        val userRole = KWApplication.instance.userRole
-                        val isPublic = KWApplication.instance.isGasPublic
-                        if (userRole == -2 && isPublic == 0) {
-                            KWApplication.instance.showRegDialog(requireContext())
-                            return
-                        }
+//                        val userRole = KWApplication.instance.userRole
+//                        val isPublic = KWApplication.instance.isGasPublic
+//                        if (userRole == -2 && isPublic == 0) {
+//                            KWApplication.instance.showRegDialog(requireContext())
+//                            return
+//                        }
                         val intent = Intent(requireContext(), OilStationActivity::class.java)
                         intent.putExtra("gasId", oilStationBean.gasId)
                         startActivity(intent)

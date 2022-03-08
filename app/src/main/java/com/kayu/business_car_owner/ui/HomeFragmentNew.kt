@@ -13,44 +13,43 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.kayu.business_car_owner.model.CategoryBean
-import com.kayu.business_car_owner.KWApplication
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.youth.banner.Banner
-import com.kayu.business_car_owner.text_banner.TextBannerView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.amap.api.location.AMapLocation
-import com.kayu.utils.location.LocationManagerUtil
-import com.youth.banner.BannerConfig
-import com.youth.banner.listener.OnBannerListener
-import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.activity.*
-import com.kayu.business_car_owner.model.PopNaviBean
-import com.kayu.business_car_owner.model.Product
-import com.kayu.business_car_owner.model.ProductSortBean
+import com.kayu.business_car_owner.model.*
 import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
-import com.kayu.business_car_owner.ui.adapter.*
+import com.kayu.business_car_owner.text_banner.TextBannerView
+import com.kayu.business_car_owner.ui.adapter.Category2Adapter
+import com.kayu.business_car_owner.ui.adapter.CategoryRootAdapter
+import com.kayu.business_car_owner.ui.adapter.ImgTitleAdapter
+import com.kayu.business_car_owner.ui.adapter.SortTitleAdapter
 import com.kayu.utils.*
+import com.kayu.utils.StringUtil.equals
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.CoordinateTransformUtil
 import com.kayu.utils.location.LocationCallback
+import com.kayu.utils.location.LocationManagerUtil
 import com.kayu.utils.view.AdaptiveHeightViewPager
+import com.kongzue.dialog.v3.MessageDialog
+import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.youth.banner.Banner
+import com.youth.banner.BannerConfig
+import com.youth.banner.listener.OnBannerListener
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.StringBuilder
-import java.util.*
 
 class HomeFragmentNew
     (private val navigation: BottomNavigationView) : Fragment() {
@@ -253,7 +252,7 @@ class HomeFragmentNew
                 editor.commit()
                 //todo 上线应用商店审核作的判断
                 isOnline = systemParam.blank1
-                if (StringUtil.equals(isOnline, "isOnline")) {
+                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole ==-2) {
                     refreshLayout!!.setEnableAutoLoadMore(true)
                     refreshLayout!!.setEnableLoadMore(true)
                     refreshLayout!!.setOnLoadMoreListener(OnLoadMoreListener {
@@ -376,7 +375,7 @@ class HomeFragmentNew
             KWApplication.instance.regDialogTip = systemParam
             //KWApplication.getInstance().userRole == -2 &&
             if (null != KWApplication.instance.regDialogTip && KWApplication.instance.userRole == -2 && !hasShow) {
-                showApplyCardDialog(activity, context, navigation)
+//                showApplyCardDialog(activity, context, navigation)
                 hasShow = true
             }
         }
@@ -430,12 +429,12 @@ class HomeFragmentNew
                     })
                 banner!!.setOnBannerListener(OnBannerListener { position ->
                     val target = bannerBeans[position].href
-                    val isPublic = bannerBeans[position].isPublic
-                    val userRole = KWApplication.instance.userRole
-                    if (userRole == -2 && isPublic == 0) {
-                        KWApplication.instance.showRegDialog(requireContext())
-                        return@OnBannerListener
-                    }
+//                    val isPublic = bannerBeans[position].isPublic
+//                    val userRole = KWApplication.instance.userRole
+//                    if (userRole == -2 && isPublic == 0) {
+//                        KWApplication.instance.showRegDialog(requireContext())
+//                        return@OnBannerListener
+//                    }
                     if (!bannerBeans[position].type.isNullOrEmpty()) {
                         when {
                             StringUtil.equals(bannerBeans[position].type, "KY_GAS") -> {
@@ -458,8 +457,16 @@ class HomeFragmentNew
             requireActivity(),
             Observer<MutableList<MutableList<CategoryBean>>?> { categoryBeans ->
                 if (null == categoryBeans) return@Observer
+                var categoryListNew: MutableList<MutableList<CategoryBean>> = ArrayList()
+                val categoryBeans1: MutableList<CategoryBean> = ArrayList()
                 for (list in categoryBeans) {
                     for (categoryBean in list) {
+                        if (equals(categoryBean.title, "特惠加油")
+                            || equals(categoryBean.title, "特惠洗车")
+//                            || equals(categoryBean.title, "电影订票")
+                        ) {
+                            categoryBeans1.add(categoryBean)
+                        }
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.instance.isGasPublic = categoryBean.isPublic
                         }
@@ -468,8 +475,14 @@ class HomeFragmentNew
                         }
                     }
                 }
+                categoryListNew.add(categoryBeans1)
+                //当前是游客模式展示3个
+                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole != -2
+                ) {
+                    categoryListNew = categoryBeans
+                }
                 val mColumns = 1
-                val mRows = categoryBeans.size
+                val mRows = categoryListNew.size
                 val layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, resources.getDimensionPixelSize(
                         R.dimen.dp_90
@@ -488,15 +501,15 @@ class HomeFragmentNew
                     override fun onPageSelect(pageIndex: Int) {}
                 }) // 设置页面变化监听器
                 category_rv!!.layoutManager = mLayoutManager
-                val categoryAdapter = CategoryRootAdapter(categoryBeans, object : ItemCallback {
+                val categoryAdapter = CategoryRootAdapter(categoryListNew, object : ItemCallback {
                     override fun onItemCallback(position: Int, obj: Any?) {
                         val categoryBean = obj as CategoryBean
-                        val userRole = KWApplication.instance.userRole
-                        val isPublic = categoryBean.isPublic
-                        if (userRole == -2 && isPublic == 0) {
-                            KWApplication.instance.showRegDialog(requireContext())
-                            return
-                        }
+//                        val userRole = KWApplication.instance.userRole
+//                        val isPublic = categoryBean.isPublic
+//                        if (userRole == -2 && isPublic == 0) {
+//                            KWApplication.instance.showRegDialog(requireContext())
+//                            return
+//                        }
                         val target = categoryBean.href
                         if (!categoryBean.type.isNullOrEmpty()) {
                             when {

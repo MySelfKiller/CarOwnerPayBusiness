@@ -146,12 +146,12 @@ class GasStationListActivity constructor() : BaseActivity() {
                                 }
                             })
                     } else {
-                        val userRole: Int = KWApplication.instance.userRole
-                        val isPublic: Int = KWApplication.instance.isGasPublic
-                        if (userRole == -2 && isPublic == 0) {
-                            KWApplication.instance.showRegDialog(this@GasStationListActivity)
-                            return
-                        }
+//                        val userRole: Int = KWApplication.instance.userRole
+//                        val isPublic: Int = KWApplication.instance.isGasPublic
+//                        if (userRole == -2 && isPublic == 0) {
+//                            KWApplication.instance.showRegDialog(this@GasStationListActivity)
+//                            return
+//                        }
                         val intent: Intent =
                             Intent(this@GasStationListActivity, OilStationActivity::class.java)
                         intent.putExtra("gasId", obj.gasId)

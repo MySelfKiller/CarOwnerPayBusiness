@@ -73,12 +73,12 @@ class HomeCarWashFragment(
         param_recycle_view?.setLayoutManager(LinearLayoutManager(context))
         stationAdapter = WashStationAdapter(context, null, true, true, object : ItemCallback {
             override fun onItemCallback(position: Int, obj: Any?) {
-                val userRole = KWApplication.instance.userRole
-                val isPublic = KWApplication.instance.isWashPublic
-                if (userRole == -2 && isPublic == 0) {
-                    KWApplication.instance.showRegDialog(requireContext())
-                    return
-                }
+//                val userRole = KWApplication.instance.userRole
+//                val isPublic = KWApplication.instance.isWashPublic
+//                if (userRole == -2 && isPublic == 0) {
+//                    KWApplication.instance.showRegDialog(requireContext())
+//                    return
+//                }
                 val intent = Intent(context, WashStationActivity::class.java)
                 intent.putExtra("shopCode", (obj as WashStationBean).shopCode)
                 startActivity(intent)
