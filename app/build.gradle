@@ -152,8 +152,8 @@ dependencies {
     implementation 'com.hjq:toast:8.8'
     implementation 'com.just.agentweb:agentweb-androidx:4.1.4'
 
-    implementation 'com.pangle.cn:ads-sdk-pro:4.0.0.6'// 穿山甲广告
-    implementation 'com.qq.e.union:union:4.410.1280' // 普通版本  腾讯广告
+//    implementation 'com.pangle.cn:ads-sdk-pro:4.0.0.6'// 穿山甲广告
+//    implementation 'com.qq.e.union:union:4.410.1280' // 普通版本  腾讯广告
 
 //    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 //    implementation 'com.kongzue.dialog_v3x:dialog:3.2.4'

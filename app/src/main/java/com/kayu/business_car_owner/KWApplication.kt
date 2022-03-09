@@ -16,15 +16,9 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatButton
-import com.kayu.business_car_owner.config_ad.TTAdManagerHolder.init
 import com.kayu.business_car_owner.activity.AppManager.Companion.appManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hjq.toast.ToastUtils
@@ -36,11 +30,9 @@ import com.kayu.business_car_owner.model.SystemParamContent
 import com.squareup.leakcanary.LeakCanary
 import com.kayu.business_car_owner.activity.SplashActivity
 import com.kayu.business_car_owner.activity.SplashHotActivity
-import com.qq.e.comm.managers.GDTAdSdk
 import com.kayu.business_car_owner.http.cookie.PersistentCookieStore
 import com.kayu.business_car_owner.http.OkHttpManager
 import com.kayu.business_car_owner.activity.login.LoginAutoActivity
-import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.hjq.toast.style.ToastWhiteStyle
 import com.kongzue.dialog.util.DialogSettings
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -58,14 +50,9 @@ import com.kayu.utils.location.CoordinateTransformUtil
 import com.kongzue.dialog.v3.BottomMenu
 import com.kongzue.dialog.v3.TipGifDialog
 import com.kayu.business_car_owner.ui.text_link.UrlClickableSpan
-import com.kongzue.dialog.v3.CustomDialog
-import com.kayu.business_car_owner.activity.WebViewActivity
-import com.kayu.business_car_owner.activity.ActivationActivity
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
-import org.json.JSONException
-import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import java.lang.StringBuilder
@@ -110,11 +97,11 @@ class KWApplication() : MultiDexApplication() {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             var sRefWatcher = LeakCanary.install(this)
         }
-        initAdSdk()
+//        initAdSdk()
         //        setFornts();
         initDialogSetting()
         LocationManagerUtil.init(this)
-        initJPushSetting()
+//        initJPushSetting()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 //        ZoomMediaLoader.getInstance().init(new TestImageLoader());
@@ -162,21 +149,21 @@ class KWApplication() : MultiDexApplication() {
     }
 
     //初始化广告SDK
-    fun initAdSdk() {
-        //是否弹出过隐私弹框
-        val isLogin = sp!!.getBoolean(Constants.isLogin, false)
-        if (isLogin) {
-            //腾讯广告SDK
-            var appID: String? = "1200140135"
-            if (null != systemArgs && !StringUtil.isEmpty(systemArgs!!.android!!.ylhAppid)) {
-                appID = systemArgs!!.android!!.ylhAppid
-            }
-            GDTAdSdk.init(this, appID)
-            //穿山甲SDK初始化
-            //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
-            init(this)
-        }
-    }
+//    fun initAdSdk() {
+//        //是否弹出过隐私弹框
+//        val isLogin = sp!!.getBoolean(Constants.isLogin, false)
+//        if (isLogin) {
+//            //腾讯广告SDK
+//            var appID: String? = "1200140135"
+//            if (null != systemArgs && !StringUtil.isEmpty(systemArgs!!.android!!.ylhAppid)) {
+//                appID = systemArgs!!.android!!.ylhAppid
+//            }
+//            GDTAdSdk.init(this, appID)
+//            //穿山甲SDK初始化
+//            //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+//            init(this)
+//        }
+//    }
 
     //记录首次异常时间
     private var firstTime: Long = 0
@@ -230,11 +217,11 @@ class KWApplication() : MultiDexApplication() {
     /**
      * 初始化极光认证
      */
-    private fun initJPushSetting() {
-        // 打开调试模式
-        JVerificationInterface.setDebugMode(true)
-        JVerificationInterface.init(this) { i, s -> LogUtil.e("JPush", "code:$i,msg:$s") }
-    }
+//    private fun initJPushSetting() {
+//        // 打开调试模式
+//        JVerificationInterface.setDebugMode(true)
+//        JVerificationInterface.init(this) { i, s -> LogUtil.e("JPush", "code:$i,msg:$s") }
+//    }
 
     private fun initDialogSetting() {
         ToastUtils.init(this, ToastWhiteStyle(this))

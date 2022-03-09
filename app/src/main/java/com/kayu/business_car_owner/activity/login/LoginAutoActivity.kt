@@ -1,8 +1,6 @@
 package com.kayu.business_car_owner.activity.login
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -16,7 +14,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.webkit.CookieManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProviders
 import com.hjq.toast.ToastUtils
@@ -31,24 +28,12 @@ import com.kayu.business_car_owner.model.LoginInfo
 import com.kayu.business_car_owner.wxapi.WXShare
 import com.kayu.utils.status_bar_set.StatusBarUtil
 import com.kayu.business_car_owner.ui.text_link.UrlClickableSpan
-import com.kayu.business_car_owner.OaidHelper
-import com.kayu.business_car_owner.OaidHelper.AppIdsUpdater
-import cn.jiguang.verifysdk.api.JVerificationInterface
-import cn.jiguang.verifysdk.api.VerifyListener
-import cn.jiguang.verifysdk.api.AuthPageEventListener
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
-import com.kongzue.dialog.v3.MessageDialog
-import cn.jiguang.verifysdk.api.JVerifyUIConfig
-import cn.jiguang.verifysdk.api.PrivacyBean
-import cn.jiguang.verifysdk.api.JVerifyUIClickCallback
 import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.activity.*
 import com.kayu.business_car_owner.http.*
 import com.kayu.utils.*
-import java.lang.Exception
 import java.lang.StringBuilder
-import java.util.ArrayList
 import java.util.HashMap
 
 class LoginAutoActivity : BaseActivity() {
@@ -294,183 +279,183 @@ class LoginAutoActivity : BaseActivity() {
         finish()
     }
 
-    fun permissionsCheck() {
-//        String[] perms = {Manifest.permission.CAMERA};
-        val perms: Array<String> = arrayOf(Manifest.permission.READ_PHONE_STATE)
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                 override fun hasPermission(allPerms: List<Array<String>>) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val helper: OaidHelper = OaidHelper(object : AppIdsUpdater {
-                            override fun OnIdsAvalid(
-                                isSupport: Boolean,
-                                oaid: String,
-                                vaid: String,
-                                aaid: String
-                            ) {
-                                if (!isSupport || StringUtil.isEmpty(oaid)) {
-                                    return
-                                }
-                                if (!oaid.startsWith("0000")) {
-                                    KWApplication.instance.oid = oaid
-                                }
-                            }
-
-                        })
-                        try { //fixme 获取不到是的时候 需要查明
-                            helper.getDeviceIds(this@LoginAutoActivity)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                    // 检查当前是否初始化成功极光 SDK
-                    if (JVerificationInterface.isInitSuccess()) {
-                        // 判断当前的手机网络环境是否可以使用认证。
-                        if (!JVerificationInterface.checkVerifyEnable(this@LoginAutoActivity)) {
-                            jumpDialog("一键登录验证失败")
-                            return
-                        }
-                        TipGifDialog.show(
-                            this@LoginAutoActivity,
-                            "请稍等...",
-                            TipGifDialog.TYPE.OTHER,
-                            R.drawable.loading_gif
-                        )
-                        JVerificationInterface.setCustomUIWithConfig(fullScreenPortraitConfig)
-                        JVerificationInterface.loginAuth(
-                            this@LoginAutoActivity,
-                            true,
-                            object : VerifyListener {
-                                public override fun onResult(
-                                    code: Int,
-                                    content: String,
-                                    operator: String
-                                ) {
-                                    TipGifDialog.dismiss()
-                                    LogUtil.e(
-                                        "JPush",
-                                        "code=" + code + ", token=" + content + " ,operator=" + operator
-                                    )
-                                    if (code == 6000) {
-//                                JVerificationInterface.dismissLoginAuthActivity();
-                                        sendSubRequest(content)
-                                    } else if (code == 6002) {
-                                        //取消登录
-                                    } else {
-                                        jumpDialog("一键登录验证失败")
-                                    }
-                                }
-                            },
-                            object : AuthPageEventListener() {
-                                public override fun onEvent(i: Int, s: String) {
-                                    LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s)
-                                }
-                            })
-                    } else {
-                        jumpDialog("一键登录验证失败")
-                        //                    ToastUtils.show("尚未初始化成功～！");
-                    }
-                }
-
-                public override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-//                EasyPermissions.goSettingsPermissions(LoginAutoActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val helper: OaidHelper = OaidHelper(object : AppIdsUpdater {
-                            public override fun OnIdsAvalid(
-                                isSupport: Boolean,
-                                oaid: String,
-                                vaid: String,
-                                aaid: String
-                            ) {
-                                if (!isSupport || StringUtil.isEmpty(oaid)) {
-                                    return
-                                }
-                                if (!oaid.startsWith("0000")) {
-                                    KWApplication.instance.oid = oaid
-                                }
-                            }
-                        })
-                        try { //fixme 获取不到是的时候 需要查明
-                            helper.getDeviceIds(this@LoginAutoActivity)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                    // 检查当前是否初始化成功极光 SDK
-                    if (JVerificationInterface.isInitSuccess()) {
-                        // 判断当前的手机网络环境是否可以使用认证。
-                        if (!JVerificationInterface.checkVerifyEnable(this@LoginAutoActivity)) {
-                            jumpDialog("一键登录验证失败")
-                            return
-                        }
-                        TipGifDialog.show(
-                            this@LoginAutoActivity,
-                            "请稍等...",
-                            TipGifDialog.TYPE.OTHER,
-                            R.drawable.loading_gif
-                        )
-                        JVerificationInterface.setCustomUIWithConfig(fullScreenPortraitConfig)
-                        JVerificationInterface.loginAuth(
-                            this@LoginAutoActivity,
-                            true,
-                            object : VerifyListener {
-                                public override fun onResult(
-                                    code: Int,
-                                    content: String,
-                                    operator: String
-                                ) {
-                                    TipGifDialog.dismiss()
-                                    LogUtil.e(
-                                        "JPush",
-                                        "code=" + code + ", token=" + content + " ,operator=" + operator
-                                    )
-                                    if (code == 6000) {
-//                                JVerificationInterface.dismissLoginAuthActivity();
-                                        sendSubRequest(content)
-                                    } else if (code == 6002) {
-                                        //取消登录
-                                    } else {
-                                        jumpDialog("一键登录验证失败")
-                                    }
-                                }
-                            },
-                            object : AuthPageEventListener() {
-                                public override fun onEvent(i: Int, s: String) {
-                                    LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s)
-                                    if (i == 6) { //选中隐私复选框
-                                    } else if (i == 7) { //未选中隐私复选框
-                                    }
-                                }
-                            })
-                    } else {
-                        jumpDialog("一键登录验证失败")
-                        //                    ToastUtils.show("尚未初始化成功～！");
-                    }
-                }
-
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@LoginAutoActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(R.string.permiss_read_phone))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
-    }
+//    fun permissionsCheck() {
+////        String[] perms = {Manifest.permission.CAMERA};
+//        val perms: Array<String> = arrayOf(Manifest.permission.READ_PHONE_STATE)
+//        performCodeWithPermission(
+//            1,
+//            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+//            perms,
+//            object : PermissionCallback {
+//                 override fun hasPermission(allPerms: List<Array<String>>) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        val helper: OaidHelper = OaidHelper(object : AppIdsUpdater {
+//                            override fun OnIdsAvalid(
+//                                isSupport: Boolean,
+//                                oaid: String,
+//                                vaid: String,
+//                                aaid: String
+//                            ) {
+//                                if (!isSupport || StringUtil.isEmpty(oaid)) {
+//                                    return
+//                                }
+//                                if (!oaid.startsWith("0000")) {
+//                                    KWApplication.instance.oid = oaid
+//                                }
+//                            }
+//
+//                        })
+//                        try { //fixme 获取不到是的时候 需要查明
+//                            helper.getDeviceIds(this@LoginAutoActivity)
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    }
+//                    // 检查当前是否初始化成功极光 SDK
+//                    if (JVerificationInterface.isInitSuccess()) {
+//                        // 判断当前的手机网络环境是否可以使用认证。
+//                        if (!JVerificationInterface.checkVerifyEnable(this@LoginAutoActivity)) {
+//                            jumpDialog("一键登录验证失败")
+//                            return
+//                        }
+//                        TipGifDialog.show(
+//                            this@LoginAutoActivity,
+//                            "请稍等...",
+//                            TipGifDialog.TYPE.OTHER,
+//                            R.drawable.loading_gif
+//                        )
+//                        JVerificationInterface.setCustomUIWithConfig(fullScreenPortraitConfig)
+//                        JVerificationInterface.loginAuth(
+//                            this@LoginAutoActivity,
+//                            true,
+//                            object : VerifyListener {
+//                                public override fun onResult(
+//                                    code: Int,
+//                                    content: String,
+//                                    operator: String
+//                                ) {
+//                                    TipGifDialog.dismiss()
+//                                    LogUtil.e(
+//                                        "JPush",
+//                                        "code=" + code + ", token=" + content + " ,operator=" + operator
+//                                    )
+//                                    if (code == 6000) {
+////                                JVerificationInterface.dismissLoginAuthActivity();
+//                                        sendSubRequest(content)
+//                                    } else if (code == 6002) {
+//                                        //取消登录
+//                                    } else {
+//                                        jumpDialog("一键登录验证失败")
+//                                    }
+//                                }
+//                            },
+//                            object : AuthPageEventListener() {
+//                                public override fun onEvent(i: Int, s: String) {
+//                                    LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s)
+//                                }
+//                            })
+//                    } else {
+//                        jumpDialog("一键登录验证失败")
+//                        //                    ToastUtils.show("尚未初始化成功～！");
+//                    }
+//                }
+//
+//                public override fun noPermission(
+//                    deniedPerms: List<String>?,
+//                    grantedPerms: List<String?>?,
+//                    hasPermanentlyDenied: Boolean?
+//                ) {
+////                EasyPermissions.goSettingsPermissions(LoginAutoActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        val helper: OaidHelper = OaidHelper(object : AppIdsUpdater {
+//                            public override fun OnIdsAvalid(
+//                                isSupport: Boolean,
+//                                oaid: String,
+//                                vaid: String,
+//                                aaid: String
+//                            ) {
+//                                if (!isSupport || StringUtil.isEmpty(oaid)) {
+//                                    return
+//                                }
+//                                if (!oaid.startsWith("0000")) {
+//                                    KWApplication.instance.oid = oaid
+//                                }
+//                            }
+//                        })
+//                        try { //fixme 获取不到是的时候 需要查明
+//                            helper.getDeviceIds(this@LoginAutoActivity)
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    }
+//                    // 检查当前是否初始化成功极光 SDK
+//                    if (JVerificationInterface.isInitSuccess()) {
+//                        // 判断当前的手机网络环境是否可以使用认证。
+//                        if (!JVerificationInterface.checkVerifyEnable(this@LoginAutoActivity)) {
+//                            jumpDialog("一键登录验证失败")
+//                            return
+//                        }
+//                        TipGifDialog.show(
+//                            this@LoginAutoActivity,
+//                            "请稍等...",
+//                            TipGifDialog.TYPE.OTHER,
+//                            R.drawable.loading_gif
+//                        )
+//                        JVerificationInterface.setCustomUIWithConfig(fullScreenPortraitConfig)
+//                        JVerificationInterface.loginAuth(
+//                            this@LoginAutoActivity,
+//                            true,
+//                            object : VerifyListener {
+//                                public override fun onResult(
+//                                    code: Int,
+//                                    content: String,
+//                                    operator: String
+//                                ) {
+//                                    TipGifDialog.dismiss()
+//                                    LogUtil.e(
+//                                        "JPush",
+//                                        "code=" + code + ", token=" + content + " ,operator=" + operator
+//                                    )
+//                                    if (code == 6000) {
+////                                JVerificationInterface.dismissLoginAuthActivity();
+//                                        sendSubRequest(content)
+//                                    } else if (code == 6002) {
+//                                        //取消登录
+//                                    } else {
+//                                        jumpDialog("一键登录验证失败")
+//                                    }
+//                                }
+//                            },
+//                            object : AuthPageEventListener() {
+//                                public override fun onEvent(i: Int, s: String) {
+//                                    LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s)
+//                                    if (i == 6) { //选中隐私复选框
+//                                    } else if (i == 7) { //未选中隐私复选框
+//                                    }
+//                                }
+//                            })
+//                    } else {
+//                        jumpDialog("一键登录验证失败")
+//                        //                    ToastUtils.show("尚未初始化成功～！");
+//                    }
+//                }
+//
+//                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
+//                    val dialog: MessageDialog =
+//                        MessageDialog.build((this@LoginAutoActivity as AppCompatActivity?)!!)
+//                    dialog.setTitle("需要获取以下权限")
+//                    dialog.setMessage(getString(R.string.permiss_read_phone))
+//                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
+//                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
+//                            callback.onGranted()
+//                            return false
+//                        }
+//                    })
+//                    dialog.setCancelable(false)
+//                    dialog.show()
+//                }
+//            })
+//    }
 
     private fun jumpDialog(msg: String) {
 //        MessageDialog.show(LoginAutoActivity.this,"提示",msg+"，是否需要使用其他手机号验证登录？","是","否").setCancelable(false)
@@ -571,159 +556,159 @@ class LoginAutoActivity : BaseActivity() {
     //                            .setLogoImgPath("logo_cm")
     //        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
 //        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
-    private val fullScreenPortraitConfig: JVerifyUIConfig
-        private get() {
-            val uiConfigBuilder: JVerifyUIConfig.Builder = JVerifyUIConfig.Builder()
-            uiConfigBuilder.setStatusBarDarkMode(false)
-            uiConfigBuilder.setNavColor(getResources().getColor(R.color.white))
-            uiConfigBuilder.setNavText("登录")
-            uiConfigBuilder.setNavTextSize(20)
-            //        uiConfigBuilder.setPrivacyNavColor(getResources().getColor(R.color.white));
-            uiConfigBuilder.setNavTextColor(getResources().getColor(R.color.black1))
-            uiConfigBuilder.setNavReturnImgPath("normal_btu_black")
-            uiConfigBuilder.setNavReturnBtnOffsetX(20)
-            uiConfigBuilder.setLogoImgPath("ic_login_bg")
-            uiConfigBuilder.setLogoWidth(80)
-            uiConfigBuilder.setLogoHeight(60)
-            uiConfigBuilder.setLogoHidden(false)
-            uiConfigBuilder.setNumberColor(getResources().getColor(R.color.black1))
-            uiConfigBuilder.setLogBtnText("一键登录")
-            uiConfigBuilder.setLogBtnTextSize(16)
-            uiConfigBuilder.setLogBtnHeight(40)
-            uiConfigBuilder.setLogBtnTextColor(getResources().getColor(R.color.select_text_color))
-            uiConfigBuilder.setLogBtnImgPath("ic_login_btn_bg")
-            //        uiConfigBuilder.setAppPrivacyOne(titles[0], urls[0]);
-//        uiConfigBuilder.setAppPrivacyTwo(titles[1], urls[1]);
-            uiConfigBuilder.setAppPrivacyColor(
-                getResources().getColor(R.color.grayText4), getResources().getColor(
-                    R.color.endColor_btn
-                )
-            )
-            uiConfigBuilder.setPrivacyState(true)
-            uiConfigBuilder.setSloganTextColor(getResources().getColor(R.color.grayText2))
-            uiConfigBuilder.setSloganTextSize(12)
-            uiConfigBuilder.setLogoOffsetY(100)
-            //                            .setLogoImgPath("logo_cm")
-            uiConfigBuilder.setNumFieldOffsetY(190)
-            uiConfigBuilder.setSloganOffsetY(235)
-            uiConfigBuilder.setLogBtnOffsetY(260)
-            uiConfigBuilder.setNumberSize(22)
-            uiConfigBuilder.setPrivacyTextCenterGravity(false)
-            uiConfigBuilder.setPrivacyState(false)
-            uiConfigBuilder.setPrivacyTextSize(12)
-            uiConfigBuilder.setPrivacyCheckboxHidden(false)
-            uiConfigBuilder.setCheckedImgPath("ic_check_box_24dp")
-            uiConfigBuilder.setUncheckedImgPath("ic_uncheck_box_24dp")
-            uiConfigBuilder.setPrivacyCheckboxSize(20)
-            uiConfigBuilder.setPrivacyWithBookTitleMark(true)
-            val ddd: Toast = ToastUtils.getToast()
-            ddd.setText("请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》")
-            uiConfigBuilder.enableHintToast(true, ddd)
-            val listp: MutableList<PrivacyBean> = ArrayList()
-            //        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
-//        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
-            val privacy1: PrivacyBean =
-                PrivacyBean("《用户协议》", "https://www.sslm01.com/sslm/static/user_agree.html", "和")
-            val privacy2: PrivacyBean = PrivacyBean(
-                "《隐私政策》",
-                "https://www.sslm01.com/sslm/static/privacy_agree.html",
-                "、"
-            )
-            listp.add(privacy1)
-            listp.add(privacy2)
-            uiConfigBuilder.setPrivacyNameAndUrlBeanList(listp)
-            //        uiConfigBuilder.setAppPrivacyOne("用户协议asdfasdfasdf","https://www.ky808.cn/carfriend/static/user_agree.html");
-//        uiConfigBuilder.setAppPrivacyTwo("隐私政策asdfasdfasd","https://www.ky808.cn/carfriend/static/privacy_agree.html");
-            uiConfigBuilder.setPrivacyText("我已阅读并同意 ", "")
-            uiConfigBuilder.setPrivacyOffsetX(52 - 15)
-            uiConfigBuilder.setPrivacyOffsetY(getResources().getDimensionPixelSize(R.dimen.dp_60))
-
-            // 手机登录按钮
-            val layoutParamPhoneLogin: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            layoutParamPhoneLogin.setMargins(
-                0,
-                getResources().getDimensionPixelSize(R.dimen.dp_310),
-                0,
-                0
-            )
-            layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
-            layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
-            val tvPhoneLogin: TextView = TextView(this)
-            tvPhoneLogin.setText("手机号码登录")
-            tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText4))
-            tvPhoneLogin.setTextSize(16f)
-            tvPhoneLogin.setLayoutParams(layoutParamPhoneLogin)
-            uiConfigBuilder.addCustomView(tvPhoneLogin, false, object : JVerifyUIClickCallback {
-                public override fun onClicked(context: Context, view: View) {
-                    toNativeVerifyActivity()
-                }
-            })
-
-            // 微信登录
-            val linearLayout: LinearLayout = LinearLayout(this)
-            val layoutLoginGroupParam: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            layoutLoginGroupParam.setMargins(
-                0,
-                getResources().getDimensionPixelSize(R.dimen.dp_370),
-                0,
-                0
-            )
-            layoutLoginGroupParam.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
-            layoutLoginGroupParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
-            layoutLoginGroupParam.setLayoutDirection(LinearLayout.VERTICAL)
-            linearLayout.setOrientation(LinearLayout.VERTICAL)
-            linearLayout.setGravity(Gravity.CENTER)
-            linearLayout.setLayoutParams(layoutLoginGroupParam)
-            val padding: Int = getResources().getDimensionPixelSize(R.dimen.dp_5)
-            linearLayout.setPadding(padding, padding, padding, padding)
-            val btnWechat: ImageView = ImageView(this)
-            val textView: TextView = TextView(this)
-            val texParam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            texParam.setMargins(0, padding, 0, 0)
-            textView.setLayoutParams(texParam)
-            textView.setText("微信登录")
-            textView.setTextSize(14f)
-            textView.setTextColor(getResources().getColor(R.color.grayText4))
-            linearLayout.setOnClickListener(object : View.OnClickListener {
-                public override fun onClick(v: View) {
-                    wxShare = WXShare(this@LoginAutoActivity)
-                    wxShare!!.register()
-                    wxShare!!.getAuth(object : ItemCallback {
-                        public override fun onItemCallback(position: Int, obj: Any?) {
-                            reqSignIn(obj as String?)
-                        }
-
-                        public override fun onDetailCallBack(position: Int, obj: Any?) {}
-                    })
-                }
-            })
-            btnWechat.setImageResource(R.drawable.ic_contact_wx)
-            val btnParam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            btnParam.setMargins(25, 0, 25, 0)
-            linearLayout.addView(btnWechat, btnParam)
-            linearLayout.addView(textView)
-            uiConfigBuilder.addCustomView(linearLayout, false
-            ) { context, view ->
-                wxShare = WXShare(this@LoginAutoActivity)
-                wxShare!!.register()
-                wxShare!!.getAuth(object : ItemCallback {
-                    public override fun onItemCallback(position: Int, obj: Any?) {
-                        reqSignIn(obj as String?)
-                    }
-
-                    public override fun onDetailCallBack(position: Int, obj: Any?) {}
-                })
-            }
-            return uiConfigBuilder.build()
-        }
+//    private val fullScreenPortraitConfig: JVerifyUIConfig
+//        private get() {
+//            val uiConfigBuilder: JVerifyUIConfig.Builder = JVerifyUIConfig.Builder()
+//            uiConfigBuilder.setStatusBarDarkMode(false)
+//            uiConfigBuilder.setNavColor(getResources().getColor(R.color.white))
+//            uiConfigBuilder.setNavText("登录")
+//            uiConfigBuilder.setNavTextSize(20)
+//            //        uiConfigBuilder.setPrivacyNavColor(getResources().getColor(R.color.white));
+//            uiConfigBuilder.setNavTextColor(getResources().getColor(R.color.black1))
+//            uiConfigBuilder.setNavReturnImgPath("normal_btu_black")
+//            uiConfigBuilder.setNavReturnBtnOffsetX(20)
+//            uiConfigBuilder.setLogoImgPath("ic_login_bg")
+//            uiConfigBuilder.setLogoWidth(80)
+//            uiConfigBuilder.setLogoHeight(60)
+//            uiConfigBuilder.setLogoHidden(false)
+//            uiConfigBuilder.setNumberColor(getResources().getColor(R.color.black1))
+//            uiConfigBuilder.setLogBtnText("一键登录")
+//            uiConfigBuilder.setLogBtnTextSize(16)
+//            uiConfigBuilder.setLogBtnHeight(40)
+//            uiConfigBuilder.setLogBtnTextColor(getResources().getColor(R.color.select_text_color))
+//            uiConfigBuilder.setLogBtnImgPath("ic_login_btn_bg")
+//            //        uiConfigBuilder.setAppPrivacyOne(titles[0], urls[0]);
+////        uiConfigBuilder.setAppPrivacyTwo(titles[1], urls[1]);
+//            uiConfigBuilder.setAppPrivacyColor(
+//                getResources().getColor(R.color.grayText4), getResources().getColor(
+//                    R.color.endColor_btn
+//                )
+//            )
+//            uiConfigBuilder.setPrivacyState(true)
+//            uiConfigBuilder.setSloganTextColor(getResources().getColor(R.color.grayText2))
+//            uiConfigBuilder.setSloganTextSize(12)
+//            uiConfigBuilder.setLogoOffsetY(100)
+//            //                            .setLogoImgPath("logo_cm")
+//            uiConfigBuilder.setNumFieldOffsetY(190)
+//            uiConfigBuilder.setSloganOffsetY(235)
+//            uiConfigBuilder.setLogBtnOffsetY(260)
+//            uiConfigBuilder.setNumberSize(22)
+//            uiConfigBuilder.setPrivacyTextCenterGravity(false)
+//            uiConfigBuilder.setPrivacyState(false)
+//            uiConfigBuilder.setPrivacyTextSize(12)
+//            uiConfigBuilder.setPrivacyCheckboxHidden(false)
+//            uiConfigBuilder.setCheckedImgPath("ic_check_box_24dp")
+//            uiConfigBuilder.setUncheckedImgPath("ic_uncheck_box_24dp")
+//            uiConfigBuilder.setPrivacyCheckboxSize(20)
+//            uiConfigBuilder.setPrivacyWithBookTitleMark(true)
+//            val ddd: Toast = ToastUtils.getToast()
+//            ddd.setText("请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》")
+//            uiConfigBuilder.enableHintToast(true, ddd)
+//            val listp: MutableList<PrivacyBean> = ArrayList()
+//            //        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
+////        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
+//            val privacy1: PrivacyBean =
+//                PrivacyBean("《用户协议》", "https://www.sslm01.com/sslm/static/user_agree.html", "和")
+//            val privacy2: PrivacyBean = PrivacyBean(
+//                "《隐私政策》",
+//                "https://www.sslm01.com/sslm/static/privacy_agree.html",
+//                "、"
+//            )
+//            listp.add(privacy1)
+//            listp.add(privacy2)
+//            uiConfigBuilder.setPrivacyNameAndUrlBeanList(listp)
+//            //        uiConfigBuilder.setAppPrivacyOne("用户协议asdfasdfasdf","https://www.ky808.cn/carfriend/static/user_agree.html");
+////        uiConfigBuilder.setAppPrivacyTwo("隐私政策asdfasdfasd","https://www.ky808.cn/carfriend/static/privacy_agree.html");
+//            uiConfigBuilder.setPrivacyText("我已阅读并同意 ", "")
+//            uiConfigBuilder.setPrivacyOffsetX(52 - 15)
+//            uiConfigBuilder.setPrivacyOffsetY(getResources().getDimensionPixelSize(R.dimen.dp_60))
+//
+//            // 手机登录按钮
+//            val layoutParamPhoneLogin: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            layoutParamPhoneLogin.setMargins(
+//                0,
+//                getResources().getDimensionPixelSize(R.dimen.dp_310),
+//                0,
+//                0
+//            )
+//            layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+//            layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
+//            val tvPhoneLogin: TextView = TextView(this)
+//            tvPhoneLogin.setText("手机号码登录")
+//            tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText4))
+//            tvPhoneLogin.setTextSize(16f)
+//            tvPhoneLogin.setLayoutParams(layoutParamPhoneLogin)
+//            uiConfigBuilder.addCustomView(tvPhoneLogin, false, object : JVerifyUIClickCallback {
+//                public override fun onClicked(context: Context, view: View) {
+//                    toNativeVerifyActivity()
+//                }
+//            })
+//
+//            // 微信登录
+//            val linearLayout: LinearLayout = LinearLayout(this)
+//            val layoutLoginGroupParam: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            layoutLoginGroupParam.setMargins(
+//                0,
+//                getResources().getDimensionPixelSize(R.dimen.dp_370),
+//                0,
+//                0
+//            )
+//            layoutLoginGroupParam.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+//            layoutLoginGroupParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+//            layoutLoginGroupParam.setLayoutDirection(LinearLayout.VERTICAL)
+//            linearLayout.setOrientation(LinearLayout.VERTICAL)
+//            linearLayout.setGravity(Gravity.CENTER)
+//            linearLayout.setLayoutParams(layoutLoginGroupParam)
+//            val padding: Int = getResources().getDimensionPixelSize(R.dimen.dp_5)
+//            linearLayout.setPadding(padding, padding, padding, padding)
+//            val btnWechat: ImageView = ImageView(this)
+//            val textView: TextView = TextView(this)
+//            val texParam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            texParam.setMargins(0, padding, 0, 0)
+//            textView.setLayoutParams(texParam)
+//            textView.setText("微信登录")
+//            textView.setTextSize(14f)
+//            textView.setTextColor(getResources().getColor(R.color.grayText4))
+//            linearLayout.setOnClickListener(object : View.OnClickListener {
+//                public override fun onClick(v: View) {
+//                    wxShare = WXShare(this@LoginAutoActivity)
+//                    wxShare!!.register()
+//                    wxShare!!.getAuth(object : ItemCallback {
+//                        public override fun onItemCallback(position: Int, obj: Any?) {
+//                            reqSignIn(obj as String?)
+//                        }
+//
+//                        public override fun onDetailCallBack(position: Int, obj: Any?) {}
+//                    })
+//                }
+//            })
+//            btnWechat.setImageResource(R.drawable.ic_contact_wx)
+//            val btnParam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            btnParam.setMargins(25, 0, 25, 0)
+//            linearLayout.addView(btnWechat, btnParam)
+//            linearLayout.addView(textView)
+//            uiConfigBuilder.addCustomView(linearLayout, false
+//            ) { context, view ->
+//                wxShare = WXShare(this@LoginAutoActivity)
+//                wxShare!!.register()
+//                wxShare!!.getAuth(object : ItemCallback {
+//                    public override fun onItemCallback(position: Int, obj: Any?) {
+//                        reqSignIn(obj as String?)
+//                    }
+//
+//                    public override fun onDetailCallBack(position: Int, obj: Any?) {}
+//                })
+//            }
+//            return uiConfigBuilder.build()
+//        }
 }

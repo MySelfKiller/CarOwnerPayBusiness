@@ -19,10 +19,10 @@ class CookiesManager     //    private final HashMap<String, List<Cookie>> cooki
                     NetUtil.token = item.value()
                     setTokenCallBack?.setToken(item.value())
 
-                    LogUtil.e("hm","------token_key-----"+KWApplication.instance.token)
+//                    LogUtil.e("hm","------token_key-----"+KWApplication.instance.token)
                 }
-                LogUtil.e("hm","------saveFromResponse-----")
-                LogUtil.e("hm","cookieItem request = name:"+item.name()+"----value:"+item.value())
+//                LogUtil.e("hm","------saveFromResponse-----")
+//                LogUtil.e("hm","cookieItem request = name:"+item.name()+"----value:"+item.value())
 
                 cookieStore.add(url, item)
             }
@@ -52,14 +52,14 @@ class CookiesManager     //    private final HashMap<String, List<Cookie>> cooki
 //        }
 //        List<Cookie> cookies = cookieStore.get(url.host());
 
-        LogUtil.e("hm","------loadForRequest-----")
+//        LogUtil.e("hm","------loadForRequest-----")
         for (item in cookies) {
-                LogUtil.e("hm","cookieItem request = name:"+item.name()+"----value:"+item.value())
+//                LogUtil.e("hm","cookieItem request = name:"+item.name()+"----value:"+item.value())
 //            cookieStore.add(url, item);
             if (item.name() == "token") {
                 NetUtil.token = item.value()
                 setTokenCallBack?.setToken(item.value())
-                                    LogUtil.e("hm","------token_key-----"+ KWApplication.instance.token)
+//                                    LogUtil.e("hm","------token_key-----"+ KWApplication.instance.token)
             }
         }
         return cookies
