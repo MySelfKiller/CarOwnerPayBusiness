@@ -5,10 +5,10 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
         maven { url 'https://jitpack.io' }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/'
-        }
+//        maven {
+//            allowInsecureProtocol = true
+//            url 'http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/'
+//        }
 
         maven { url 'https://artifact.bytedance.com/repository/pangle' }
     }
