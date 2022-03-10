@@ -21,7 +21,6 @@ import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
 import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
-import com.kongzue.dialog.v3.TipGifDialog
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.kayu.utils.view.RoundImageView
 import com.kayu.business_car_owner.activity.CustomerActivity
@@ -197,15 +196,16 @@ class PersonalFragment : Fragment() {
         LogUtil.e("PersonalFragment----", "----setUserVisibleHint---")
         if (isVisibleToUser && isCreated && !mHasLoadedOnce) {
             LogUtil.e("PersonalFragment----", "----setUserVisibleHint---isCreated")
-            TipGifDialog.show(
-                requireContext() as AppCompatActivity,
-                "加载中...",
-                TipGifDialog.TYPE.OTHER,
-                R.drawable.loading_gif
-            )
-            isRefresh = true
-            mHasLoadedOnce = true
-            initView()
+//            TipGifDialog.show(
+//                requireContext() as AppCompatActivity,
+//                "加载中...",
+//                TipGifDialog.TYPE.OTHER,
+//                R.drawable.loading_gif
+//            )
+//            isRefresh = true
+//            mHasLoadedOnce = true
+//            initView()
+            refreshLayout?.autoRefresh()
         }
     }
 
@@ -214,15 +214,16 @@ class PersonalFragment : Fragment() {
         LogUtil.e("PersonalFragment----", "----onStart---")
         if (!userVisibleHint || mHasLoadedOnce) return
         LogUtil.e("PersonalFragment----", "----onStart---isVisibleToUser")
-        TipGifDialog.show(
-            requireContext() as AppCompatActivity,
-            "加载中...",
-            TipGifDialog.TYPE.OTHER,
-            R.drawable.loading_gif
-        )
-        isRefresh = true
-        mHasLoadedOnce = true
-        initView()
+//        TipGifDialog.show(
+//            requireContext() as AppCompatActivity,
+//            "加载中...",
+//            TipGifDialog.TYPE.OTHER,
+//            R.drawable.loading_gif
+//        )
+//        isRefresh = true
+//        mHasLoadedOnce = true
+//        initView()
+        refreshLayout?.autoRefresh()
     }
 
     private fun initView() {

@@ -89,6 +89,10 @@ class KWApplication() : MultiDexApplication() {
     override fun onCreate() {
         instance = this
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE)
+//        val isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
+//        if (isFirstShow) {
+//
+//        }
         val sysArgs = sp?.getString(Constants.system_args, "")
         if (!StringUtil.isEmpty(sysArgs)) {
             systemArgs = GsonHelper.fromJson(sysArgs, SystemParamContent::class.java)

@@ -46,6 +46,8 @@ class LoginAutoActivity : BaseActivity() {
     private var order_list_tv: TextView? = null
     private var sp: SharedPreferences? = null
     private var isFirstShow: Boolean = false
+    private val titlesStr = "隐私政策@@用户协议"
+    private val urlsStr = "https://www.sslm01.com/sslm/static/privacy_agree.html@@https://www.sslm01.com/sslm/static/user_agree.html"
     var titles //协议标题
             : Array<String>? = null
     var urls //协议连接
@@ -99,122 +101,114 @@ class LoginAutoActivity : BaseActivity() {
         })
         user_agreement = findViewById(R.id.login_user_agreement_tv)
         //        user_privacy = findViewById(R.id.login_user_privacy_tv);
-        TipGifDialog.show(this, "请稍等...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif)
-        mViewModel!!.getParameter(this, 3).observe(this, object : Observer<SystemParam?> {
-             override fun onChanged(systemParam: SystemParam?) {
-                TipGifDialog.dismiss()
-                if (null != systemParam && systemParam.type == 3) {
-                    if (!StringUtil.isEmpty(systemParam.content)) {
-                        systemParam.content?.let { KWApplication.instance.loadImg(it, bg_img!!) }
-                    }
-                    titles = systemParam.title.split("@@".toRegex()).toTypedArray()
-                    urls = systemParam.url.split("@@".toRegex()).toTypedArray()
-                    if (titles!!.size != 2 || urls!!.size != 2) return
-                    isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
-                    if (isFirstShow) {
+//        TipGifDialog.show(this, "请稍等...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif)
+//        mViewModel!!.getParameter(this, 3).observe(this, object : Observer<SystemParam?> {
+//             override fun onChanged(systemParam: SystemParam?) {
+////                TipGifDialog.dismiss()
+//                if (null != systemParam && systemParam.type == 3) {
+//                    if (!StringUtil.isEmpty(systemParam.content)) {
+//                        systemParam.content.let { KWApplication.instance.loadImg(it, bg_img!!) }
+//                    }
+//                }
+//            }
+//        })
+        showAgreementDialog()
+    }
+
+    private fun showAgreementDialog() {
+        titles = titlesStr.split("@@".toRegex()).toTypedArray()
+        urls = urlsStr.split("@@".toRegex()).toTypedArray()
+        if (titles!!.size != 2 || urls!!.size != 2) return
+        isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
+        if (isFirstShow) {
 //                        String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"与\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
 //                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
 //                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>与<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息。" +
 //                                "如您同意，请点击确定接收我们的服务";
-                        AgreementDialog.show(
-                            this@LoginAutoActivity,
-                            titles!![1] + "与" + titles!![0],
-                            KWApplication.instance.getClickableSpan(this@LoginAutoActivity, titles!!, urls!!),
-                            "同意并继续",
-                            "拒绝并退出"
-                        )
-                            .setCancelable(false).setOkButton(object : OnDialogButtonClickListener {
-                                public override fun onClick(
-                                    baseDialog: BaseDialog,
-                                    v: View
-                                ): Boolean {
-                                    baseDialog.doDismiss()
-                                    isFirstShow = false
-                                    val editor: SharedPreferences.Editor = sp!!.edit()
-                                    editor.putBoolean(Constants.isShowDialog, isFirstShow)
-                                    editor.apply()
-                                    editor.commit()
-                                    return false
-                                }
-                            }).setCancelButton(object : OnDialogButtonClickListener {
-                                public override fun onClick(
-                                    baseDialog: BaseDialog,
-                                    v: View
-                                ): Boolean {
-                                    baseDialog.doDismiss()
-                                    finish()
-                                    return false
-                                }
-                            })
+            AgreementDialog.show(
+                this@LoginAutoActivity,
+                titles!![1] + "与" + titles!![0],
+                KWApplication.instance.getClickableSpan(this@LoginAutoActivity, titles!!, urls!!),
+                "同意并继续",
+                "拒绝并退出"
+            )
+                .setCancelable(false).setOkButton(object : OnDialogButtonClickListener {
+                    public override fun onClick(
+                        baseDialog: BaseDialog,
+                        v: View
+                    ): Boolean {
+                        baseDialog.doDismiss()
+                        isFirstShow = false
+                        val editor: SharedPreferences.Editor = sp!!.edit()
+                        editor.putBoolean(Constants.isShowDialog, isFirstShow)
+                        editor.apply()
+                        editor.commit()
+                        return false
                     }
-                    val stringBuilder: StringBuilder = StringBuilder()
-                    val title1Index: Int = stringBuilder.length
-                    stringBuilder.append(titles!![1])
-                    val title1End: Int = stringBuilder.length
-                    stringBuilder.append("与")
-                    val title2Index: Int = stringBuilder.length
-                    stringBuilder.append(titles!!.get(0))
-                    val title2End: Int = stringBuilder.length
-                    val spannableString: SpannableString = SpannableString(stringBuilder.toString())
-                    //设置下划线文字
+                }).setCancelButton(object : OnDialogButtonClickListener {
+                    public override fun onClick(
+                        baseDialog: BaseDialog,
+                        v: View
+                    ): Boolean {
+                        baseDialog.doDismiss()
+                        finish()
+                        return false
+                    }
+                })
+        }
+        val stringBuilder = StringBuilder()
+        val title1Index: Int = stringBuilder.length
+        stringBuilder.append(titles!![1])
+        val title1End: Int = stringBuilder.length
+        stringBuilder.append("与")
+        val title2Index: Int = stringBuilder.length
+        stringBuilder.append(titles!!.get(0))
+        val title2End: Int = stringBuilder.length
+        val spannableString: SpannableString = SpannableString(stringBuilder.toString())
+        //设置下划线文字
 //                    spannableString.setSpan(new NoUnderlineSpan(), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    //设置文字的单击事件
-                    spannableString.setSpan(
-                        UrlClickableSpan(this@LoginAutoActivity, urls!![1]),
-                        title1Index,
-                        title1End,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    //设置文字的前景色
-                    spannableString.setSpan(
-                        ForegroundColorSpan(getResources().getColor(R.color.select_text_color)),
-                        title1Index,
-                        title1End,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
+        //设置文字的单击事件
+        spannableString.setSpan(
+            UrlClickableSpan(this@LoginAutoActivity, urls!![1]),
+            title1Index,
+            title1End,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        //设置文字的前景色
+        spannableString.setSpan(
+            ForegroundColorSpan(getResources().getColor(R.color.select_text_color)),
+            title1Index,
+            title1End,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-                    //设置下划线文字
+        //设置下划线文字
 //                    spannableString.setSpan(new NoUnderlineSpan(), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    //设置文字的单击事件
-                    spannableString.setSpan(
-                        UrlClickableSpan(this@LoginAutoActivity, urls!!.get(0)),
-                        title2Index,
-                        title2End,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    //设置文字的前景色
-                    spannableString.setSpan(
-                        ForegroundColorSpan(getResources().getColor(R.color.select_text_color)),
-                        title2Index,
-                        title2End,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    user_agreement?.setMovementMethod(LinkMovementMethod.getInstance())
-                    user_agreement?.setText(spannableString)
-                    //                    user_privacy.setText(titles[1]);
-                    user_agreement?.setOnClickListener(object : NoMoreClickListener() {
-                        override fun OnMoreClick(view: View) {
-                            jumpWeb("服务条款", urls!!.get(0))
-                        }
-
-                        override fun OnMoreErrorClick() {}
-                    })
-                    //                    user_privacy.setOnClickListener(new NoMoreClickListener() {
-//                        @Override
-//                        protected void OnMoreClick(View view) {
-//                            jumpWeb(titles[1],urls[1]);
-//                        }
-//
-//                        @Override
-//                        protected void OnMoreErrorClick() {
-//
-//                        }
-//                    });
-                }
+        //设置文字的单击事件
+        spannableString.setSpan(
+            UrlClickableSpan(this@LoginAutoActivity, urls!!.get(0)),
+            title2Index,
+            title2End,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        //设置文字的前景色
+        spannableString.setSpan(
+            ForegroundColorSpan(getResources().getColor(R.color.select_text_color)),
+            title2Index,
+            title2End,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        user_agreement?.setMovementMethod(LinkMovementMethod.getInstance())
+        user_agreement?.setText(spannableString)
+        //                    user_privacy.setText(titles[1]);
+        user_agreement?.setOnClickListener(object : NoMoreClickListener() {
+            override fun OnMoreClick(view: View) {
+                jumpWeb("服务条款", urls!!.get(0))
             }
+
+            override fun OnMoreErrorClick() {}
         })
     }
-
     private fun jumpWeb(title: String, url: String) {
         val intent: Intent = Intent(this@LoginAutoActivity, WebViewActivity::class.java)
         intent.putExtra("url", url)
