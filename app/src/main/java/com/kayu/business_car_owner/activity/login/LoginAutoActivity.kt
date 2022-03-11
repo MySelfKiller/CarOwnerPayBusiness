@@ -143,6 +143,7 @@ class LoginAutoActivity : BaseActivity() {
                         editor.putBoolean(Constants.isShowDialog, isFirstShow)
                         editor.apply()
                         editor.commit()
+                        KWApplication.instance.initSDKs()
                         return false
                     }
                 }).setCancelButton(object : OnDialogButtonClickListener {

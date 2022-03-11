@@ -89,10 +89,6 @@ class KWApplication() : MultiDexApplication() {
     override fun onCreate() {
         instance = this
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE)
-//        val isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
-//        if (isFirstShow) {
-//
-//        }
         val sysArgs = sp?.getString(Constants.system_args, "")
         if (!StringUtil.isEmpty(sysArgs)) {
             systemArgs = GsonHelper.fromJson(sysArgs, SystemParamContent::class.java)
@@ -104,7 +100,10 @@ class KWApplication() : MultiDexApplication() {
 //        initAdSdk()
         //        setFornts();
         initDialogSetting()
-        LocationManagerUtil.init(this)
+        val isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
+        if (!isFirstShow) {
+            initSDKs()
+        }
 //        initJPushSetting()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
@@ -152,6 +151,12 @@ class KWApplication() : MultiDexApplication() {
         })
     }
 
+    /**
+     * 必须弹出隐私对话框之后才能初始化
+     */
+    fun initSDKs() {
+        LocationManagerUtil.init(this)
+    }
     //初始化广告SDK
 //    fun initAdSdk() {
 //        //是否弹出过隐私弹框
