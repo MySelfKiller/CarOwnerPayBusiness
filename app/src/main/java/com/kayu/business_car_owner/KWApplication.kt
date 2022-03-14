@@ -124,7 +124,7 @@ class KWApplication() : MultiDexApplication() {
                 val isLogin = sp.getBoolean(Constants.isLogin, false) //判断用户是否登录
                 //热启动 && 应用退到后台时间超过10s
                 if (((mActivityCount.get() == 0) && isLogin
-                            && (System.currentTimeMillis() - mAppStopTimeMillis > 10 * 1000
+                            && (System.currentTimeMillis() - mAppStopTimeMillis > 30 * 1000
                             ) && activity !is SplashActivity)
                 ) {
                     activity.startActivity(Intent(activity, SplashHotActivity::class.java))

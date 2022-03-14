@@ -13,8 +13,8 @@ object Constants {
     const val isShowDialog = "isShowDialog"
     const val system_args = "system_args"
     const val userInfo = "user_info"
-    const val authority = "com.kayu.car_owner_pay.provider"
-    const val PATH_ROOT = "com.kayu.car_owner_pay"
+    const val authority = "com.kayu.business_car_owner.provider"
+    const val PATH_ROOT = "com.kayu.business_car_owner"
     var PATH_IMG = "imag/" // 图片
     var PATH_PHOTO = "photo/" // 图片及其他数据保存文件夹
 

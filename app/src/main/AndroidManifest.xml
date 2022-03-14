@@ -4,6 +4,7 @@
     package="com.kayu.business_car_owner">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 读取SD卡的权限:打开相册选取图片所必须的权限 -->

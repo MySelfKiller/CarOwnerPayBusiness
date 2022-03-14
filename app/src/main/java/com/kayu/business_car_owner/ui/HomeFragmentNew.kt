@@ -332,7 +332,8 @@ class HomeFragmentNew
                                     sb.append(longitude)
                                     sb.append(",")
                                     sb.append(latitude)
-                                    intent.putExtra("url", sb.toString())
+//                                    intent.putExtra("url", sb.toString())
+                                    intent.putExtra("url", "http://192.168.3.41:8080/#/Merchants")
                                     intent.putExtra("from", "首页")
                                     startActivity(intent)
                                 } else {
