@@ -192,7 +192,8 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
                     }
 
                     override fun onDetailCallBack(position: Int, obj: Any?) {
-                        permissionsCheck(
+                        KWApplication.instance.permissionsCheck(
+                            this@WashOrderAllFragment.activity as BaseActivity,
                             arrayOf(Manifest.permission.CALL_PHONE),
                             R.string.permiss_call_phone,
                             object : Callback {
@@ -208,41 +209,4 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
         }
     }
 
-    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        (activity as BaseActivity?)!!.performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        requireContext(),
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog = MessageDialog.build((requireActivity() as AppCompatActivity))
-                    dialog.title = "需要获取以下权限"
-                    dialog.message = getString(resId)
-                    dialog.setOkButton("下一步") { baseDialog, v ->
-                        callback.onGranted()
-                        false
-                    }
-                    dialog.cancelable = false
-                    dialog.show()
-                }
-            })
-    }
 }

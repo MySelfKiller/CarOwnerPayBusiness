@@ -4,21 +4,14 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Handler
-import android.view.View
 import android.webkit.JavascriptInterface
 import androidx.appcompat.app.AppCompatActivity
 import com.kayu.business_car_owner.activity.*
-import com.kayu.business_car_owner.activity.BaseActivity.PermissionCallback
 import com.kayu.business_car_owner.model.WXSharedBean
 import com.kayu.business_car_owner.wxapi.WXShare
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.callback.ImageCallback
-import com.kayu.utils.permission.EasyPermissions
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kongzue.dialog.v3.MessageDialog
 import com.kongzue.dialog.v3.TipGifDialog
 import org.json.JSONException
 import org.json.JSONObject
@@ -60,7 +53,7 @@ class LocalJavascriptInterface constructor(
             TipGifDialog.show(mContext as AppCompatActivity?, "数据错误，无法保存！", TipGifDialog.TYPE.ERROR)
             return
         }
-        permissionsCheck(
+        KWApplication.instance.permissionsCheck(
             mContext as BaseActivity,
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             R.string.permiss_write_store,
@@ -185,51 +178,5 @@ class LocalJavascriptInterface constructor(
                 )
             }
         }
-    }
-
-    fun permissionsCheck(
-        baseActivity: BaseActivity,
-        perms: Array<String>,
-        resId: Int,
-        callback: Callback
-    ) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        baseActivity.performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        baseActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((baseActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(baseActivity.getString(resId))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
     }
 }

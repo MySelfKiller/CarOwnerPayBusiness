@@ -10,7 +10,7 @@ import java.nio.charset.Charset
 import java.util.*
 
 object Utils {
-    fun GetExternalStroragePath(context: Context?): String? {
+    fun GetExternalStroragePath(context: Context): String? {
         // 得到存储卡路径
         var sdDir: File? = null
         val sdCardExist = Environment.getExternalStorageState() ==

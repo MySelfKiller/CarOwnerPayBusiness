@@ -34,6 +34,7 @@ import com.kayu.business_car_owner.model.DistancesParam
 import com.kayu.business_car_owner.model.SortsParam
 import com.kayu.business_car_owner.ui.adapter.OilStationAdapter
 import com.kayu.utils.*
+import com.kayu.utils.callback.Callback
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.ArrayList
 import java.util.HashMap
@@ -162,18 +163,11 @@ class GasStationListActivity constructor() : BaseActivity() {
                 override fun onDetailCallBack(position: Int, obj: Any?) {}
             })
         station_rv?.setAdapter(oilStationAdapter)
-        permissionsCheck()
-    }
-
-    fun permissionsCheck() {
-        val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        //        String[] perms = needPermissions;
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
+        KWApplication.instance.permissionsCheck(
+            this@GasStationListActivity,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            R.string.permiss_location,object: Callback {
+                override fun onSuccess() {
                     if (!LocationManagerUtil.self?.isLocServiceEnable!!) {
                         MessageDialog.show(
                             this@GasStationListActivity,
@@ -215,33 +209,10 @@ class GasStationListActivity constructor() : BaseActivity() {
                     }
                 }
 
-                public override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        this@GasStationListActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
+                override fun onError() {
+
                 }
 
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@GasStationListActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(R.string.permiss_location))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
             })
     }
 

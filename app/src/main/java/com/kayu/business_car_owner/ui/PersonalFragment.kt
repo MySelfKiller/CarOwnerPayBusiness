@@ -1,38 +1,49 @@
 package com.kayu.business_car_owner.ui
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.kayu.business_car_owner.KWApplication
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.kayu.business_car_owner.model.SysOrderBean
-import com.kayu.business_car_owner.activity.WebViewActivity
-import com.kayu.business_car_owner.activity.MainViewModel
 import androidx.lifecycle.ViewModelProviders
+import androidx.multidex.MultiDexApplication
 import androidx.recyclerview.widget.RecyclerView
-import com.kongzue.dialog.v3.MessageDialog
 import com.gcssloop.widget.PagerGridLayoutManager
 import com.hjq.toast.ToastUtils
+import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.R
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.kayu.utils.view.RoundImageView
-import com.kayu.business_car_owner.activity.CustomerActivity
-import com.kayu.business_car_owner.activity.SettingsActivity
+import com.kayu.business_car_owner.activity.*
+import com.kayu.business_car_owner.model.SysOrderBean
 import com.kayu.business_car_owner.ui.adapter.OrderCategoryAdapter
-import com.kayu.business_car_owner.activity.OilOrderListActivity
-import com.kayu.business_car_owner.activity.WashOrderListActivity
 import com.kayu.utils.*
+import com.kayu.utils.callback.Callback
+import com.kayu.utils.view.RoundImageView
+import com.kongzue.dialog.interfaces.OnDismissListener
+import com.kongzue.dialog.interfaces.OnMenuItemClickListener
+import com.kongzue.dialog.v3.BottomMenu
+import com.kongzue.dialog.v3.MessageDialog
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.StringBuilder
+import java.io.File
 
 class PersonalFragment : Fragment() {
     private var refreshLayout: SmartRefreshLayout? = null
@@ -47,7 +58,7 @@ class PersonalFragment : Fragment() {
     private var user_tip: TextView? = null
     private var card_valid: TextView? = null
     private var explain_content: TextView? = null
-
+    private var sp: SharedPreferences? = null
     //    private ConstraintLayout all_order_lay;
     //    private LinearLayout more_lay;
     //    private ImageView user_card_bg;
@@ -63,6 +74,10 @@ class PersonalFragment : Fragment() {
     ): View? {
         mainViewModel = ViewModelProviders.of(requireActivity())
             .get(MainViewModel::class.java)
+        sp = requireContext().getSharedPreferences(
+            Constants.SharedPreferences_name,
+            Context.MODE_PRIVATE
+        )
         return inflater.inflate(R.layout.fragment_personal, container, false)
     }
 
@@ -71,6 +86,15 @@ class PersonalFragment : Fragment() {
         refreshLayout = view.findViewById(R.id.refreshLayout)
         //用户头像
         user_head_img = view.findViewById(R.id.personal_user_head_img)
+        user_head_img?.setOnClickListener(object:NoMoreClickListener(){
+            override fun OnMoreClick(view: View) {
+                openImageChooserActivity()
+            }
+
+            override fun OnMoreErrorClick() {
+            }
+
+        })
         //用户名称
         user_name = view.findViewById(R.id.personal_user_name)
         //累计节省
@@ -311,6 +335,13 @@ class PersonalFragment : Fragment() {
                     }
                 })
             KWApplication.instance.loadImg(userBean.headPic, user_head_img!!)
+            val photo = sp?.getString("photoPath","")
+            if (!photo.isNullOrEmpty()) {
+                if (hasFile(photo)) {
+                    val bitmap = BitmapFactory.decodeFile(photo)
+                    user_head_img?.setImageBitmap(bitmap)
+                }
+            }
 //            var useType = ""
 //            when (userBean.type) {
 //                -2 -> useType = "游客"
@@ -320,7 +351,7 @@ class PersonalFragment : Fragment() {
 //            }
             user_name!!.text = userBean.phone
             card_valid!!.text = userBean.idenName
-
+            KWApplication.instance.userRole = userBean.type
             if (userBean.balance != 0.0)
                 user_balance!!.text = userBean.balance.toString()
             val sss = userBean.busTitle.split("#".toRegex()).toTypedArray()
@@ -464,51 +495,6 @@ class PersonalFragment : Fragment() {
                 category_rv!!.adapter = categoryAdapter
             })
 
-//        mainViewModel.getSysParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
-//            @Override
-//            public void onChanged(SystemParam systemParam) {
-//                if (null  == systemParam)
-//                    return;
-//                try {
-//                    JSONObject jsonObject = new JSONObject(systemParam.content);
-//                    int showGas = jsonObject.optInt("gas");
-//                    int showCarWash = jsonObject.optInt("carwash");
-//                    if (showGas == 1 && showCarWash ==1 ) {
-//                        all_order_lay.setVisibility(View.VISIBLE);
-//                        wash_order_lay.setVisibility(View.VISIBLE);
-//                        oil_order_lay.setVisibility(View.VISIBLE);
-//
-//                    }else if(showGas == 0 && showCarWash == 0){
-//                        all_order_lay.setVisibility(View.GONE);
-//                        wash_order_lay.setVisibility(View.GONE);
-//                        oil_order_lay.setVisibility(View.GONE);
-//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(more_lay.getLayoutParams());
-//                        layoutParams.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_15)
-//                                ,getResources().getDimensionPixelSize(R.dimen.dp_90)
-//                                ,getResources().getDimensionPixelSize(R.dimen.dp_15)
-//                                ,getResources().getDimensionPixelSize(R.dimen.dp_20));
-//                        more_lay.setLayoutParams(layoutParams);
-//
-//                    } else {
-//
-//                        if (showCarWash == 1) {
-//                            wash_order_lay.setVisibility(View.VISIBLE);
-//                        }else{
-//                            wash_order_lay.setVisibility(View.GONE);
-//                        }
-//                        if (showGas == 1) {
-//                            oil_order_lay.setVisibility(View.VISIBLE);
-//                        } else {
-//                            oil_order_lay.setVisibility(View.GONE);
-//                        }
-//                        all_order_lay.setVisibility(View.VISIBLE);
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
         if (isRefresh) {
             refreshLayout!!.finishRefresh()
             isRefresh = false
@@ -517,5 +503,208 @@ class PersonalFragment : Fragment() {
             refreshLayout!!.finishLoadMore()
             isLoadmore = false
         }
+    }
+
+    //选择拍照还是相册
+    fun openImageChooserActivity() {
+        showCustomDialog()
+    }
+
+
+
+
+    //拍照
+    private fun takeCamera() {
+        KWApplication.instance.permissionsCheck(
+            this@PersonalFragment.requireActivity() as BaseActivity,
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            R.string.permiss_take_phone,
+            object : Callback {
+                override fun onSuccess() {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    cameraFilePath = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                        .toString() + "//" + System.currentTimeMillis() + ".png"
+                    val outputImage = File(cameraFilePath)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //7.0及以上
+                        val photoUri: Uri = FileProvider.getUriForFile(
+                            this@PersonalFragment.requireContext(), Constants.authority,
+                            outputImage
+                        )
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        intent.putExtra("return-data", true)
+                    } else {
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputImage))
+                    }
+                    startActivityForResult(intent, FILE_CAMERA_RESULT_CODE)
+                }
+
+                override fun onError() {
+
+                }
+            })
+    }
+    private var cameraFilePath: String? = null
+    private val FILE_CHOOSER_RESULT_CODE: Int = 1
+    private val FILE_CAMERA_RESULT_CODE: Int = 0
+    //选择图片
+    private fun takePhoto() {
+        KWApplication.instance.permissionsCheck(
+            this@PersonalFragment.requireActivity() as BaseActivity,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            R.string.permiss_write_stor2,
+            object : Callback {
+                override fun onSuccess() {
+
+                    // FIXME: 2018/12/10 从相册选择
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    intent.addFlags(
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                    startActivityForResult(intent, FILE_CHOOSER_RESULT_CODE)
+                }
+
+                override fun onError() {
+
+                }
+            })
+
+    }
+    var isClickBottomMenu = false
+    private fun showCustomDialog() {
+        BottomMenu.show(
+            this@PersonalFragment.requireActivity() as BaseActivity,
+            arrayOf("拍照", "从相册选择"),
+            object : OnMenuItemClickListener {
+                public override fun onClick(text: String, index: Int) {
+                    if (index == 0) {
+                        // 2018/12/10 拍照
+//                    requestCode = FILE_CAMERA_RESULT_CODE;
+                        takeCamera()
+                        isClickBottomMenu = true
+                    } else if (index == 1) {
+//                    requestCode = FILE_CHOOSER_RESULT_CODE;
+                        // 2018/12/10 从相册选择
+                        takePhoto()
+                        isClickBottomMenu = true
+                    } else {
+//                    mUploadCallbackAboveL = null;
+//                    mUploadMessage = null;
+                        isClickBottomMenu = false
+                    }
+                }
+            }).setOnDismissListener(object : OnDismissListener {
+            public override fun onDismiss() {
+                if (isClickBottomMenu)return
+
+            }
+        })
+    }
+
+    //    private int requestCode = -2;
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        isClickBottomMenu = false
+        var resultUri: Uri? = null
+        if (requestCode == FILE_CAMERA_RESULT_CODE) {
+            if (data?.data != null) {
+                resultUri = data.getData()
+            }
+            if (resultUri == null && hasFile(cameraFilePath)) {
+//                resultUri = Uri.fromFile(File(cameraFilePath))
+                val pictureFile = File(cameraFilePath)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    resultUri = FileProvider.getUriForFile(
+                        this@PersonalFragment.requireContext(),
+                        Constants.authority, pictureFile
+                    )
+                } else {
+                    resultUri = Uri.fromFile(pictureFile)
+                }
+            }
+
+
+            Log.e("hm", "photoUri=" + resultUri.toString())
+            if (resultUri != null) {
+                startPhotoZoom(resultUri)
+            }
+
+        } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            if (data != null) {
+                resultUri = data.getData()
+            }
+            if (resultUri != null) {
+                startPhotoZoom(resultUri)
+            }
+
+        }else if (requestCode == 3) {
+            val bitmap = BitmapFactory.decodeFile(photoPath + cropPhoto)
+            user_head_img?.setImageBitmap(bitmap)
+            val editor: SharedPreferences.Editor = sp!!.edit()
+            editor.putString("photoPath", photoPath + cropPhoto)
+            editor.apply()
+            editor.commit()
+
+        }
+    }
+
+    /**
+     * 判断文件是否存在
+     */
+    fun hasFile(path: String?): Boolean {
+        try {
+            val f: File = File(path)
+            if (!f.exists()) {
+                return false
+            }
+        } catch (e: Exception) {
+            Log.i("error", e.toString())
+            return false
+        }
+        return true
+    }
+    var photoPath: String? = null
+    var cropPhoto: String? = null
+
+    private fun startPhotoZoom(uri: Uri) {
+        //保存裁剪后的图片
+        cropPhoto = "photo.jpg"
+        photoPath = KWApplication.instance.GetDataPath()+ Constants.PATH_PHOTO
+        val file = File(photoPath)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+        val cropFile = File(photoPath, cropPhoto)
+        try {
+            if (cropFile.exists()) {
+                cropFile.delete()
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        val cropUri: Uri
+        cropUri = Uri.fromFile(cropFile)
+        val intent = Intent("com.android.camera.action.CROP")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        }
+        intent.setDataAndType(uri, "image/*")
+        intent.putExtra("crop", "true")
+        intent.putExtra("aspectX", 1) // 裁剪框比例
+        intent.putExtra("aspectY", 1)
+        intent.putExtra("outputX", 300) // 输出图片大小
+        intent.putExtra("outputY", 300)
+        intent.putExtra("scale", true)
+        intent.putExtra("return-data", true)
+        Log.e("hm", "cropUri = $cropUri")
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
+        intent.putExtra("noFaceDetection", true) // no face detection
+        startActivityForResult(intent, 3)
     }
 }

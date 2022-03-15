@@ -304,7 +304,8 @@ class WashStationActivity constructor() : BaseActivity() {
         })
         phone_lay!!.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                permissionsCheck(
+                KWApplication.instance.permissionsCheck(
+                    this@WashStationActivity,
                     arrayOf(Manifest.permission.CALL_PHONE),
                     R.string.permiss_call_phone,
                     object : Callback {
@@ -402,44 +403,44 @@ class WashStationActivity constructor() : BaseActivity() {
         }
     }
 
-    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        this@WashStationActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@WashStationActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(resId))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
-    }
+//    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
+////        String[] perms = {Manifest.permission.CAMERA};
+//        performCodeWithPermission(
+//            1,
+//            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+//            perms,
+//            object : PermissionCallback {
+//                override fun hasPermission(allPerms: List<Array<String>>) {
+//                    callback.onSuccess()
+//                }
+//
+//                override fun noPermission(
+//                    deniedPerms: List<String>?,
+//                    grantedPerms: List<String?>?,
+//                    hasPermanentlyDenied: Boolean?
+//                ) {
+//                    EasyPermissions.goSettingsPermissions(
+//                        this@WashStationActivity,
+//                        1,
+//                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+//                        Constants.RC_PERMISSION_BASE
+//                    )
+//                }
+//
+//                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
+//                    val dialog: MessageDialog =
+//                        MessageDialog.build((this@WashStationActivity as AppCompatActivity?)!!)
+//                    dialog.setTitle("需要获取以下权限")
+//                    dialog.setMessage(getString(resId))
+//                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
+//                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
+//                            callback.onGranted()
+//                            return false
+//                        }
+//                    })
+//                    dialog.setCancelable(false)
+//                    dialog.show()
+//                }
+//            })
+//    }
 }

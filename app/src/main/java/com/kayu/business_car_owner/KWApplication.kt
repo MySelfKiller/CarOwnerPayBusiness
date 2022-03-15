@@ -16,48 +16,49 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.kayu.business_car_owner.activity.AppManager.Companion.appManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.hjq.toast.ToastUtils
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
-import com.kayu.utils.location.LocationManagerUtil
 import androidx.multidex.MultiDexApplication
-import com.kayu.business_car_owner.model.SystemParam
-import com.kayu.business_car_owner.model.SystemParamContent
-import com.squareup.leakcanary.LeakCanary
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.request.transition.Transition
+import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.hjq.toast.ToastUtils
+import com.hjq.toast.style.ToastWhiteStyle
+import com.kayu.business_car_owner.activity.AppManager.Companion.appManager
+import com.kayu.business_car_owner.activity.BaseActivity
 import com.kayu.business_car_owner.activity.SplashActivity
 import com.kayu.business_car_owner.activity.SplashHotActivity
-import com.kayu.business_car_owner.http.cookie.PersistentCookieStore
-import com.kayu.business_car_owner.http.OkHttpManager
 import com.kayu.business_car_owner.activity.login.LoginAutoActivity
-import com.hjq.toast.style.ToastWhiteStyle
-import com.kongzue.dialog.util.DialogSettings
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.kayu.business_car_owner.http.HttpConfig
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.ViewTarget
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.kayu.utils.callback.ImageCallback
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.kongzue.dialog.v3.MessageDialog
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
+import com.kayu.business_car_owner.http.OkHttpManager
+import com.kayu.business_car_owner.http.cookie.PersistentCookieStore
 import com.kayu.business_car_owner.model.MapInfoModel
-import com.kayu.utils.location.CoordinateTransformUtil
-import com.kongzue.dialog.v3.BottomMenu
-import com.kongzue.dialog.v3.TipGifDialog
+import com.kayu.business_car_owner.model.SystemParam
+import com.kayu.business_car_owner.model.SystemParamContent
 import com.kayu.business_car_owner.ui.text_link.UrlClickableSpan
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
+import com.kayu.utils.callback.ImageCallback
+import com.kayu.utils.location.CoordinateTransformUtil
+import com.kayu.utils.location.LocationManagerUtil
+import com.kayu.utils.permission.EasyPermissions
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
+import com.kongzue.dialog.util.BaseDialog
+import com.kongzue.dialog.util.DialogSettings
+import com.kongzue.dialog.v3.BottomMenu
+import com.kongzue.dialog.v3.MessageDialog
+import com.kongzue.dialog.v3.TipGifDialog
+import com.squareup.leakcanary.LeakCanary
 import java.io.File
-import java.lang.Exception
-import java.lang.StringBuilder
 import java.net.URISyntaxException
-import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.properties.Delegates
 
@@ -721,11 +722,62 @@ class KWApplication() : MultiDexApplication() {
         return spannableString
     }
 
-    private var title: String? = null
-    private var desc: String? = null
-    private var regBtn: String? = null
-    private var pastTitle: String? = null
-    private var pastBtn: String? = null
+    fun GetDataPath(): String? {
+        return Utils.getEnaviBaseStorage(this)
+    }
+
+    fun permissionsCheck(
+        baseActivity: BaseActivity,
+        perms: Array<String>,
+        resId: Int,
+        callback: Callback
+    ) {
+//        String[] perms = {Manifest.permission.CAMERA};
+        baseActivity.performCodeWithPermission(
+            1,
+            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+            perms,
+            object : BaseActivity.PermissionCallback {
+                override fun hasPermission(allPerms: List<Array<String>>) {
+                    callback.onSuccess()
+                }
+
+                override fun noPermission(
+                    deniedPerms: List<String>?,
+                    grantedPerms: List<String?>?,
+                    hasPermanentlyDenied: Boolean?
+                ) {
+                    EasyPermissions.goSettingsPermissions(
+                        baseActivity,
+                        1,
+                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
+                        Constants.RC_PERMISSION_BASE
+                    )
+                }
+
+                public override fun showDialog(dialogType: Int, callback: EasyPermissions.DialogCallback) {
+                    val dialog: MessageDialog =
+                        MessageDialog.build((baseActivity as AppCompatActivity?)!!)
+                    dialog.setTitle("需要获取以下权限")
+                    dialog.setMessage(baseActivity.getString(resId))
+                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
+                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
+                            callback.onGranted()
+                            return false
+                        }
+                    })
+                    dialog.setCancelable(false)
+                    dialog.show()
+                }
+            })
+    }
+
+
+//    private var title: String? = null
+//    private var desc: String? = null
+//    private var regBtn: String? = null
+//    private var pastTitle: String? = null
+//    private var pastBtn: String? = null
 
     //    private String url = null;
 //    fun showRegDialog(context: Context) {

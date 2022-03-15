@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
+import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.model.WashParam
 import com.kayu.business_car_owner.ui.adapter.WashStationAdapter
 import com.kayu.utils.location.CoordinateTransformUtil
@@ -30,6 +31,7 @@ import com.kayu.business_car_owner.model.ParamParent
 import com.kayu.business_car_owner.ui.adapter.ParamParentAdapter
 import com.kayu.business_car_owner.R
 import com.kayu.utils.*
+import com.kayu.utils.callback.Callback
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.ArrayList
 import java.util.HashMap
@@ -141,18 +143,12 @@ class CarWashListActivity constructor() : BaseActivity() {
             })
         station_rv?.adapter = stationAdapter
         param_recycle_view?.layoutManager = LinearLayoutManager(this@CarWashListActivity)
-        permissionsCheck()
-    }
-
-    fun permissionsCheck() {
-        val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        //        String[] perms = needPermissions;
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                public override fun hasPermission(allPerms: List<Array<String>>) {
+        KWApplication.instance.permissionsCheck(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            R.string.permiss_location,
+            object :Callback{
+                override fun onSuccess() {
                     if (!LocationManagerUtil.self?.isLocServiceEnable!!) {
                         MessageDialog.show(
                             this@CarWashListActivity,
@@ -167,7 +163,7 @@ class CarWashListActivity constructor() : BaseActivity() {
                                     v: View
                                 ): Boolean {
                                     baseDialog.doDismiss()
-                                    val intent: Intent = Intent()
+                                    val intent = Intent()
                                     intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     startActivity(intent)
@@ -191,38 +187,14 @@ class CarWashListActivity constructor() : BaseActivity() {
                     }
                     if (null == LocationManagerUtil.self?.loccation) {
                         LocationManagerUtil.self?.reStartLocation()
-                    }
-                }
+                    }                }
 
-                public override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        this@CarWashListActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
+                override fun onError() {}
 
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@CarWashListActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(R.string.permiss_location))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
+            }
+        )
     }
+
 
     private fun loadParam() {
 //        TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);

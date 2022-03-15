@@ -193,7 +193,8 @@ class WashUnusedActivity constructor() : BaseActivity() {
         })
         phone_lay!!.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                permissionsCheck(
+                KWApplication.instance.permissionsCheck(
+                    this@WashUnusedActivity,
                     arrayOf(Manifest.permission.CALL_PHONE),
                     R.string.permiss_call_phone,
                     object : Callback {
@@ -386,43 +387,4 @@ class WashUnusedActivity constructor() : BaseActivity() {
         })
     }
 
-    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        this@WashUnusedActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@WashUnusedActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(resId))
-                    dialog.setOkButton("下一步"
-                    ) { baseDialog, v ->
-                        callback.onGranted()
-                        false
-                    }
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
-    }
 }

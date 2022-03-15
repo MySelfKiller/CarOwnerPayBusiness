@@ -21,7 +21,6 @@ import android.view.View
 import android.webkit.*
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.hjq.toast.ToastUtils
 import com.kongzue.dialog.v3.TipGifDialog
 import com.kayu.utils.status_bar_set.StatusBarUtil
@@ -32,12 +31,8 @@ import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
-import com.kayu.utils.permission.EasyPermissions
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
 import com.kongzue.dialog.interfaces.OnDismissListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kongzue.dialog.v3.MessageDialog
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -521,7 +516,7 @@ class WebViewActivity : BaseActivity() {
     private var mUploadCallbackAboveL: ValueCallback<Array<Uri?>>? = null
     private var mUploadMessage: ValueCallback<Uri?>? = null
 
-    ///选择拍照还是相册
+    //选择拍照还是相册
     fun openImageChooserActivity() {
         showCustomDialog()
     }
@@ -531,7 +526,7 @@ class WebViewActivity : BaseActivity() {
 
     //拍照
     private fun takeCamera() {
-        permissionsCheck(
+        KWApplication.instance.permissionsCheck(
             this@WebViewActivity,
             arrayOf(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE),
             R.string.permiss_take_phone,
@@ -564,7 +559,7 @@ class WebViewActivity : BaseActivity() {
 
     //选择图片
     private fun takePhoto() {
-        permissionsCheck(
+        KWApplication.instance.permissionsCheck(
             this@WebViewActivity,
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             R.string.permiss_write_stor2,
@@ -758,52 +753,6 @@ class WebViewActivity : BaseActivity() {
         val cookieManager: CookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies {  }
         super.onDestroy()
-    }
-
-    fun permissionsCheck(
-        baseActivity: BaseActivity,
-        perms: Array<String>,
-        resId: Int,
-        callback: Callback
-    ) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        baseActivity.performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        baseActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                public override fun showDialog(dialogType: Int, callback: EasyPermissions.DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((baseActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(baseActivity.getString(resId))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
     }
 
     companion object {

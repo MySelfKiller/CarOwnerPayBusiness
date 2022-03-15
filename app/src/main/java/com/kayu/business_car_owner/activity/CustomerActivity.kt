@@ -7,15 +7,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.model.SystemParam
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
-import com.kongzue.dialog.v3.MessageDialog
-import com.kayu.utils.permission.EasyPermissions
 import com.kayu.utils.callback.ImageCallback
 import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.*
@@ -68,7 +62,8 @@ class CustomerActivity : BaseActivity() {
                         call_btn?.setVisibility(View.VISIBLE)
                         call_btn?.setOnClickListener(object : NoMoreClickListener() {
                             override fun OnMoreClick(view: View) {
-                                permissionsCheck(
+                                KWApplication.instance.permissionsCheck(
+                                    this@CustomerActivity,
                                     arrayOf(Manifest.permission.CALL_PHONE),
                                     R.string.permiss_call_phone,
                                     object : Callback {
@@ -100,7 +95,7 @@ class CustomerActivity : BaseActivity() {
                     save_btn?.visibility = View.VISIBLE
                     save_btn?.setOnClickListener(object : NoMoreClickListener() {
                         override fun OnMoreClick(view: View) {
-                            permissionsCheck(
+                            KWApplication.instance.permissionsCheck(this@CustomerActivity,
                                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                                 R.string.permiss_write_store,
                                 object : Callback {
@@ -133,44 +128,4 @@ class CustomerActivity : BaseActivity() {
             })
     }
 
-    fun permissionsCheck(perms: Array<String>, resId: Int, callback: Callback) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        performCodeWithPermission(
-            1,
-            Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-            perms,
-            object : PermissionCallback {
-                override fun hasPermission(allPerms: List<Array<String>>) {
-                    callback.onSuccess()
-                }
-
-                override fun noPermission(
-                    deniedPerms: List<String>?,
-                    grantedPerms: List<String?>?,
-                    hasPermanentlyDenied: Boolean?
-                ) {
-                    EasyPermissions.goSettingsPermissions(
-                        this@CustomerActivity,
-                        1,
-                        Constants.RC_PERMISSION_PERMISSION_FRAGMENT,
-                        Constants.RC_PERMISSION_BASE
-                    )
-                }
-
-                public override fun showDialog(dialogType: Int, callback: DialogCallback) {
-                    val dialog: MessageDialog =
-                        MessageDialog.build((this@CustomerActivity as AppCompatActivity?)!!)
-                    dialog.setTitle("需要获取以下权限")
-                    dialog.setMessage(getString(resId))
-                    dialog.setOkButton("下一步", object : OnDialogButtonClickListener {
-                        public override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
-                            callback.onGranted()
-                            return false
-                        }
-                    })
-                    dialog.setCancelable(false)
-                    dialog.show()
-                }
-            })
-    }
 }
