@@ -529,8 +529,8 @@ class MainViewModel : ViewModel() {
     fun getParamSelect(context: Context): LiveData<ParamOilBean?> {
         if (null == paramOilData) {
             paramOilData = MutableLiveData()
-            loadParamSelect(context)
         }
+        loadParamSelect(context)
         return paramOilData!!
     }
 
@@ -560,8 +560,8 @@ class MainViewModel : ViewModel() {
     fun getParamWash(context: Context): LiveData<ParamWashBean?> {
         if (null == paramWashData) {
             paramWashData = MutableLiveData()
-            loadParamWash(context)
         }
+        loadParamWash(context)
         return paramWashData!!
     }
 

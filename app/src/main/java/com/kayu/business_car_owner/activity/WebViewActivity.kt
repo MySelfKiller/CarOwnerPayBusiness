@@ -735,23 +735,23 @@ class WebViewActivity : BaseActivity() {
 
             // 清理缓存
             wvWebView?.stopLoading()
-            wvWebView?.onPause()
-            wvWebView?.clearHistory()
-            wvWebView?.clearCache(true)
-            wvWebView?.clearFormData()
-            wvWebView?.clearSslPreferences()
-            WebStorage.getInstance().deleteAllData()
-            wvWebView?.destroyDrawingCache()
-            wvWebView?.removeAllViews()
+//            wvWebView?.onPause()
+//            wvWebView?.clearHistory()
+//            wvWebView?.clearCache(true)
+//            wvWebView?.clearFormData()
+//            wvWebView?.clearSslPreferences()
+//            WebStorage.getInstance().deleteAllData()
+//            wvWebView?.destroyDrawingCache()
+//            wvWebView?.removeAllViews()
 
             // 最后再去webView.destroy();
             wvWebView?.destroy()
-            wvWebView = null
+//            wvWebView = null
         }
 
         // 清理cookie
-        val cookieManager: CookieManager = CookieManager.getInstance()
-        cookieManager.removeAllCookies {  }
+//        val cookieManager: CookieManager = CookieManager.getInstance()
+//        cookieManager.removeAllCookies {  }
         super.onDestroy()
     }
 
