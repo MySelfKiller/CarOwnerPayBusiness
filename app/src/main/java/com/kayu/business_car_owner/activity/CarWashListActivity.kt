@@ -33,8 +33,8 @@ import com.kayu.business_car_owner.R
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import java.util.ArrayList
 import java.util.HashMap
+import kotlin.collections.ArrayList
 
 class CarWashListActivity constructor() : BaseActivity() {
     var selectDistanceParam: WashParam? = null
@@ -223,7 +223,7 @@ class CarWashListActivity constructor() : BaseActivity() {
                                 param_recycle_view!!.setVisibility(View.GONE)
                                 return
                             }
-                            val parents: MutableList<ParamParent> = ArrayList()
+                            val parents: ArrayList<ParamParent> = ArrayList()
                             val paramParent: ParamParent = ParamParent()
                             paramParent.type = -1
                             paramParent.objList = ArrayList<Any>(paramWashBean.typesList)
@@ -240,7 +240,7 @@ class CarWashListActivity constructor() : BaseActivity() {
                                 param_recycle_view!!.setVisibility(View.GONE)
                                 return
                             }
-                            val parents: MutableList<ParamParent> = ArrayList()
+                            val parents: ArrayList<ParamParent> = ArrayList()
                             val paramParent: ParamParent = ParamParent()
                             paramParent.type = -1
                             paramParent.objList = ArrayList<Any>(paramWashBean.desList)
@@ -271,13 +271,12 @@ class CarWashListActivity constructor() : BaseActivity() {
             })
     }
 
-    private fun showParamViewData(flag: Int, data: List<ParamParent>) {
-        if (param_recycle_view!!.getVisibility() == View.GONE) param_recycle_view!!.setVisibility(
-            View.VISIBLE
-        )
+    private fun showParamViewData(flag: Int, data: ArrayList<ParamParent>) {
+        if (param_recycle_view!!.getVisibility() == View.GONE)
+            param_recycle_view!!.setVisibility(View.VISIBLE)
         param_recycle_view!!.adapter = ParamParentAdapter(
             this@CarWashListActivity,
-            data as MutableList<ParamParent>,
+            data,
             object : ItemCallback {
                 override fun onItemCallback(position: Int, obj: Any?) {
                     val paramWashBean: ParamWashBean? =
@@ -359,8 +358,10 @@ class CarWashListActivity constructor() : BaseActivity() {
             )
         }
         if (null == selectSortsParam || null == selectDistanceParam) {
-            mainViewModel!!.getParamWash(this@CarWashListActivity)
-            TipGifDialog.show(this@CarWashListActivity, "查询参数错误,请重试", TipGifDialog.TYPE.WARNING)
+//            mainViewModel!!.getParamWash(this@CarWashListActivity)
+            loadParam()
+            TipGifDialog.dismiss()
+//            TipGifDialog.show(this@CarWashListActivity, "查询参数错误,请重试", TipGifDialog.TYPE.WARNING)
             return
         }
         val dataMap: HashMap<String, Any> = HashMap()

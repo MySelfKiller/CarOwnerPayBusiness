@@ -6,7 +6,7 @@ package com.kayu.business_car_owner.model
  */
 class ParamWashBean {
 
-    var desList: List<WashParam>? = null
+    var desList: ArrayList<WashParam>? = null
 
-    var typesList: List<WashParam>? = null
+    var typesList: ArrayList<WashParam>? = null
 }

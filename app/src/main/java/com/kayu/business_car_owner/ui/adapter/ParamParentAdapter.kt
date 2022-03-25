@@ -11,15 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kayu.business_car_owner.R
 import com.kayu.utils.ItemCallback
-import java.util.ArrayList
 
 class ParamParentAdapter(
     private val context: Context,
-    private val dataList: MutableList<ParamParent>,
+    private val dataList: ArrayList<ParamParent>,
     private val itemCallback: ItemCallback,
     private val flag: Int
 ) : RecyclerView.Adapter<ParamParentAdapter.loanHolder>() {
-    private val childAdapterList: MutableList<ParamAdapter> = ArrayList()
+    private val childAdapterList: ArrayList<ParamAdapter> = ArrayList()
     private var parentCallback: ItemCallback = object : ItemCallback {
         override fun onItemCallback(position: Int, obj: Any?) {
             for (x in childAdapterList.indices) {
@@ -43,7 +42,7 @@ class ParamParentAdapter(
 
     //    private ParamAdapter paramAdapter;
     //    private String flag;
-    fun addAllData(dataList: List<ParamParent>?, isRemoveAllData: Boolean) {
+    fun addAllData(dataList: ArrayList<ParamParent>?, isRemoveAllData: Boolean) {
         if (isRemoveAllData) {
             this.dataList.clear()
         }

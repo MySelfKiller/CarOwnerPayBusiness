@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.hjq.toast.ToastUtils
 import com.kongzue.dialog.v3.TipGifDialog
@@ -14,9 +13,7 @@ import com.kayu.business_car_owner.KWApplication
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
 import com.kongzue.dialog.util.BaseDialog
 import com.kayu.utils.location.LocationManagerUtil
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
 import com.kongzue.dialog.v3.MessageDialog
-import com.kayu.utils.permission.EasyPermissions
 import com.kayu.business_car_owner.model.OilStationBean
 import com.kayu.business_car_owner.model.ParamOilBean
 import com.kayu.business_car_owner.model.WebBean
@@ -36,8 +33,8 @@ import com.kayu.business_car_owner.ui.adapter.OilStationAdapter
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import java.util.ArrayList
 import java.util.HashMap
+import kotlin.collections.ArrayList
 
 class GasStationListActivity constructor() : BaseActivity() {
     private var station_rv: RecyclerView? = null
@@ -250,7 +247,7 @@ class GasStationListActivity constructor() : BaseActivity() {
                                 param_recycle_view!!.setVisibility(View.GONE)
                                 return
                             }
-                            val parents: MutableList<ParamParent> = ArrayList()
+                            val parents: ArrayList<ParamParent> = ArrayList()
                             val paramParent = ParamParent()
                             paramParent.type = -1
                             paramParent.objList = ArrayList<Any>(paramOilBean.sortsParamList)
@@ -268,7 +265,7 @@ class GasStationListActivity constructor() : BaseActivity() {
                                 param_recycle_view!!.setVisibility(View.GONE)
                                 return
                             }
-                            val parents: MutableList<ParamParent> = ArrayList()
+                            val parents: ArrayList<ParamParent> = ArrayList()
                             val paramParent = ParamParent()
                             paramParent.type = -1
                             paramParent.objList = ArrayList<Any>(paramOilBean.oilsTypeParamList)
@@ -286,7 +283,7 @@ class GasStationListActivity constructor() : BaseActivity() {
                                 param_recycle_view!!.setVisibility(View.GONE)
                                 return
                             }
-                            val parents: MutableList<ParamParent> = ArrayList()
+                            val parents: ArrayList<ParamParent> = ArrayList()
                             val paramParent: ParamParent = ParamParent()
                             paramParent.type = -1
                             paramParent.objList = ArrayList<Any>(paramOilBean.distancesParamList)
@@ -306,14 +303,14 @@ class GasStationListActivity constructor() : BaseActivity() {
             })
     }
 
-    private fun showParamViewData(flag: Int, data: List<ParamParent>) {
+    private fun showParamViewData(flag: Int, data: ArrayList<ParamParent>) {
         if (param_recycle_view!!.getVisibility() != View.VISIBLE) param_recycle_view!!.setVisibility(
             View.VISIBLE
         )
         param_recycle_view!!.setAdapter(
             ParamParentAdapter(
                 this@GasStationListActivity,
-                data as MutableList<ParamParent>,
+                data as ArrayList<ParamParent>,
                 object : ItemCallback {
                     override fun onItemCallback(position: Int, obj: Any?) {
                         val paramOilBean: ParamOilBean? =
@@ -408,8 +405,10 @@ class GasStationListActivity constructor() : BaseActivity() {
             )
         }
         if ((null == selectSortsParam) || (null == selectDistanceParam) || (null == selectOilParam)) {
-            mainViewModel!!.getParamSelect(this@GasStationListActivity)
-            TipGifDialog.show(this@GasStationListActivity, "查询参数错误,请重试", TipGifDialog.TYPE.WARNING)
+            loadParam()
+            TipGifDialog.dismiss()
+//            mainViewModel!!.getParamSelect(this@GasStationListActivity)
+//            TipGifDialog.show(this@GasStationListActivity, "查询参数错误,请重试", TipGifDialog.TYPE.WARNING)
             return
         }
         val dataMap: HashMap<String, Any> = HashMap()

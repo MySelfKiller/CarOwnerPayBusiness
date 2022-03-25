@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.kayu.business_car_owner.model.WashParam
-import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.model.ParamParent
 import com.kayu.business_car_owner.model.WashStationBean
 import com.kayu.business_car_owner.ui.adapter.WashStationAdapter
@@ -26,8 +25,8 @@ import com.kongzue.dialog.v3.TipGifDialog
 import com.kayu.business_car_owner.ui.adapter.ParamParentAdapter
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
-import java.util.ArrayList
 import java.util.HashMap
+import kotlin.collections.ArrayList
 
 class HomeCarWashFragment(
     private val viewPager: AdaptiveHeightViewPager?,
@@ -109,7 +108,7 @@ class HomeCarWashFragment(
                         param_recycle_view?.setVisibility(View.GONE)
                         return@OnClickListener
                     }
-                    val parents: MutableList<ParamParent> = ArrayList()
+                    val parents: ArrayList<ParamParent> = ArrayList()
                     val paramParent = ParamParent()
                     paramParent.type = -1
                     paramParent.objList = ArrayList(paramWashBean.typesList)
@@ -124,7 +123,7 @@ class HomeCarWashFragment(
                         param_recycle_view?.setVisibility(View.GONE)
                         return@OnClickListener
                     }
-                    val parents: MutableList<ParamParent> = ArrayList()
+                    val parents: ArrayList<ParamParent> = ArrayList()
                     val paramParent = ParamParent()
                     paramParent.type = -1
                     paramParent.objList = ArrayList(paramWashBean.desList)
@@ -137,7 +136,7 @@ class HomeCarWashFragment(
         LogUtil.e("-------HomeCarWashFragment----", "----onViewCreated---")
     }
 
-    private fun showParamViewData(flag: Int, data: MutableList<ParamParent>) {
+    private fun showParamViewData(flag: Int, data: ArrayList<ParamParent>) {
         if (param_recycle_view!!.visibility == View.GONE) param_recycle_view!!.visibility =
             View.VISIBLE
         param_recycle_view!!.adapter = ParamParentAdapter(requireContext(), data, object : ItemCallback {

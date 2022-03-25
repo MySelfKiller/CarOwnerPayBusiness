@@ -6,9 +6,9 @@ package com.kayu.business_car_owner.model
  */
 class ParamOilBean {
 
-    var distancesParamList: MutableList<DistancesParam>? = null
+    var distancesParamList: ArrayList<DistancesParam>? = null
 
-    var sortsParamList: MutableList<SortsParam>? = null
+    var sortsParamList: ArrayList<SortsParam>? = null
 
-    var oilsTypeParamList: MutableList<OilsParam>? = null
+    var oilsTypeParamList: ArrayList<OilsParam>? = null
 }

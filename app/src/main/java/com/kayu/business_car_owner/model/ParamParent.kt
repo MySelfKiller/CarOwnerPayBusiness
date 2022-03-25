@@ -9,5 +9,5 @@ class ParamParent {
     var type //燃油类型 1:汽油 2:柴油 3:天然气
             = 0
 
-    var objList: MutableList<Any>? = null
+    var objList: ArrayList<Any>? = null
 }

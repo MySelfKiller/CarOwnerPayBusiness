@@ -12,7 +12,6 @@ import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.model.DistancesParam
 import com.kayu.business_car_owner.model.OilsParam
 import com.kayu.business_car_owner.model.SortsParam
-import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.model.OilStationBean
 import com.kayu.business_car_owner.ui.adapter.OilStationAdapter
 import com.kayu.business_car_owner.model.ParamParent
@@ -30,8 +29,8 @@ import com.kayu.business_car_owner.ui.adapter.ParamParentAdapter
 import com.kayu.business_car_owner.activity.OilStationActivity
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
-import java.util.ArrayList
 import java.util.HashMap
+import kotlin.collections.ArrayList
 
 class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
 //        this.context = context;
@@ -158,7 +157,7 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
                         param_recycle_view?.visibility = View.GONE
                         return@OnClickListener
                     }
-                    val parents: MutableList<ParamParent> = ArrayList()
+                    val parents: ArrayList<ParamParent> = ArrayList()
                     val paramParent = ParamParent()
                     paramParent.type = -1
                     paramParent.objList = ArrayList(paramOilBean.sortsParamList)
@@ -174,7 +173,7 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
                         param_recycle_view?.visibility = View.GONE
                         return@OnClickListener
                     }
-                    val parents: MutableList<ParamParent> = ArrayList()
+                    val parents: ArrayList<ParamParent> = ArrayList()
                     val paramParent = ParamParent()
                     paramParent.type = -1
                     paramParent.objList = ArrayList(paramOilBean.oilsTypeParamList)
@@ -190,7 +189,7 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
                         param_recycle_view?.visibility = View.GONE
                         return@OnClickListener
                     }
-                    val parents: MutableList<ParamParent> = ArrayList()
+                    val parents: ArrayList<ParamParent> = ArrayList()
                     val paramParent = ParamParent()
                     paramParent.type = -1
                     paramParent.objList = ArrayList(paramOilBean.distancesParamList)
@@ -203,7 +202,7 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
         LogUtil.e("-------HomeGasStationFragment----", "----onViewCreated---")
     }
 
-    private fun showParamViewData(flag: Int, data: MutableList<ParamParent>) {
+    private fun showParamViewData(flag: Int, data: ArrayList<ParamParent>) {
         if (param_recycle_view!!.visibility != View.VISIBLE) param_recycle_view!!.visibility =
             View.VISIBLE
         param_recycle_view!!.adapter = ParamParentAdapter(requireContext(), data, object : ItemCallback {

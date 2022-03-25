@@ -18,12 +18,12 @@ import com.kayu.utils.ItemCallback
 class ParamAdapter(
     private val parentIndex: Int,
     private val context: Context?,
-    private val dataList: MutableList<Any>?,
+    private val dataList: ArrayList<Any>?,
     private val callback: ItemCallback,
     private val flag: Int,
     private val parentCallback: ItemCallback
 ) : RecyclerView.Adapter<ParamAdapter.NoticeHolder>() {
-    fun addAllData(dataList: MutableList<Any>?) {
+    fun addAllData(dataList: ArrayList<Any>?) {
         this.dataList?.addAll(dataList!!)
         notifyDataSetChanged()
     }
@@ -81,7 +81,7 @@ class ParamAdapter(
             if (!viewHolder.nameText.isSelected) {
                 if (null != selectedView) {
                     selectedView!!.nameText.isSelected = false
-                    selectedView!!.nameText.setTextColor(context!!.resources.getColor(R.color.endColor_btn))
+                    selectedView!!.nameText.setTextColor(context!!.resources.getColor(R.color.black1))
                     selectedView!!.nameText.typeface = Typeface.DEFAULT
                 } else {
                     parentCallback.onItemCallback(parentIndex, null)

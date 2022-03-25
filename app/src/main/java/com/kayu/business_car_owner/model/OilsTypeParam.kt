@@ -9,5 +9,5 @@ class OilsTypeParam {
     var oilType //燃油类型 1:汽油 2:柴油 3:天然气
             = 0
 
-    var oilsParamList: MutableList<OilsParam>? = null
+    var oilsParamList: ArrayList<OilsParam>? = null
 }
