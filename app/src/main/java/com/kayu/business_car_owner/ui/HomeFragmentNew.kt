@@ -333,7 +333,7 @@ class HomeFragmentNew
                                     sb.append(",")
                                     sb.append(latitude)
                                     intent.putExtra("url", sb.toString())
-//                                    intent.putExtra("url", "http://192.168.3.41:8080/#/Merchants")
+//                                    intent.putExtra("url", "https://www.sslm01.com/sslm/static/nav-test/demo.html")
                                     intent.putExtra("from", "首页")
                                     startActivity(intent)
                                 } else {

@@ -15,13 +15,8 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.annotation.AnimRes
 import com.kayu.business_car_owner.R
-import com.kayu.business_car_owner.popupWindow.DialogUtils
-import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
 import kotlin.jvm.JvmOverloads
-import com.kayu.business_car_owner.text_banner.TextBannerView
-import com.kayu.business_car_owner.text_banner.ITextBannerItemClickListener
 import com.kayu.utils.DisplayUtils
-import com.kayu.business_car_owner.text_banner.TextBannerView.AnimRunnable
 
 /**
  *
