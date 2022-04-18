@@ -130,14 +130,14 @@ class WebViewActivity : BaseActivity() {
 
             override fun OnMoreErrorClick() {}
         })
-        findViewById<View>(R.id.title_close_btn).setOnClickListener(object : NoMoreClickListener() {
-            override fun OnMoreClick(view: View) {
-//                sendOilPayInfo(this@WebViewActivity)
-                finish()
-            }
-
-            override fun OnMoreErrorClick() {}
-        })
+//        findViewById<View>(R.id.title_close_btn).setOnClickListener(object : NoMoreClickListener() {
+//            override fun OnMoreClick(view: View) {
+////                sendOilPayInfo(this@WebViewActivity)
+//                finish()
+//            }
+//
+//            override fun OnMoreErrorClick() {}
+//        })
         title_name = findViewById(R.id.title_name_tv)
         title_name?.text = titleName
         if (StringUtil.isEmpty(from)) {
@@ -433,6 +433,10 @@ class WebViewActivity : BaseActivity() {
                 }
             }
 
+            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                super.doUpdateVisitedHistory(view, url, isReload)
+                LogUtil.e("WebView", "doUpdateVisitedHistory: url="+view?.url +"-------"+ url+",isReload="+isReload)
+            }
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 title_name?.text = titleName
                 TipGifDialog.show(
@@ -758,7 +762,7 @@ class WebViewActivity : BaseActivity() {
     companion object {
         //    ProgressBar pbWebView;
         val URL: String = "https://www.baidu.com"
-        private val TAG: String = "RewardVideoActivity"
+//        private val TAG: String = "RewardVideoActivity"
         private val FILE_CAMERA_RESULT_CODE: Int = 0
     }
 }
