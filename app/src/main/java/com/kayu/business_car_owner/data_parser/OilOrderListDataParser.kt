@@ -19,24 +19,21 @@ class OilOrderListDataParser : BaseParse<Any?>() {
         val responseJson = JSONObject(jsonStr)
         val state = responseJson.optInt("status")
         val message = responseJson.optString("message")
-        val dataJson = responseJson.optJSONObject("data")
+        val dataJson = responseJson.optJSONArray("data")
         val responseInfo = ResponseInfo(state, message)
-        if (null != dataJson) {
-            if (state == 1) {
-                val jsonList = dataJson.optJSONArray("list")
-                if (null != jsonList && jsonList.length() > 0) {
-                    val listArray = ArrayList<ItemOilOrderBean>()
-                    for (x in 0 until jsonList.length()) {
-                        val stationBean = GsonHelper.fromJson(
-                            jsonList[x].toString(),
-                            ItemOilOrderBean::class.java
-                        )
-                        if (stationBean != null) {
-                            listArray.add(stationBean)
-                        }
+        if (state == 1) {
+            if (null != dataJson && dataJson.length() > 0) {
+                val listArray = ArrayList<ItemOilOrderBean>()
+                for (x in 0 until dataJson.length()) {
+                    val stationBean = GsonHelper.fromJson(
+                        dataJson[x].toString(),
+                        ItemOilOrderBean::class.java
+                    )
+                    if (stationBean != null) {
+                        listArray.add(stationBean)
                     }
-                    responseInfo.responseData = listArray
                 }
+                responseInfo.responseData = listArray
             }
         }
         return responseInfo

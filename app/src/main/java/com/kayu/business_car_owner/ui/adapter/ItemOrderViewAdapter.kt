@@ -60,16 +60,16 @@ class ItemOrderViewAdapter(
             //92#(2号枪)
             vh.order_name.text = oilOrderData.gasName
             vh.order_number.text = oilOrderData.orderNo
-            var orderStatusName = "未知"
-            when (oilOrderData.state) {
-                0 -> orderStatusName = "未支付"
-                1 -> orderStatusName = "已支付"
-                2 -> orderStatusName = "已取消"
-                3 -> orderStatusName = "已退款"
-                4 -> orderStatusName = "待退款"
-                5 -> orderStatusName = "退款失败"
-            }
-            vh.oil_state.text = orderStatusName
+//            var orderStatusName = "未知"
+//            when (oilOrderData.state) {
+//                0 -> orderStatusName = "未支付"
+//                1 -> orderStatusName = "已支付"
+//                2 -> orderStatusName = "已取消"
+//                3 -> orderStatusName = "已退款"
+//                4 -> orderStatusName = "待退款"
+//                5 -> orderStatusName = "退款失败"
+//            }
+            vh.oil_state.text = oilOrderData.stateName
             vh.pay_model.text = oilOrderData.payType
             vh.pay_time.text = oilOrderData.createTime
             vh.oil_info.text = oilOrderData.oilNo + "(" + oilOrderData.gunNo + "号枪)"
