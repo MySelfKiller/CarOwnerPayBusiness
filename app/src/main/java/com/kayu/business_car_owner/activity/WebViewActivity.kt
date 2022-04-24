@@ -49,7 +49,7 @@ class WebViewActivity : BaseActivity() {
     @SuppressLint("HandlerLeak")
     private val jsHandler: Handler = object : Handler() {
         public override fun handleMessage(msg: Message) {
-            LogUtil.e("WebViewActivity", "advert----what:" + msg.what + "------arg1:" + msg.arg1)
+//            LogUtil.e("WebViewActivity", "advert----what:" + msg.what + "------arg1:" + msg.arg1)
 //            if (msg.what == 1) {
 //                adID = msg.obj as Long
 //                loadAd(TTAdManagerHolder.videoID)
@@ -377,7 +377,7 @@ class WebViewActivity : BaseActivity() {
                 errorResponse: WebResourceResponse
             ) {
                 super.onReceivedHttpError(view, request, errorResponse)
-                LogUtil.e("webview", "errorResponse=" + errorResponse.toString())
+//                LogUtil.e("webview", "errorResponse=" + errorResponse.toString())
             }
 
             override fun onReceivedError(
@@ -387,10 +387,10 @@ class WebViewActivity : BaseActivity() {
                 failingUrl: String
             ) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
-                LogUtil.e("webview", "description=" + description + "  failingUrl=" + failingUrl)
+//                LogUtil.e("webview", "description=" + description + "  failingUrl=" + failingUrl)
             }
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                LogUtil.e("WebView", "shouldOverrideUrlLoading: " + url)
+//                LogUtil.e("WebView", "shouldOverrideUrlLoading: view："+view.url + "----------- url="+url)
 
     //                view.loadUrl(url);
                 if (url.startsWith("http:") || url.startsWith("https:")) {
@@ -433,19 +433,26 @@ class WebViewActivity : BaseActivity() {
                 }
             }
 
-            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
-                super.doUpdateVisitedHistory(view, url, isReload)
-                LogUtil.e("WebView", "doUpdateVisitedHistory: url="+view?.url +"-------"+ url+",isReload="+isReload)
-            }
+//            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+//                super.doUpdateVisitedHistory(view, url, isReload)
+//                LogUtil.e("WebView", "doUpdateVisitedHistory: url="+view?.url +"-------"+ url+",isReload="+isReload)
+//            }
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 title_name?.text = titleName
-                TipGifDialog.show(
-                    this@WebViewActivity,
-                    "加载中...",
-                    TipGifDialog.TYPE.OTHER,
-                    R.drawable.loading_gif
-                )
+                if (!isBacking){
+                    TipGifDialog.show(
+                        this@WebViewActivity,
+                        "加载中...",
+                        TipGifDialog.TYPE.OTHER,
+                        R.drawable.loading_gif
+                    )
+                }
                 //                pbWebView.setVisibility(View.VISIBLE);
+//                LogUtil.e("WebView", "onPageStarted: url="+view?.url +"------- url="+ url)
+                if (isBacking && url.contains("#/login")) {
+                    onBackPressed()
+                    isBacking = false
+                }
                 super.onPageStarted(view, url, favicon)
             }
 
@@ -467,10 +474,10 @@ class WebViewActivity : BaseActivity() {
                 handler: SslErrorHandler,
                 error: SslError
             ) {
-                LogUtil.e(
-                    "webview",
-                    "SslErrorHandler=" + handler.toString() + "  SslError=" + error.toString()
-                )
+//                LogUtil.e(
+//                    "webview",
+//                    "SslErrorHandler=" + handler.toString() + "  SslError=" + error.toString()
+//                )
                 handler.proceed()
             }
         }
@@ -502,13 +509,13 @@ class WebViewActivity : BaseActivity() {
             mimetype: String,
             contentLength: Long
         ) {
-            LogUtil.e("WebView", "DownloadListener-->url=" + url)
-            LogUtil.e("WebView", "isDownload-->" + isDownload)
+//            LogUtil.e("WebView", "DownloadListener-->url=" + url)
+//            LogUtil.e("WebView", "isDownload-->" + isDownload)
             if (isDownload) {
-                val intent: Intent = Intent(Intent.ACTION_VIEW)
+                val intent = Intent(Intent.ACTION_VIEW)
                 val uri: Uri = Uri.parse(url)
                 intent.addCategory(Intent.CATEGORY_BROWSABLE)
-                intent.setData(uri)
+                intent.data = uri
                 startActivity(intent)
             }
             isDownload = true //重置为初始状态
@@ -703,11 +710,13 @@ class WebViewActivity : BaseActivity() {
         mUploadCallbackAboveL = null
     }
 
+    var isBacking : Boolean = false
     //系统自带监听方法
     public override fun onBackPressed() {
         if (wvWebView!!.canGoBack()) {
-            wvWebView!!.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE)
+            wvWebView!!.settings.cacheMode = WebSettings.LOAD_NO_CACHE
             wvWebView!!.goBack()
+            isBacking  = true
             return
         } else {
             finish()
