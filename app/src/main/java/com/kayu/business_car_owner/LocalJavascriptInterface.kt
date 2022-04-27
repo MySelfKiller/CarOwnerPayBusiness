@@ -22,6 +22,17 @@ class LocalJavascriptInterface constructor(
     private val handler: Handler
 ) {
     @JavascriptInterface
+    fun Loading(s: String) {
+        //关闭加载框
+        handler.sendMessage(handler.obtainMessage(2, s))
+    }
+    @JavascriptInterface
+    fun CloseStatus(s: String) {
+        //返回按键是否需要全部关闭
+        handler.sendMessage(handler.obtainMessage(3, s))
+    }
+
+    @JavascriptInterface
     fun advert(s: String) {
         LogUtil.e("LocalJavascriptInterface", "advert----path:" + s)
         if (StringUtil.isEmpty(s)) return

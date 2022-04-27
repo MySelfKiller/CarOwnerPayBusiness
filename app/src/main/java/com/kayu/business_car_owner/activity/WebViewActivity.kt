@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.content.ClipData
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
@@ -28,11 +29,14 @@ import com.kongzue.dialog.v3.BottomMenu
 import androidx.core.content.FileProvider
 import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.data_parser.ParameterDataParser
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.model.SystemParam
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kongzue.dialog.interfaces.OnDismissListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
+import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -40,7 +44,7 @@ import java.util.*
 class WebViewActivity : BaseActivity() {
     var wvWebView: WebView? = null
     private var url: String? = null
-    private var from: String? = null
+//    private var from: String? = null
     private val titleName: String = "加载中..."
     private var title_name: TextView? = null
     var headMap: MutableMap<String, String?> = HashMap()
@@ -53,7 +57,7 @@ class WebViewActivity : BaseActivity() {
 //            if (msg.what == 1) {
 //                adID = msg.obj as Long
 //                loadAd(TTAdManagerHolder.videoID)
-                //                if (mttRewardVideoAd != null&&mIsLoaded) {
+            //                if (mttRewardVideoAd != null&&mIsLoaded) {
 //                    //step6:在获取到广告后展示,强烈建议在onRewardVideoCached回调后，展示广告，提升播放体验
 //                    //该方法直接展示广告
 ////                    mttRewardVideoAd.showRewardVideoAd(RewardVideoActivity.this);
@@ -72,9 +76,34 @@ class WebViewActivity : BaseActivity() {
 //                )
 //                mttRewardVideoAd = null
 //            }
+            when (msg.what) {
+                2 -> {   //关闭加载框
+                    isOpenDialog = msg.obj as String
+//                    when (isOpenDialog) {
+//                        "1" -> {
+//                            TipGifDialog.show(
+//                                this@WebViewActivity,
+//                                "加载中...",
+//                                TipGifDialog.TYPE.OTHER,
+//                                R.drawable.loading_gif
+//                            )
+//                        }
+//                        "0" -> {
+//                            TipGifDialog.dismiss()
+//                        }
+//                    }
+
+                }
+                3 -> {   //返回按键是否需要全部关闭
+                    jsCloseStatus = msg.obj as String
+                }
+            }
             super.handleMessage(msg)
         }
     }
+
+    private var jsCloseStatus: String = ""
+    private var isOpenDialog: String = ""
     private var data //需要用到的加密数据
             : String? = null
     private var channel //加油平台渠道 团油:ty ，淘油宝:tyb 青桔:qj
@@ -89,9 +118,9 @@ class WebViewActivity : BaseActivity() {
     }
 
     public override fun getResources(): Resources { //还原字体大小
-        val res: Resources? = super.getResources()
+        val res: Resources = super.getResources()
         //非默认值
-        if (res!!.getConfiguration().fontScale != 1f) {
+        if (res.getConfiguration().fontScale != 1f) {
             val newConfig: Configuration = Configuration()
             newConfig.setToDefaults() //设置默认
             res.updateConfiguration(newConfig, res.getDisplayMetrics())
@@ -119,48 +148,33 @@ class WebViewActivity : BaseActivity() {
         data = intent.getStringExtra("data")
         channel = intent.getStringExtra("channel")
         gasId = intent.getStringExtra("gasId")
-        //        titleName = intent.getStringExtra("title");
-//        from = intent.getStringExtra("from");
-//        title = intent.getStringExtra("title");
         findViewById<View>(R.id.title_back_btu).setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-//                sendOilPayInfo(this@WebViewActivity)
                 onBackPressed()
             }
 
             override fun OnMoreErrorClick() {}
         })
-//        findViewById<View>(R.id.title_close_btn).setOnClickListener(object : NoMoreClickListener() {
-//            override fun OnMoreClick(view: View) {
-////                sendOilPayInfo(this@WebViewActivity)
-//                finish()
-//            }
-//
-//            override fun OnMoreErrorClick() {}
-//        })
+        findViewById<View>(R.id.title_close_btn).setOnClickListener(object : NoMoreClickListener() {
+            override fun OnMoreClick(view: View) {
+                finish()
+            }
+
+            override fun OnMoreErrorClick() {}
+        })
         title_name = findViewById(R.id.title_name_tv)
         title_name?.text = titleName
-        if (StringUtil.isEmpty(from)) {
-            from = "返回"
-        }
-        wvWebView = findViewById(R.id.wvWebView)
-        //        pbWebView = findViewById(R.id.pbWebView);
-//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//        StrictMode.setVmPolicy(builder.build());
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-//            builder.detectFileUriExposure();
+//        if (StringUtil.isEmpty(from)) {
+//            from = "返回"
 //        }
-//        CookieSyncManager.createInstance(this);
-//        CookieSyncManager.getInstance().startSync();
-//        CookieManager.getInstance().removeSessionCookie();
-        TipGifDialog.show(this, "加载中...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif)
+        wvWebView = findViewById(R.id.wvWebView)
+//        TipGifDialog.show(this, "加载中...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif)
+        //获取后台判断是否需要开启关闭按钮
+        loadSysParameter(this, 51)
         initData()
     }
 
-    protected fun initViewsAndEvents() {
-        initData()
-    }
-
+    @SuppressLint("SetJavaScriptEnabled")
     fun initData() {
         if (StringUtil.isEmpty(url)) {
             url = URL
@@ -324,7 +338,15 @@ class WebViewActivity : BaseActivity() {
                 super.onProgressChanged(view, newProgress)
                 //                pbWebView.setProgress(newProgress);
                 if (newProgress == 100) {
-                    TipGifDialog.dismiss()
+//                    LogUtil.e(
+//                        "WebView",
+//                        "onProgressChanged: url=" + view.url + "------- newProgress=" + newProgress
+//                    )
+                    if (isOpenDialog == "") {
+                        TipGifDialog.dismiss()
+                    } else if (isOpenDialog == "0"){
+                        TipGifDialog.dismiss()
+                    }
                 }
 
             }
@@ -389,12 +411,13 @@ class WebViewActivity : BaseActivity() {
                 super.onReceivedError(view, errorCode, description, failingUrl)
 //                LogUtil.e("webview", "description=" + description + "  failingUrl=" + failingUrl)
             }
+
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
 //                LogUtil.e("WebView", "shouldOverrideUrlLoading: view："+view.url + "----------- url="+url)
 
-    //                view.loadUrl(url);
+                //                view.loadUrl(url);
                 if (url.startsWith("http:") || url.startsWith("https:")) {
-                    return if ((url == HttpConfig.CLOSE_WEB_VIEW)|| url == HttpConfig.CLOSE_WEB_VIEW1) {
+                    return if ((url == HttpConfig.CLOSE_WEB_VIEW) || url == HttpConfig.CLOSE_WEB_VIEW1) {
                         this@WebViewActivity.finish()
                         true
                     } else {
@@ -411,20 +434,20 @@ class WebViewActivity : BaseActivity() {
                         startActivity(intent)
                         isDownload = false //该字段是用于判断是否需要跳转浏览器下载
                     } catch (e: Exception) {
-    //                        if (url.startsWith("xywallet://")){
-    //                            String mUrl = "https://wallet.xiaoying.com/fe/wallet-activity/download/index.html?source=100021313&landId=910#/";
-    //                            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
-    //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //                            intent.setComponent(new ComponentName("com.android.browser","com.android.browser.BrowserActivity"));
-    //                            startActivity(intent);
-    //                        }
-    //                        String mUrl = "https://wallet.xiaoying.com/fe/wallet-activity/download/index.html?source=100021313&landId=910#/";
-    //                        if (!url.startsWith("qihooloan://")){
-    //                            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(lastOpenUrl));
-    //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //                            intent.setComponent(new ComponentName("com.android.browser","com.android.browser.BrowserActivity"));
-    //                            startActivity(intent);
-    //                        }
+                        //                        if (url.startsWith("xywallet://")){
+                        //                            String mUrl = "https://wallet.xiaoying.com/fe/wallet-activity/download/index.html?source=100021313&landId=910#/";
+                        //                            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+                        //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //                            intent.setComponent(new ComponentName("com.android.browser","com.android.browser.BrowserActivity"));
+                        //                            startActivity(intent);
+                        //                        }
+                        //                        String mUrl = "https://wallet.xiaoying.com/fe/wallet-activity/download/index.html?source=100021313&landId=910#/";
+                        //                        if (!url.startsWith("qihooloan://")){
+                        //                            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(lastOpenUrl));
+                        //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //                            intent.setComponent(new ComponentName("com.android.browser","com.android.browser.BrowserActivity"));
+                        //                            startActivity(intent);
+                        //                        }
                         // 防止没有安装的情况
                         e.printStackTrace()
                         ToastUtils.show("未安装相应的客户端")
@@ -433,25 +456,41 @@ class WebViewActivity : BaseActivity() {
                 }
             }
 
-//            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+            //            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
 //                super.doUpdateVisitedHistory(view, url, isReload)
 //                LogUtil.e("WebView", "doUpdateVisitedHistory: url="+view?.url +"-------"+ url+",isReload="+isReload)
 //            }
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 title_name?.text = titleName
-                if (!isBacking){
-                    TipGifDialog.show(
-                        this@WebViewActivity,
-                        "加载中...",
-                        TipGifDialog.TYPE.OTHER,
-                        R.drawable.loading_gif
-                    )
+                if (!isBacking) {
+                    if (isOpenDialog == "") {
+                        TipGifDialog.show(
+                            this@WebViewActivity,
+                            "加载中...",
+                            TipGifDialog.TYPE.OTHER,
+                            R.drawable.loading_gif
+                        )
+                    } else if (isOpenDialog == "1"){
+                        TipGifDialog.show(
+                            this@WebViewActivity,
+                            "加载中...",
+                            TipGifDialog.TYPE.OTHER,
+                            R.drawable.loading_gif
+                        )
+                    }
+
                 }
                 //                pbWebView.setVisibility(View.VISIBLE);
-//                LogUtil.e("WebView", "onPageStarted: url="+view?.url +"------- url="+ url)
-                if (isBacking && url.contains("#/login")) {
-                    onBackPressed()
-                    isBacking = false
+//                LogUtil.e("WebView", "onPageStarted: url=" + view.url + "------- url=" + url)
+                if ((isBacking)) {
+                    if (jsCloseStatus == "1"){
+                        finish()
+                        isBacking = false
+                    }else if (url.contains("#/login")) {
+                        onBackPressed()
+                        isBacking = false
+                    }
+
                 }
                 super.onPageStarted(view, url, favicon)
             }
@@ -459,12 +498,12 @@ class WebViewActivity : BaseActivity() {
             override fun onPageFinished(view: WebView, url: String) {
                 view.getSettings().setLoadsImagesAutomatically(true)
                 //                pbWebView.setVisibility(View.GONE);
-    //                LogUtil.e("WebView","onPageFinished-----title:"+view.getTitle());
+//                LogUtil.e("WebView", "onPageFinished-----title:" + view.getTitle())
                 title_name!!.postDelayed({ title_name!!.text = view.title }, 1)
 //                val cookieManager: CookieManager = CookieManager.getInstance()
 //                val CookieStr: String? = cookieManager.getCookie(url)
                 lastOpenUrl = url
-                LogUtil.e("WebView", "onPageFinished: " + url)
+//                LogUtil.e("WebView", "onPageFinished: " + url)
 //                LogUtil.e("WebView", "Cookies = " + CookieStr)
                 super.onPageFinished(view, url)
             }
@@ -482,7 +521,7 @@ class WebViewActivity : BaseActivity() {
             }
         }
         wvWebView!!.loadUrl((url)!!)
-        wvWebView!!.loadUrl( "javascript:window.location.reload( true )" )
+        wvWebView!!.loadUrl("javascript:window.location.reload( true )")
     }
 
     private var lastOpenUrl: String? = null
@@ -533,13 +572,11 @@ class WebViewActivity : BaseActivity() {
     }
 
 
-
-
     //拍照
     private fun takeCamera() {
         KWApplication.instance.permissionsCheck(
             this@WebViewActivity,
-            arrayOf(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
             R.string.permiss_take_phone,
             object : Callback {
                 override fun onSuccess() {
@@ -588,6 +625,7 @@ class WebViewActivity : BaseActivity() {
             })
 
     }
+
     var isClickBottomMenu = false
     private fun showCustomDialog() {
         BottomMenu.show(
@@ -613,7 +651,7 @@ class WebViewActivity : BaseActivity() {
                 }
             }).setOnDismissListener(object : OnDismissListener {
             public override fun onDismiss() {
-                if (isClickBottomMenu)return
+                if (isClickBottomMenu) return
                 if (mUploadCallbackAboveL != null) {
                     mUploadCallbackAboveL!!.onReceiveValue(null)
                     mUploadCallbackAboveL = null
@@ -710,13 +748,14 @@ class WebViewActivity : BaseActivity() {
         mUploadCallbackAboveL = null
     }
 
-    var isBacking : Boolean = false
+    var isBacking: Boolean = false
+
     //系统自带监听方法
     public override fun onBackPressed() {
         if (wvWebView!!.canGoBack()) {
             wvWebView!!.settings.cacheMode = WebSettings.LOAD_NO_CACHE
             wvWebView!!.goBack()
-            isBacking  = true
+            isBacking = true
             return
         } else {
             finish()
@@ -771,8 +810,50 @@ class WebViewActivity : BaseActivity() {
     companion object {
         //    ProgressBar pbWebView;
         val URL: String = "https://www.baidu.com"
-//        private val TAG: String = "RewardVideoActivity"
+
+        //        private val TAG: String = "RewardVideoActivity"
         private val FILE_CAMERA_RESULT_CODE: Int = 0
+    }
+
+    @SuppressLint("HandlerLeak")
+    private fun loadSysParameter(context: Context, type: Int) {
+        val request = RequestInfo()
+        request.context = context
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_SYS_PARAMETER
+        val dataMap: HashMap<String, Any> = HashMap()
+        dataMap.put("", type)
+        request.reqDataMap = dataMap
+        request.parser = ParameterDataParser()
+        request.handler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val response: ResponseInfo = msg.obj as ResponseInfo
+                val systemParam: SystemParam?
+                if (response.status == 1) {
+                    systemParam = response.responseData as SystemParam?
+                    val jsonContent = systemParam?.content
+                    if (!jsonContent.isNullOrEmpty()) {
+                        when (jsonContent) {
+                            "1" -> {
+                                findViewById<View>(R.id.title_close_btn).visibility = View.VISIBLE
+                            }
+                            "0" -> {
+                                findViewById<View>(R.id.title_close_btn).visibility = View.GONE
+                            }
+                        }
+                    } else {
+                        findViewById<View>(R.id.title_close_btn).visibility = View.VISIBLE
+                    }
+
+
+                } else {
+                    ToastUtils.show(response.msg)
+                }
+
+                super.handleMessage(msg)
+            }
+        }
+        ReqUtil.setReqInfo(request)
+        ReqUtil.requestGetJSON(ResponseCallback(request))
     }
 }
 
