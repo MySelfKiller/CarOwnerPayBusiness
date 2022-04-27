@@ -180,27 +180,23 @@ class WebViewActivity : BaseActivity() {
             url = URL
         }
         //        url = "https://wallet.xiaoying.com/fe/wallet-landing/blueRegPage/index.html?landId=306&source=100016303";
-        val webSettings: WebSettings = wvWebView!!.getSettings()
-        webSettings.setJavaScriptEnabled(true)
-        webSettings.setBlockNetworkImage(false)
+        val webSettings: WebSettings = wvWebView!!.settings
+        webSettings.javaScriptEnabled = true
+        webSettings.blockNetworkImage = false
         //支持插件
 //        webSettings.setPluginsEnabled(true);
 
 //设置自适应屏幕，两者合用
-        webSettings.setUseWideViewPort(true) //将图片调整到适合webview的大小
-        webSettings.setLoadWithOverviewMode(true) // //和setUseWideViewPort(true)一起解决网页自适应问题
+        webSettings.textZoom = 100
+        webSettings.useWideViewPort = true //将图片调整到适合webview的大小
+        webSettings.loadWithOverviewMode = true // //和setUseWideViewPort(true)一起解决网页自适应问题
 
 //缩放操作
         webSettings.setSupportZoom(true) //支持缩放，默认为true。是下面那个的前提。
-        webSettings.setBuiltInZoomControls(true) //设置内置的缩放控件。若为false，则该WebView不可缩放
-        webSettings.setDisplayZoomControls(false) //隐藏原生的缩放控件
-        webSettings.setDomStorageEnabled(true)
-        webSettings.setSupportZoom(true) //支持缩放，默认为true。是下面那个的前提。
-
         webSettings.builtInZoomControls = true //设置内置的缩放控件。若为false，则该WebView不可缩放
 
         webSettings.displayZoomControls = false //隐藏原生的缩放控件
-
+        webSettings.domStorageEnabled = true
         webSettings.setSupportMultipleWindows(false)
 
 
@@ -503,7 +499,7 @@ class WebViewActivity : BaseActivity() {
 //                val cookieManager: CookieManager = CookieManager.getInstance()
 //                val CookieStr: String? = cookieManager.getCookie(url)
                 lastOpenUrl = url
-//                LogUtil.e("WebView", "onPageFinished: " + url)
+                LogUtil.e("WebView", "onPageFinished: " + url)
 //                LogUtil.e("WebView", "Cookies = " + CookieStr)
                 super.onPageFinished(view, url)
             }
