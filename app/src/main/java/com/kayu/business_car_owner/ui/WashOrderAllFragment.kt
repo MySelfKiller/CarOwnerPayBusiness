@@ -89,7 +89,7 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
     private var isCreated = false
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        LogUtil.e("hm", "WashOrderAllFragment---------setUserVisibleHint====$isVisibleToUser")
+//        LogUtil.e("hm", "WashOrderAllFragment---------setUserVisibleHint====$isVisibleToUser")
         if (isVisibleToUser && !mHasLoadedOnce && isCreated) {
             refreshLayout!!.autoRefresh()
             //            mHasLoadedOnce = true;
@@ -103,12 +103,12 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        LogUtil.e("hm", "WashOrderAllFragment---------onPause====$userVisibleHint$orderStatus")
+//        LogUtil.e("hm", "WashOrderAllFragment---------onPause====$userVisibleHint$orderStatus")
     }
 
     override fun onResume() {
         super.onResume()
-        LogUtil.e("hm", "WashOrderAllFragment---------onResume====$userVisibleHint$orderStatus")
+//        LogUtil.e("hm", "WashOrderAllFragment---------onResume====$userVisibleHint$orderStatus")
         if (userVisibleHint && !mHasLoadedOnce && isCreated) {
             refreshLayout!!.autoRefresh()
             //            mHasLoadedOnce = true;
@@ -117,12 +117,12 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        LogUtil.e("hm", "WashOrderAllFragment---------onStart====$userVisibleHint$orderStatus")
+//        LogUtil.e("hm", "WashOrderAllFragment---------onStart====$userVisibleHint$orderStatus")
     }
 
     override fun onStop() {
         super.onStop()
-        LogUtil.e("hm", "WashOrderAllFragment---------onStop====$userVisibleHint$orderStatus")
+//        LogUtil.e("hm", "WashOrderAllFragment---------onStop====$userVisibleHint$orderStatus")
     }
 
     @SuppressLint("HandlerLeak")
@@ -142,7 +142,7 @@ class WashOrderAllFragment(private val orderStatus: Int) : Fragment() {
             override fun handleMessage(msg: Message) {
                 val resInfo = msg.obj as ResponseInfo
                 if (null == this@WashOrderAllFragment.activity) {
-                    LogUtil.e("hm", "WashOrderAllFragment 以销毁")
+//                    LogUtil.e("hm", "WashOrderAllFragment 以销毁")
                     return
                 }
                 if (resInfo.status == 1) {

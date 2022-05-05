@@ -5,30 +5,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
-import com.kongzue.dialog.v3.TipGifDialog
-import com.kayu.business_car_owner.model.SystemParam
-import com.kayu.utils.location.LocationManagerUtil
-import com.kayu.business_car_owner.wxapi.WXShare
-import com.kayu.business_car_owner.model.WashStationDetailBean
-import com.kayu.business_car_owner.model.WashStationDetailBean.ServicesDTO.ListDTO
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import com.kayu.business_car_owner.wxapi.WxPayBean
+import androidx.lifecycle.ViewModelProviders
+import com.alipay.sdk.app.PayTask
+import com.amap.api.location.AMapLocation
+import com.kayu.business_car_owner.KWApplication
+import com.kayu.business_car_owner.PayOrderViewModel
+import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.model.SystemParam
+import com.kayu.business_car_owner.model.WashStationDetailBean
+import com.kayu.business_car_owner.model.WashStationDetailBean.ServicesDTO.ListDTO
 import com.kayu.business_car_owner.wxapi.AliPayBean
 import com.kayu.business_car_owner.wxapi.PayResult
-import com.amap.api.location.AMapLocation
-import com.kayu.business_car_owner.wxapi.OnResponseListener
-import com.alipay.sdk.app.PayTask
-import com.kayu.business_car_owner.*
-import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.wxapi.WXShare
+import com.kayu.business_car_owner.wxapi.WxPayBean
 import com.kayu.utils.*
-import com.kongzue.dialog.interfaces.OnDismissListener
+import com.kayu.utils.location.LocationManagerUtil
+import com.kongzue.dialog.v3.TipDialog
+import com.kongzue.dialog.v3.TipGifDialog
 
 class WashOrderActivity constructor() : BaseActivity() {
     private var selectedListDTO //已选择的洗车服务
@@ -70,25 +69,95 @@ class WashOrderActivity constructor() : BaseActivity() {
                     /**
                      * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
-//                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    val resultStatus: String = payResult.resultStatus
-                    // 判断resultStatus 为9000则代表支付成功
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-//                        showAlert(PayDemoActivity.this, getString(R.string.pay_success) + payResult);
-                        TipGifDialog.show(this@WashOrderActivity, "支付成功", TipGifDialog.TYPE.SUCCESS)
-                            .setOnDismissListener(object : OnDismissListener {
-                                public override fun onDismiss() {
-                                    if (null != mAliPayBean) {
-//                                    onBackPressed();
-//                                    onBackPressed();
-//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                                    fragmentTransaction.add(R.id.main_root_lay, new WashUnusedActivity(mAliPayBean.orderId,8));
-//                                    fragmentTransaction.addToBackStack("ddd");
-//                                    fragmentTransaction.commit();
-                                        val intent: Intent = Intent(
+//                    val resultStatus: String = payResult.resultStatus
+//                    // 判断resultStatus 为9000则代表支付成功
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        TipGifDialog.show(this@WashOrderActivity, "支付成功", TipGifDialog.TYPE.SUCCESS)
+//                            .setOnDismissListener(object : OnDismissListener {
+//                                public override fun onDismiss() {
+//                                    if (null != mAliPayBean) {
+//                                        val intent: Intent = Intent(
+//                                            this@WashOrderActivity,
+//                                            WashUnusedActivity::class.java
+//                                        )
+//                                        intent.putExtra("orderId", mAliPayBean!!.orderId)
+//                                        intent.putExtra("orderState", 8)
+//                                        startActivity(intent)
+//                                        finish()
+//                                    }
+//                                }
+//                            })
+//                    } else {
+//                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                        if (null != mAliPayBean && !TextUtils.equals(resultStatus, "5000")) {
+//                            payOrderViewModel!!.cancelPay(
+//                                this@WashOrderActivity,
+//                                mAliPayBean!!.orderId
+//                            )
+//                        }
+//                        TipGifDialog.show(
+//                            this@WashOrderActivity,
+//                            "支付已取消",
+//                            TipGifDialog.TYPE.WARNING
+//                        ).setOnDismissListener(object : OnDismissListener {
+//                            override fun onDismiss() {}
+//                        })
+//                    }
+//                    isPaying = false
+
+//                    @SuppressWarnings("unchecked")
+//                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+//                    /**
+//                     * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+//                     */
+//                    String resultStatus = payResult.getResultStatus();
+//                    // 判断resultStatus 为9000则代表支付成功
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        TipGifDialog.show(WashOrderActivity.this, "支付成功", TipGifDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+//                            @Override
+//                            public void onDismiss() {
+//                                if (null != mAliPayBean) {
+//                                    Intent intent = new Intent(WashOrderActivity.this, WashUnusedActivity.class);
+//                                    intent.putExtra("orderId", mAliPayBean.orderId);
+//                                    intent.putExtra("orderState",8);
+//                                    startActivity(intent);
+//                                    finish();
+//                                }
+//                            }
+//                        });
+//                    } else {
+//                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                        if (null != mAliPayBean && !TextUtils.equals(resultStatus, "5000")) {
+//                            payOrderViewModel.cancelPay(WashOrderActivity.this,mAliPayBean.orderId);
+//                        }
+//                        TipGifDialog.show(WashOrderActivity.this, "支付已取消", TipGifDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
+//                            @Override
+//                            public void onDismiss() {
+//
+//                            }
+//                        });
+//                    }
+                    if (null != mAliPayBean) {
+                        TipGifDialog.show(
+                            this@WashOrderActivity,
+                            "查询支付结果，稍等...",
+                            TipGifDialog.TYPE.OTHER,
+                            R.drawable.loading_gif
+                        )
+                        payOrderViewModel!!.getWashOrderStatus(
+                            this@WashOrderActivity,
+                            mAliPayBean!!.orderId
+                        ).observe(
+                            this@WashOrderActivity
+                        ) { responseInfo ->
+                            TipGifDialog.dismiss()
+                            if (null != responseInfo) {
+                                if (responseInfo.status == 1) {
+                                    if (responseInfo.responseData as Int == 1) {
+                                        //                                            TipDialog.show(WashOrderActivity.this,"支付成功！",TipDialog.TYPE.WARNING);
+                                        val intent = Intent(
                                             this@WashOrderActivity,
                                             WashUnusedActivity::class.java
                                         )
@@ -96,24 +165,30 @@ class WashOrderActivity constructor() : BaseActivity() {
                                         intent.putExtra("orderState", 8)
                                         startActivity(intent)
                                         finish()
+                                    } else {
+                                        TipDialog.show(
+                                            this@WashOrderActivity,
+                                            responseInfo.msg,
+                                            TipDialog.TYPE.WARNING
+                                        )
+                                        payOrderViewModel!!.cancelPay(
+                                            this@WashOrderActivity,
+                                            mAliPayBean!!.orderId
+                                        )
                                     }
+                                } else if (responseInfo.status == 302) {
+                                    TipDialog.show(
+                                        this@WashOrderActivity,
+                                        responseInfo.msg,
+                                        TipDialog.TYPE.WARNING
+                                    )
+                                    payOrderViewModel!!.cancelPay(
+                                        this@WashOrderActivity,
+                                        mAliPayBean!!.orderId
+                                    )
                                 }
-                            })
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        if (null != mAliPayBean && !TextUtils.equals(resultStatus, "5000")) {
-                            payOrderViewModel!!.cancelPay(
-                                this@WashOrderActivity,
-                                mAliPayBean!!.orderId
-                            )
+                            }
                         }
-                        TipGifDialog.show(
-                            this@WashOrderActivity,
-                            "支付已取消",
-                            TipGifDialog.TYPE.WARNING
-                        ).setOnDismissListener(object : OnDismissListener {
-                            override fun onDismiss() {}
-                        })
                     }
                     isPaying = false
                 }
@@ -316,74 +391,66 @@ class WashOrderActivity constructor() : BaseActivity() {
     private fun wechatPayOrder() {
         wxShare = WXShare(this@WashOrderActivity)
         wxShare!!.register()
-        wxShare!!.setListener(object : OnResponseListener {
-            public override fun onSuccess() {
-//                LogUtil.e("hm", "支付成功");
-                TipGifDialog.show(this@WashOrderActivity, "支付成功", TipGifDialog.TYPE.SUCCESS)
-                    .setOnDismissListener(object : OnDismissListener {
-                        public override fun onDismiss() {
-                            if (null != mWxPayBean) {
-//                            onBackPressed();
-//                            onBackPressed();
-//                            FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                            FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                            fragmentTransaction.add(R.id.main_root_lay, new WashUnusedActivity(mWxPayBean.orderId,8));
-//                            fragmentTransaction.addToBackStack("ddd");
-//                            fragmentTransaction.commit();
-                                val intent: Intent =
-                                    Intent(this@WashOrderActivity, WashUnusedActivity::class.java)
-                                intent.putExtra("orderId", mWxPayBean!!.orderId)
-                                intent.putExtra("orderState", 8)
-                                startActivity(intent)
-                                finish()
-                            }
-                        }
-                    })
-                isPaying = false
-            }
-
-            public override fun onCancel() {
-//                LogUtil.e("hm", "支付已取消");
-                if (null != mWxPayBean) {
-                    mWxPayBean!!.orderId?.let {
-                        payOrderViewModel!!.cancelPay(this@WashOrderActivity,
-                            it
-                        )
-                    }
-                }
-                TipGifDialog.show(this@WashOrderActivity, "支付已取消", TipGifDialog.TYPE.WARNING)
-                    .setOnDismissListener(object : OnDismissListener {
-                        public override fun onDismiss() {}
-                    })
-                isPaying = false
-            }
-
-            public override fun onFail(message: String) {
-                LogUtil.e("hm", message)
-                TipGifDialog.show(this@WashOrderActivity, message, TipGifDialog.TYPE.ERROR)
-                    .setOnDismissListener(object : OnDismissListener {
-                        public override fun onDismiss() {
-                            if (null != mWxPayBean) {
-                                mWxPayBean!!.orderId?.let {
-                                    payOrderViewModel!!.cancelPay(
-                                        this@WashOrderActivity,
-                                        it
-                                    )
-                                }
-                            }
-                            TipGifDialog.show(
-                                this@WashOrderActivity,
-                                "支付失败",
-                                TipGifDialog.TYPE.ERROR
-                            ).setOnDismissListener(object : OnDismissListener {
-                                public override fun onDismiss() {}
-                            })
-                        }
-                    })
-                isPaying = false
-            }
-        })
+//        wxShare!!.setListener(object : OnResponseListener {
+//            public override fun onSuccess() {
+////                LogUtil.e("hm", "支付成功");
+//                TipGifDialog.show(this@WashOrderActivity, "支付成功", TipGifDialog.TYPE.SUCCESS)
+//                    .setOnDismissListener(object : OnDismissListener {
+//                        public override fun onDismiss() {
+//                            if (null != mWxPayBean) {
+//                                val intent: Intent =
+//                                    Intent(this@WashOrderActivity, WashUnusedActivity::class.java)
+//                                intent.putExtra("orderId", mWxPayBean!!.orderId)
+//                                intent.putExtra("orderState", 8)
+//                                startActivity(intent)
+//                                finish()
+//                            }
+//                        }
+//                    })
+//                isPaying = false
+//            }
+//
+//            public override fun onCancel() {
+////                LogUtil.e("hm", "支付已取消");
+//                if (null != mWxPayBean) {
+//                    mWxPayBean!!.orderId?.let {
+//                        payOrderViewModel!!.cancelPay(this@WashOrderActivity,
+//                            it
+//                        )
+//                    }
+//                }
+//                TipGifDialog.show(this@WashOrderActivity, "支付已取消", TipGifDialog.TYPE.WARNING)
+//                    .setOnDismissListener(object : OnDismissListener {
+//                        public override fun onDismiss() {}
+//                    })
+//                isPaying = false
+//            }
+//
+//            public override fun onFail(message: String) {
+//                LogUtil.e("hm", message)
+//                TipGifDialog.show(this@WashOrderActivity, message, TipGifDialog.TYPE.ERROR)
+//                    .setOnDismissListener(object : OnDismissListener {
+//                        public override fun onDismiss() {
+//                            if (null != mWxPayBean) {
+//                                mWxPayBean!!.orderId?.let {
+//                                    payOrderViewModel!!.cancelPay(
+//                                        this@WashOrderActivity,
+//                                        it
+//                                    )
+//                                }
+//                            }
+//                            TipGifDialog.show(
+//                                this@WashOrderActivity,
+//                                "支付失败",
+//                                TipGifDialog.TYPE.ERROR
+//                            ).setOnDismissListener(object : OnDismissListener {
+//                                public override fun onDismiss() {}
+//                            })
+//                        }
+//                    })
+//                isPaying = false
+//            }
+//        })
         payOrderViewModel!!.getWeChatPayInfo(
             this@WashOrderActivity,
             shopCode,
@@ -420,9 +487,72 @@ class WashOrderActivity constructor() : BaseActivity() {
             })
     }
 
+    private var firstTime: Long = 0
     private fun reqWxPay(wxPayBean: WxPayBean?) {
         if (null != wxPayBean) {
-            wxShare!!.getWXPay(wxPayBean, null)
+            wxShare!!.getWXPay(wxPayBean, object : ItemCallback {
+                override fun onItemCallback(position: Int, obj: Any?) {
+                    //微信支付有结果回调，查询服务器支付状态
+                    val secondTime = System.currentTimeMillis()
+                    if (firstTime == 0L || secondTime - firstTime > 500) {
+                        firstTime = secondTime
+                        if (null != mWxPayBean) {
+                            TipGifDialog.show(
+                                this@WashOrderActivity,
+                                "查询支付结果，请稍等...",
+                                TipGifDialog.TYPE.OTHER,
+                                R.drawable.loading_gif
+                            )
+                            payOrderViewModel!!.getWashOrderStatus(
+                                this@WashOrderActivity,
+                                mWxPayBean!!.orderId!!
+                            ).observe(
+                                this@WashOrderActivity
+                            ) { responseInfo ->
+                                TipGifDialog.dismiss()
+                                if (null != responseInfo) {
+                                    if (responseInfo.status == 1) {
+                                        if (responseInfo.responseData as Int == 1) {
+                                            //                                            TipDialog.show(WashOrderActivity.this,"支付成功！",TipDialog.TYPE.WARNING);
+                                            val intent = Intent(
+                                                this@WashOrderActivity,
+                                                WashUnusedActivity::class.java
+                                            )
+                                            intent.putExtra("orderId", mWxPayBean!!.orderId)
+                                            intent.putExtra("orderState", 8)
+                                            startActivity(intent)
+                                            finish()
+                                        } else {
+                                            TipDialog.show(
+                                                this@WashOrderActivity,
+                                                responseInfo.msg,
+                                                TipDialog.TYPE.WARNING
+                                            )
+                                            payOrderViewModel!!.cancelPay(
+                                                this@WashOrderActivity,
+                                                mWxPayBean!!.orderId!!
+                                            )
+                                        }
+                                    } else if (responseInfo.status == 302) {
+                                        TipDialog.show(
+                                            this@WashOrderActivity,
+                                            responseInfo.msg,
+                                            TipDialog.TYPE.WARNING
+                                        )
+                                        payOrderViewModel!!.cancelPay(
+                                            this@WashOrderActivity,
+                                            mWxPayBean!!.orderId!!
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        isPaying = false
+                    }
+                }
+
+                override fun onDetailCallBack(position: Int, obj: Any?) {}
+            })
         }
     }
 

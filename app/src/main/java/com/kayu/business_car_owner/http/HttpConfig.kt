@@ -36,6 +36,7 @@ object HttpConfig {
     const val INTERFACE_WASH_STATION_DETAIL = "api/v1/carwash/getdetail/" //获取洗车站详情
     const val INTERFACE_WASH_PAY = "api/v1/carwash/buy" //获取洗车订单购买信息
     const val INTERFACE_WASH_PAY_CANCEL = "api/v1/cworder/cancel" //取消洗车订单
+    const val INTERFACE_WASH_PAY_STATUS = "api/v1/cworder/getstatus/" //获取洗车订单支付后的状态
     const val INTERFACE_WASH_ORDER_LIST = "api/v1/cworder/list" //获取洗车订单列表
     const val INTERFACE_WASH_ORDER_DETAIL = "api/v1/cworder/getdetail/" //获取洗车订单详情
     const val INTERFACE_WASH_ORDER_REFUND_INFO = "api/v1/cworder/rfdinfo/" //获取洗车订单退款信息

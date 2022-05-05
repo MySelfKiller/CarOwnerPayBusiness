@@ -8,15 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kayu.business_car_owner.wxapi.WxPayBean
 import com.hjq.toast.ToastUtils
-import com.kongzue.dialog.v3.TipGifDialog
-import com.kayu.business_car_owner.wxapi.AliPayBean
-import com.kayu.business_car_owner.data_parser.WxPayDataParse
 import com.kayu.business_car_owner.data_parser.AliPayDataParse
+import com.kayu.business_car_owner.data_parser.WxPayDataParse
 import com.kayu.business_car_owner.http.*
 import com.kayu.business_car_owner.http.parser.NormalIntParse
-import java.util.HashMap
+import com.kayu.business_car_owner.wxapi.AliPayBean
+import com.kayu.business_car_owner.wxapi.WxPayBean
+import com.kongzue.dialog.v3.TipGifDialog
 
 class PayOrderViewModel : ViewModel() {
     private var wxPayLiveData: MutableLiveData<WxPayBean?>? = null
@@ -111,5 +110,35 @@ class PayOrderViewModel : ViewModel() {
         val callback: ResponseCallback = ResponseCallback(reques)
         ReqUtil.setReqInfo(reques)
         ReqUtil.requestPostJSON(callback)
+    }
+
+    fun getWashOrderStatus(context: Context, orderId: Long): LiveData<ResponseInfo> {
+        val orderStatusData = MutableLiveData<ResponseInfo>()
+        getOrderStatus(context, orderId, orderStatusData)
+        return orderStatusData
+    }
+
+    @SuppressLint("HandlerLeak")
+    private fun getOrderStatus(
+        context: Context,
+        orderId: Long,
+        orderStatusData: MutableLiveData<ResponseInfo>
+    ) {
+        val request = RequestInfo()
+        request.context = context
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_WASH_PAY_STATUS
+        val dataMap = HashMap<String, Any>()
+        dataMap[""] = orderId
+        request.reqDataMap = dataMap
+        request.parser = NormalIntParse()
+        request.handler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val response = msg.obj as ResponseInfo
+                orderStatusData.value = response
+                super.handleMessage(msg)
+            }
+        }
+        ReqUtil.setReqInfo(request)
+        ReqUtil.requestGetJSON(ResponseCallback(request))
     }
 }
