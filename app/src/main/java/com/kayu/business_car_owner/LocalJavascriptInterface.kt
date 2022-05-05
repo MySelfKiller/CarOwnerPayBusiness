@@ -24,11 +24,13 @@ class LocalJavascriptInterface constructor(
     @JavascriptInterface
     fun Loading(s: String) {
         //关闭加载框
+        LogUtil.e("LocalJavascriptInterface", "Loading----s:" + s)
         handler.sendMessage(handler.obtainMessage(2, s))
     }
     @JavascriptInterface
     fun CloseStatus(s: String) {
         //返回按键是否需要全部关闭
+        LogUtil.e("LocalJavascriptInterface", "CloseStatus----s:" + s)
         handler.sendMessage(handler.obtainMessage(3, s))
     }
 

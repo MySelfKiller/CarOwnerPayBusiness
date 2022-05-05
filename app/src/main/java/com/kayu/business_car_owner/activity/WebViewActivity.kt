@@ -79,19 +79,19 @@ class WebViewActivity : BaseActivity() {
             when (msg.what) {
                 2 -> {   //关闭加载框
                     isOpenDialog = msg.obj as String
-//                    when (isOpenDialog) {
-//                        "1" -> {
-//                            TipGifDialog.show(
-//                                this@WebViewActivity,
-//                                "加载中...",
-//                                TipGifDialog.TYPE.OTHER,
-//                                R.drawable.loading_gif
-//                            )
-//                        }
-//                        "0" -> {
-//                            TipGifDialog.dismiss()
-//                        }
-//                    }
+                    when (isOpenDialog) {
+                        "1" -> {
+                            TipGifDialog.show(
+                                this@WebViewActivity,
+                                "加载中...",
+                                TipGifDialog.TYPE.OTHER,
+                                R.drawable.loading_gif
+                            )
+                        }
+                        "0" -> {
+                            TipGifDialog.dismiss()
+                        }
+                    }
 
                 }
                 3 -> {   //返回按键是否需要全部关闭
@@ -340,9 +340,10 @@ class WebViewActivity : BaseActivity() {
 //                    )
                     if (isOpenDialog == "") {
                         TipGifDialog.dismiss()
-                    } else if (isOpenDialog == "0"){
-                        TipGifDialog.dismiss()
                     }
+//                    else if (isOpenDialog == "0"){
+//                        TipGifDialog.dismiss()
+//                    }
                 }
 
             }
@@ -459,21 +460,27 @@ class WebViewActivity : BaseActivity() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 title_name?.text = titleName
                 if (!isBacking) {
-                    if (isOpenDialog == "") {
-                        TipGifDialog.show(
-                            this@WebViewActivity,
-                            "加载中...",
-                            TipGifDialog.TYPE.OTHER,
-                            R.drawable.loading_gif
-                        )
-                    } else if (isOpenDialog == "1"){
-                        TipGifDialog.show(
-                            this@WebViewActivity,
-                            "加载中...",
-                            TipGifDialog.TYPE.OTHER,
-                            R.drawable.loading_gif
-                        )
-                    }
+                    TipGifDialog.show(
+                        this@WebViewActivity,
+                        "加载中...",
+                        TipGifDialog.TYPE.OTHER,
+                        R.drawable.loading_gif
+                    )
+//                    if (isOpenDialog == "") {
+//                        TipGifDialog.show(
+//                            this@WebViewActivity,
+//                            "加载中...",
+//                            TipGifDialog.TYPE.OTHER,
+//                            R.drawable.loading_gif
+//                        )
+//                    } else if (isOpenDialog == "1"){
+//                        TipGifDialog.show(
+//                            this@WebViewActivity,
+//                            "加载中...",
+//                            TipGifDialog.TYPE.OTHER,
+//                            R.drawable.loading_gif
+//                        )
+//                    }
 
                 }
                 //                pbWebView.setVisibility(View.VISIBLE);
