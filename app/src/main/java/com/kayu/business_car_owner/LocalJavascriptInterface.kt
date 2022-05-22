@@ -12,6 +12,7 @@ import com.kayu.business_car_owner.wxapi.WXShare
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.callback.ImageCallback
+import com.kayu.utils.location.LocationManagerUtil
 import com.kongzue.dialog.v3.TipGifDialog
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,19 +20,46 @@ import org.json.JSONObject
 
 class LocalJavascriptInterface constructor(
     private val mContext: Context,
-    private val handler: Handler
+    private val mHandler: Handler
 ) {
+
+    @JavascriptInterface
+    fun GetLocation( ) {//获取本地定位点
+        mHandler.sendMessage(mHandler.obtainMessage(4 ))
+
+    }
+
+    @JavascriptInterface
+    fun OpenMap(args: String) {
+        LogUtil.e("js调用方法", "OpenMap-------$args")
+        mHandler.post {
+            //{"fromLng":118.180237,"fromLat":39.623863,"toLng":"118.02162","toLat":"39.7285","toName":"红利加油站"}
+            try {
+                val jsonObject = JSONObject(args)
+                KWApplication.instance.toNavi(
+                    mContext,
+                    jsonObject.getString("toLat"),
+                    jsonObject.getString("toLng"),
+                    jsonObject.getString("toName"), "GCJ02"
+                )
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
     @JavascriptInterface
     fun Loading(s: String) {
         //关闭加载框
         LogUtil.e("LocalJavascriptInterface", "Loading----s:" + s)
-        handler.sendMessage(handler.obtainMessage(2, s))
+        mHandler.sendMessage(mHandler.obtainMessage(2, s))
     }
     @JavascriptInterface
     fun CloseStatus(s: String) {
         //返回按键是否需要全部关闭
         LogUtil.e("LocalJavascriptInterface", "CloseStatus----s:" + s)
-        handler.sendMessage(handler.obtainMessage(3, s))
+        mHandler.sendMessage(mHandler.obtainMessage(3, s))
     }
 
     @JavascriptInterface
@@ -46,7 +74,7 @@ class LocalJavascriptInterface constructor(
         }
         if (null == jsonObject) return
         val id: Long = jsonObject.optLong("id")
-        handler.sendMessage(handler.obtainMessage(1, id))
+        mHandler.sendMessage(mHandler.obtainMessage(1, id))
     }
 
     @JavascriptInterface

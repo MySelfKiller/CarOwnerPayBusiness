@@ -34,6 +34,7 @@ import com.kayu.business_car_owner.http.*
 import com.kayu.business_car_owner.model.SystemParam
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
+import com.kayu.utils.location.LocationManagerUtil
 import com.kongzue.dialog.interfaces.OnDismissListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
 import org.json.JSONObject
@@ -96,6 +97,17 @@ class WebViewActivity : BaseActivity() {
                 }
                 3 -> {   //返回按键是否需要全部关闭
                     jsCloseStatus = msg.obj as String
+                }
+                4 -> {  //js调用本地定位点并回传
+                    val location = LocationManagerUtil.self?.loccation
+                    wvWebView?.evaluateJavascript(
+                        "window.locationCallback(" + location!!.longitude + "," + location.latitude + ")",
+                        null
+                    )
+                    LogUtil.e(
+                        "js调用方法",
+                        " getLocation==" + location?.longitude + "," + location?.latitude
+                    )
                 }
             }
             super.handleMessage(msg)
