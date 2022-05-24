@@ -333,7 +333,7 @@ class HomeFragmentNew
                                     sb.append(",")
                                     sb.append(latitude)
                                     intent.putExtra("url", sb.toString())
-//                                    intent.putExtra("url", "http://192.168.3.41:8020/%E7%A4%BA%E4%BE%8B%E9%A1%B5%E9%9D%A2/demo.html?__hbt=1651719988425")
+//                                    intent.putExtra("url", "http://192.168.3.41:8080/#/OrderDetails?id=6")
                                     intent.putExtra("from", "首页")
                                     startActivity(intent)
                                 } else {

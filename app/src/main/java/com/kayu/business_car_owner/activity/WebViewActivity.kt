@@ -99,15 +99,17 @@ class WebViewActivity : BaseActivity() {
                     jsCloseStatus = msg.obj as String
                 }
                 4 -> {  //js调用本地定位点并回传
+
                     val location = LocationManagerUtil.self?.loccation
-                    wvWebView?.evaluateJavascript(
-                        "window.locationCallback(" + location!!.longitude + "," + location.latitude + ")",
-                        null
-                    )
                     LogUtil.e(
                         "js调用方法",
                         " getLocation==" + location?.longitude + "," + location?.latitude
                     )
+                    wvWebView?.evaluateJavascript(
+                        "window.CurrentLocation(" + location!!.latitude + "," + location.longitude + ")",
+                        null
+                    )
+
                 }
             }
             super.handleMessage(msg)
