@@ -45,6 +45,7 @@ import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
 import com.kayu.business_car_owner.ui.HomeFragmentNew
+import com.kayu.business_car_owner.ui.ShopFragment
 import com.kayu.business_car_owner.update.UpdateInfo
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
@@ -54,7 +55,7 @@ import java.lang.Exception
 import java.util.ArrayList
 import java.util.HashMap
 
-class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
+class MainActivity: BaseActivity(), OnPageChangeListener {
     private var view_pager: ViewPager? = null
     private var mViewModel: MainViewModel? = null
     private var apkDownloadPath: String? = null
@@ -72,7 +73,8 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
                 lastSelectItemid = item.getItemId()
                 when (item.getItemId()) {
                     R.id.navigation_home -> view_pager!!.setCurrentItem(0)
-                    R.id.navigation_personal -> view_pager!!.setCurrentItem(1)
+                    R.id.navigation_shop -> view_pager!!.setCurrentItem(1)
+                    R.id.navigation_personal -> view_pager!!.setCurrentItem(2)
                 }
                 return true
             }
@@ -107,6 +109,7 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
         private get() {
             val list: MutableList<Fragment> = ArrayList()
             navigation?.let { HomeFragmentNew(it) }?.let { list.add(it) }
+            list.add(ShopFragment())
             list.add(PersonalFragment())
             return list
         }
@@ -215,10 +218,10 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
                     reqUpdate()
                     if (!mHasShowOnce1) reqActivityData(38)
                     val fragmentManager: FragmentManager = getSupportFragmentManager()
-                    val navigationAdapter: NavigationAdapter =
+                    val navigationAdapter =
                         NavigationAdapter(fragmentManager, fragments)
                     view_pager!!.addOnPageChangeListener(this@MainActivity)
-                    view_pager!!.setOffscreenPageLimit(2)
+                    view_pager!!.setOffscreenPageLimit(3)
                     view_pager!!.setAdapter(navigationAdapter)
                     navigation?.let { BottomNavigationViewHelper.disableShiftMode(it) }
                     navigation!!.setItemIconTintList(null) //设置item图标颜色为null，当menu里icon设置selector的时候，
@@ -236,10 +239,10 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
                     reqUpdate()
                     if (!mHasShowOnce1) reqActivityData(38)
                     val fragmentManager: FragmentManager = getSupportFragmentManager()
-                    val navigationAdapter: NavigationAdapter =
+                    val navigationAdapter =
                         NavigationAdapter(fragmentManager, fragments)
                     view_pager!!.addOnPageChangeListener(this@MainActivity)
-                    view_pager!!.setOffscreenPageLimit(2)
+                    view_pager!!.setOffscreenPageLimit(3)
                     view_pager!!.setAdapter(navigationAdapter)
                     navigation?.let { BottomNavigationViewHelper.disableShiftMode(it) }
                     navigation!!.setItemIconTintList(null) //设置item图标颜色为null，当menu里icon设置selector的时候，
@@ -568,13 +571,13 @@ class MainActivity constructor() : BaseActivity(), OnPageChangeListener {
     }
 
     public override fun onPageSelected(position: Int) {
-        var selectedItemId: Int = 0
+        var selectedItemId = 0
         when (position) {
             0 -> {
                 selectedItemId = R.id.navigation_home
                 if (!mHasShowOnce1) reqActivityData(38)
             }
-            1 -> {
+            2 -> {
                 selectedItemId = R.id.navigation_personal
                 if (!mHasShowOnce2) reqActivityData(39)
             }

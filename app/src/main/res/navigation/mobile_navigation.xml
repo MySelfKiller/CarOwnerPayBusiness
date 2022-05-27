@@ -10,6 +10,11 @@
         android:name="com.kayu.business_car_owner.ui.HomeFragmentNew"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/navigation_shop"
+        android:name="com.kayu.business_car_owner.ui.ShopFragment"
+        android:label="@string/title_shop"
+        tools:layout="@layout/fragment_shop" />
 
     <fragment
         android:id="@+id/navigation_personal"

@@ -6,10 +6,9 @@
         android:icon="@drawable/ic_home_selector"
         android:title="@string/title_home" />
 
-<!--    <item-->
-<!--        android:id="@+id/navigation_shop"-->
-<!--        android:icon="@drawable/ic_dashboard_black_24dp"-->
-<!--        android:title="@string/title_shop" />-->
+    <item
+        android:id="@+id/navigation_shop"
+        android:title="@string/title_shop" />
 <!--    <item-->
 <!--        android:id="@+id/navigation_consult"-->
 <!--        android:icon="@drawable/ic_dashboard_black_24dp"-->
