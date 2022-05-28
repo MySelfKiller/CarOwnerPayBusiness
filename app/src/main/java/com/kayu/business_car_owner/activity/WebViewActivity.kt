@@ -46,7 +46,7 @@ class WebViewActivity : BaseActivity() {
     var wvWebView: WebView? = null
     private var url: String? = null
 //    private var from: String? = null
-    private val titleName: String = "加载中..."
+//    private val titleName: String = "加载中..."
     private var title_name: TextView? = null
     var headMap: MutableMap<String, String?> = HashMap()
 //    private var adID: Long = 0L
@@ -177,7 +177,7 @@ class WebViewActivity : BaseActivity() {
             override fun OnMoreErrorClick() {}
         })
         title_name = findViewById(R.id.title_name_tv)
-        title_name?.text = titleName
+        title_name?.text = ""
 //        if (StringUtil.isEmpty(from)) {
 //            from = "返回"
 //        }
@@ -341,7 +341,7 @@ class WebViewActivity : BaseActivity() {
 
             public override fun onReceivedTitle(view: WebView, title: String) {
                 super.onReceivedTitle(view, title)
-                title_name!!.setText(titleName)
+//                title_name!!.setText(titleName)
             }
 
             public override fun onProgressChanged(view: WebView, newProgress: Int) {
@@ -472,7 +472,7 @@ class WebViewActivity : BaseActivity() {
 //                LogUtil.e("WebView", "doUpdateVisitedHistory: url="+view?.url +"-------"+ url+",isReload="+isReload)
 //            }
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                title_name?.text = titleName
+//                title_name?.text = titleName
                 if (!isBacking) {
                     TipGifDialog.show(
                         this@WebViewActivity,
