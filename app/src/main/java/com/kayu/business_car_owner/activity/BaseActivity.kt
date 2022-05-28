@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getColor
 import com.kayu.utils.status_bar_set.StatusBarUtil
 import com.kayu.utils.permission.EasyPermissions.DialogCallback
 import com.kayu.utils.permission.EasyPermissions.PermissionWithDialogCallbacks
@@ -50,7 +51,7 @@ open class BaseActivity : AppCompatActivity(), PermissionWithDialogCallbacks {
         StatusBarUtil.setRootViewFitsSystemWindows(this, true)
         //设置状态栏透明
 //        StatusBarUtil.setTranslucentStatus(this);
-        StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.white))
+        StatusBarUtil.setColor(this, getColor(this,R.color.grayText))
 
 //        StatusBarUtil.setTranslucent(this, 0);
 //        StatusBarUtil.setColor(this, getResources().getColor(R.color.white));

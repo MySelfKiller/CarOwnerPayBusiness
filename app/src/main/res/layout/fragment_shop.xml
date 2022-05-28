@@ -1,104 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/dp_30"
-    android:orientation="vertical">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="vertical"
+    android:layout_height="match_parent">
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_marginTop="@dimen/dp_30"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
-
-        android:elevation="@dimen/dp_2"
-        android:id="@+id/title_root_lay"
-        android:background="@color/white">
-        <LinearLayout
-            android:id="@+id/title_back_btu"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <ImageView
-                android:id="@+id/title_back_iv"
-                android:layout_width="@dimen/dp_25"
-                android:layout_height="@dimen/dp_25"
-                android:layout_marginStart="@dimen/dp_8"
-                android:padding="@dimen/dp_2"
-                android:src="@mipmap/normal_btu_white"
-                app:tint="@color/colorAccent" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/title_name_lay"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <TextView
-                android:id="@+id/title_name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_16"
-                android:maxLines="1"
-                android:maxEms="10"
-                android:ellipsize="end"
-                android:text="标题"
-                android:textStyle="bold"
-                android:textColor="@color/colorAccent"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/title_close_btn"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_0"
-            android:gravity="center"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <ImageView
-                android:id="@+id/title_close_iv"
-                android:layout_width="@dimen/dp_25"
-                android:layout_height="@dimen/dp_25"
-                android:layout_gravity="center"
-                android:gravity="center"
-                app:tint="@color/colorAccent"
-                android:src="@mipmap/btn_close" />
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <LinearLayout
-        android:id="@+id/llWebView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:splitMotionEvents="false">
-
-
-        <RelativeLayout
+        android:layout_height="match_parent">
+        <com.scwang.smart.refresh.header.ClassicsHeader
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:srlAccentColor="@color/black"
+            app:srlClassicsSpinnerStyle="FixedBehind"
+            app:srlPrimaryColor="@color/white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <WebView
-                android:id="@+id/wvWebView"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:elevation="@dimen/dp_2"
+                android:background="@color/white"
+                android:id="@+id/title_root_lay">
+                <LinearLayout
+                    android:id="@+id/title_back_btu"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <ImageView
+                        android:id="@+id/title_back_iv"
+                        android:layout_width="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_25"
+                        android:layout_marginStart="@dimen/dp_8"
+                        android:padding="@dimen/dp_2"
+                        android:src="@mipmap/normal_btu_white"
+                        app:tint="@color/colorAccent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/title_name_lay"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <TextView
+                        android:id="@+id/title_name_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_16"
+                        android:maxLines="1"
+                        android:maxEms="10"
+                        android:ellipsize="end"
+                        android:text="标题"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccent"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/title_close_btn"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_0"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <ImageView
+                        android:id="@+id/title_close_iv"
+                        android:layout_width="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_25"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        app:tint="@color/colorAccent"
+                        android:src="@mipmap/btn_close" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+            <LinearLayout
+                android:id="@+id/llWebView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layerType="hardware" />
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:splitMotionEvents="false">
 
-        </RelativeLayout>
-    </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <WebView
+                        android:id="@+id/wvWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layerType="hardware" />
+
+                </RelativeLayout>
+            </LinearLayout>
 
 
+        </LinearLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </LinearLayout>

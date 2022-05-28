@@ -14,46 +14,43 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
-import com.hjq.toast.ToastUtils
-import com.kongzue.dialog.v3.TipGifDialog
-import com.kayu.business_car_owner.model.SystemParam
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kayu.utils.location.LocationManagerUtil
-import com.kayu.utils.status_bar_set.StatusBarUtil
-import com.kayu.utils.permission.EasyPermissions.DialogCallback
-import com.kongzue.dialog.v3.MessageDialog
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import androidx.viewpager.widget.ViewPager
-import com.maning.updatelibrary.InstallUtils.DownloadCallBack
-import com.daimajia.numberprogressbar.NumberProgressBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.kongzue.dialog.v3.CustomDialog
-import com.kayu.business_car_owner.ui.PersonalFragment
-import com.kayu.business_car_owner.ui.adapter.BottomNavigationViewHelper
-import com.kayu.business_car_owner.update.UpdateInfoParse
-import com.kayu.business_car_owner.update.UpdateCallBack
-import com.maning.updatelibrary.InstallUtils
-import com.maning.updatelibrary.InstallUtils.InstallPermissionCallBack
-import com.maning.updatelibrary.InstallUtils.InstallCallBack
-import com.kayu.utils.callback.ImageCallback
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.daimajia.numberprogressbar.NumberProgressBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.model.SystemParam
 import com.kayu.business_car_owner.ui.HomeFragmentNew
+import com.kayu.business_car_owner.ui.PersonalFragment
 import com.kayu.business_car_owner.ui.ShopFragment
+import com.kayu.business_car_owner.ui.adapter.BottomNavigationViewHelper
+import com.kayu.business_car_owner.update.UpdateCallBack
 import com.kayu.business_car_owner.update.UpdateInfo
+import com.kayu.business_car_owner.update.UpdateInfoParse
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
+import com.kayu.utils.callback.ImageCallback
+import com.kayu.utils.location.LocationManagerUtil
 import com.kayu.utils.permission.EasyPermissions
+import com.kayu.utils.permission.EasyPermissions.DialogCallback
+import com.kayu.utils.status_bar_set.StatusBarUtil
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
+import com.kongzue.dialog.util.BaseDialog
+import com.kongzue.dialog.v3.CustomDialog
+import com.kongzue.dialog.v3.MessageDialog
+import com.kongzue.dialog.v3.TipGifDialog
+import com.maning.updatelibrary.InstallUtils
+import com.maning.updatelibrary.InstallUtils.*
 import java.io.File
-import java.lang.Exception
-import java.util.ArrayList
-import java.util.HashMap
 
 class MainActivity: BaseActivity(), OnPageChangeListener {
     private var view_pager: ViewPager? = null
@@ -72,9 +69,9 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
                 }
                 lastSelectItemid = item.getItemId()
                 when (item.getItemId()) {
-                    R.id.navigation_home -> view_pager!!.setCurrentItem(0)
-                    R.id.navigation_shop -> view_pager!!.setCurrentItem(1)
-                    R.id.navigation_personal -> view_pager!!.setCurrentItem(2)
+                    R.id.navigation_home -> view_pager!!.currentItem = 0
+                    R.id.navigation_shop -> view_pager!!.currentItem = 1
+                    R.id.navigation_personal -> view_pager!!.currentItem = 2
                 }
                 return true
             }
@@ -106,10 +103,10 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
     }
 
     private val fragments: List<Fragment>
-        private get() {
+        get() {
             val list: MutableList<Fragment> = ArrayList()
             navigation?.let { HomeFragmentNew(it) }?.let { list.add(it) }
-            list.add(ShopFragment())
+            navigation?.let { ShopFragment(it) }?.let { list.add(it) }
             list.add(PersonalFragment())
             return list
         }
@@ -191,40 +188,15 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
             perms,
             object : PermissionCallback {
                 override fun hasPermission(allPerms: List<Array<String>>) {
-//                    mViewModel!!.sendOilPayInfo(this@MainActivity)
-                    //                if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
-//                    MessageDialog.show(MainActivity.this, "定位服务未开启", getString(R.string.permiss_location), "开启定位服务","取消").setCancelable(false)
-//                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-//                                @Override
-//                                public boolean onClick(BaseDialog baseDialog, View v) {
-//                                    baseDialog.doDismiss();
-//                                    Intent intent = new Intent();
-//                                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    startActivity(intent);
-////                                    appManager.finishAllActivity();
-////                                    LocationManagerUtil.getSelf().stopLocation();
-////                                    finish();
-//                                    return true;
-//                                }
-//                            }).setCancelButton(new OnDialogButtonClickListener() {
-//                        @Override
-//                        public boolean onClick(BaseDialog baseDialog, View v) {
-//
-//                            return false;
-//                        }
-//                    });
-//                }
                     reqUpdate()
                     if (!mHasShowOnce1) reqActivityData(38)
-                    val fragmentManager: FragmentManager = getSupportFragmentManager()
                     val navigationAdapter =
-                        NavigationAdapter(fragmentManager, fragments)
+                        NavigationAdapter(supportFragmentManager, fragments)
                     view_pager!!.addOnPageChangeListener(this@MainActivity)
-                    view_pager!!.setOffscreenPageLimit(3)
+                    view_pager!!.offscreenPageLimit = 3
                     view_pager!!.setAdapter(navigationAdapter)
                     navigation?.let { BottomNavigationViewHelper.disableShiftMode(it) }
-                    navigation!!.setItemIconTintList(null) //设置item图标颜色为null，当menu里icon设置selector的时候，
+                    navigation!!.itemIconTintList = null //设置item图标颜色为null，当menu里icon设置selector的时候，
                     navigation!!.setOnNavigationItemSelectedListener(
                         mOnNavigationItemSelectedListener
                     )
@@ -238,29 +210,16 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
                 ) {
                     reqUpdate()
                     if (!mHasShowOnce1) reqActivityData(38)
-                    val fragmentManager: FragmentManager = getSupportFragmentManager()
                     val navigationAdapter =
-                        NavigationAdapter(fragmentManager, fragments)
+                        NavigationAdapter(supportFragmentManager, fragments)
                     view_pager!!.addOnPageChangeListener(this@MainActivity)
-                    view_pager!!.setOffscreenPageLimit(3)
-                    view_pager!!.setAdapter(navigationAdapter)
+                    view_pager!!.offscreenPageLimit = 3
+                    view_pager!!.adapter = navigationAdapter
                     navigation?.let { BottomNavigationViewHelper.disableShiftMode(it) }
-                    navigation!!.setItemIconTintList(null) //设置item图标颜色为null，当menu里icon设置selector的时候，
+                    navigation!!.itemIconTintList = null //设置item图标颜色为null，当menu里icon设置selector的时候，
                     navigation!!.setOnNavigationItemSelectedListener(
                         mOnNavigationItemSelectedListener
                     )
-                    //                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
-//                showPermissTipsDialog();
-//                MessageDialog.show(MainActivity.this, "需要开启定位服务", getString(R.string.permiss_location), "下一步","").setCancelable(false)
-//                        .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-//                            @Override
-//                            public boolean onClick(BaseDialog baseDialog, View v) {
-//                                baseDialog.doDismiss();
-//                                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
-////                        permissionsCheck();
-//                                return true;
-//                            }
-//                        });
                 }
 
                 public override fun showDialog(dialogType: Int, callback: DialogCallback) {
@@ -576,6 +535,9 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
             0 -> {
                 selectedItemId = R.id.navigation_home
                 if (!mHasShowOnce1) reqActivityData(38)
+            }
+            1 -> {
+                selectedItemId = R.id.navigation_shop
             }
             2 -> {
                 selectedItemId = R.id.navigation_personal
