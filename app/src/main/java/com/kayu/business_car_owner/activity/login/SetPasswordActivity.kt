@@ -23,10 +23,11 @@ import com.kayu.business_car_owner.activity.*
 import com.kayu.business_car_owner.http.*
 import com.kayu.form_verify.Form
 import com.kayu.utils.*
+import com.kayu.utils.status_bar_set.StatusBarUtil
 import java.util.HashMap
 
 class SetPasswordActivity constructor() : BaseActivity() {
-    private var title: String? = "标题"
+    private var title: String? = "设置密码"
     private var back: String? = ""
     private var set_new_password: EditText? = null
     private var set_old_password: EditText? = null
@@ -35,6 +36,9 @@ class SetPasswordActivity constructor() : BaseActivity() {
     private var isSetPwd: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtil.setRootViewFitsSystemWindows(this, true)
+        //设置状态栏透明
+        StatusBarUtil.setTranslucentStatus(this)
         setContentView(R.layout.activity_set_password)
         val intent: Intent = getIntent()
         title = intent.getStringExtra("title")

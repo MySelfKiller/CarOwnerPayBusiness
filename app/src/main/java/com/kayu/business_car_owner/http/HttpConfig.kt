@@ -51,6 +51,7 @@ object HttpConfig {
     const val INTERFACE_MESSAGE_LIST = "api/v1/notify/list" //消息列表
     const val INTERFACE_MESSAGE_NUM = "api/v1/notify/getUnreadCnt" //消息列表
     const val INTERFACE_AD_COMPLETE = "api/v1/ad/complete" //看完广告回调
+    const val INTERFACE_SHOP_URL = "api/v1/poi/getIndexUrl" //周边生活主页面链接地址
 
     //    public String authorization = "";
     //    public static final MediaType JSON =MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");

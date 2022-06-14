@@ -8,6 +8,7 @@
 
     <item
         android:id="@+id/navigation_shop"
+        android:icon="@drawable/ic_shop_selector"
         android:title="@string/title_shop" />
 <!--    <item-->
 <!--        android:id="@+id/navigation_consult"-->

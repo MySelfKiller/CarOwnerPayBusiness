@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.content.ClipData
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
@@ -34,13 +35,13 @@ import com.kayu.business_car_owner.activity.AndroidBug5497Workaround
 import com.kayu.business_car_owner.activity.BaseActivity
 import com.kayu.business_car_owner.activity.WebViewActivity
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.http.parser.NormalStringParse
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.LocationManagerUtil
 import com.kongzue.dialog.interfaces.OnDismissListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
 import com.kongzue.dialog.v3.BottomMenu
-import com.kongzue.dialog.v3.TipGifDialog
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.io.File
@@ -154,6 +155,7 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
             if (isRefresh ) return@OnRefreshListener
             isRefresh = true
             initData()
+            loadServiceUrl(requireContext())
         })
 
         refreshLayout!!.autoRefresh()
@@ -465,7 +467,7 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
                 handler.proceed()
             }
         }
-        wvWebView!!.loadUrl((URL))
+
         wvWebView!!.loadUrl("javascript:window.location.reload( true )")
         if (isRefresh) {
             refreshLayout!!.finishRefresh()
@@ -742,45 +744,38 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
         private val FILE_CAMERA_RESULT_CODE: Int = 0
     }
 
-//    @SuppressLint("HandlerLeak")
-//    private fun loadSysParameter(context: Context, type: Int) {
-//        val request = RequestInfo()
-//        request.context = context
-//        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_SYS_PARAMETER
-//        val dataMap: HashMap<String, Any> = HashMap()
-//        dataMap.put("", type)
-//        request.reqDataMap = dataMap
-//        request.parser = ParameterDataParser()
-//        request.handler = object : Handler() {
-//            override fun handleMessage(msg: Message) {
-//                val response: ResponseInfo = msg.obj as ResponseInfo
-//                val systemParam: SystemParam?
-//                if (response.status == 1) {
-//                    systemParam = response.responseData as SystemParam?
+    @SuppressLint("HandlerLeak")
+    private fun loadServiceUrl(context: Context) {
+        val request = RequestInfo()
+        request.context = context
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SHOP_URL
+        val dataMap: HashMap<String, Any> = HashMap()
+        request.reqDataMap = dataMap
+        request.parser = NormalStringParse()
+        request.handler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val response: ResponseInfo = msg.obj as ResponseInfo
+                val serviceUrl: String?
+                if (response.status == 1) {
+                    serviceUrl = response.responseData as String?
 //                    val jsonContent = systemParam?.content
-//                    if (!jsonContent.isNullOrEmpty()) {
-//                        when (jsonContent) {
-//                            "1" -> {
-//                                findViewById<View>(R.id.title_close_btn).visibility = View.VISIBLE
-//                            }
-//                            "0" -> {
-//                                findViewById<View>(R.id.title_close_btn).visibility = View.GONE
-//                            }
-//                        }
-//                    } else {
-//                        findViewById<View>(R.id.title_close_btn).visibility = View.VISIBLE
-//                    }
-//
-//
-//                } else {
-//                    ToastUtils.show(response.msg)
-//                }
-//
-//                super.handleMessage(msg)
-//            }
-//        }
-//        ReqUtil.setReqInfo(request)
-//        ReqUtil.requestGetJSON(ResponseCallback(request))
-//    }
+                    if (!serviceUrl.isNullOrEmpty()) {
+                        URL = serviceUrl
+                        wvWebView!!.loadUrl((URL))
+                    } else {
+                        ToastUtils.show("链接地址不存在！")
+                    }
+
+
+                } else {
+                    ToastUtils.show(response.msg)
+                }
+
+                super.handleMessage(msg)
+            }
+        }
+        ReqUtil.setReqInfo(request)
+        ReqUtil.requestGetJSON(ResponseCallback(request))
+    }
 
 }

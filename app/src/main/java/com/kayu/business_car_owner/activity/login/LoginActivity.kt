@@ -38,6 +38,7 @@ import com.kayu.business_car_owner.activity.*
 import com.kayu.business_car_owner.http.*
 import com.kayu.form_verify.Form
 import com.kayu.utils.*
+import com.kayu.utils.status_bar_set.StatusBarUtil
 import java.util.HashMap
 import java.util.regex.Pattern
 
@@ -63,6 +64,9 @@ class LoginActivity() : BaseActivity() {
     private var login_checkbox: CheckBox? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtil.setRootViewFitsSystemWindows(this, true)
+        //设置状态栏透明
+        StatusBarUtil.setTranslucentStatus(this)
         setContentView(R.layout.activity_login)
 
 //        //标题栏
