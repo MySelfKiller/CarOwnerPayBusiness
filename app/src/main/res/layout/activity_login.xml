@@ -258,7 +258,7 @@
                     android:layout_weight="5"
                     android:gravity="center|right"
                     android:padding="@dimen/dp_5"
-                    android:text="忘记密码"
+                    android:text="设置密码"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/sp_14" />
             </LinearLayout>

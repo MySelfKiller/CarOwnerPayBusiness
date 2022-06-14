@@ -101,7 +101,7 @@ class LoginActivity : BaseActivity() {
         login_forget_password = findViewById(R.id.login_forget_password)
         login_forget_password?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                startActivity(Intent(this@LoginActivity, ForgetPasswordActivity::class.java))
+                startActivity(Intent(this@LoginActivity, SetPasswordActivity::class.java))
             }
 
             override fun OnMoreErrorClick() {}
