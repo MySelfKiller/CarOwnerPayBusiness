@@ -3,20 +3,13 @@ package com.kayu.business_car_owner.activity.login
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.Editable
-import android.text.InputFilter
-import android.text.InputType
 import android.text.TextWatcher
-import android.text.method.PasswordTransformationMethod
 import android.view.View
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProviders
 import com.kayu.form_verify.Validate
@@ -42,14 +35,17 @@ import com.kayu.utils.status_bar_set.StatusBarUtil
 import java.util.HashMap
 import java.util.regex.Pattern
 
-class LoginActivity() : BaseActivity() {
+class LoginActivity : BaseActivity() {
     private var phone_number: EditText? = null
-    private var sms_code: EditText? = null
+    private var password_edt: EditText? = null
+    private var sms_code_edt: EditText? = null
     private var ask_btn: AppCompatButton? = null
     private var timer: SMSCountDownTimer? = null
-    private var send_sms: TextView? = null
+    private var send_sms_tv: TextView? = null
+    private var img_code_iv: ImageView? = null
     private var password_target: TextView? = null
-    private var login_send_sms_lay: LinearLayout? = null
+    private var code_divider: View? = null
+    private var password_edt_lay: LinearLayout? = null
     private var password_target_lay: LinearLayout? = null
     private var login_sms_target_lay: LinearLayout? = null
     private var login_sms_target: TextView? = null
@@ -69,22 +65,9 @@ class LoginActivity() : BaseActivity() {
         StatusBarUtil.setTranslucentStatus(this)
         setContentView(R.layout.activity_login)
 
-//        //标题栏
-//        findViewById(R.id.title_menu_btu).setVisibility(View.INVISIBLE);
-//        TextView title_name = findViewById(R.id.title_name_tv);
-//        title_name.setText(getResources().getString(R.string.title_login));
-
-//        findViewById(R.id.title_menu_btu).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
-//        TextView back_tv = findViewById(R.id.title_back_tv);
-//        back_tv.setText("微信登录");
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE)
         mViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        login_send_sms_lay = findViewById(R.id.login_send_sms_lay)
+        code_divider = findViewById(R.id.login_code_divider)
         login_sms_target_lay = findViewById(R.id.login_sms_target_lay)
         password_target_lay = findViewById(R.id.login_password_target_lay)
         password_target = findViewById(R.id.login_password_target)
@@ -93,16 +76,23 @@ class LoginActivity() : BaseActivity() {
         auto_progress = findViewById(R.id.login_auto_progress)
         auto_progress?.setClickable(false)
         auto_progress?.setFocusable(false)
+
+        ask_btn = findViewById(R.id.login_ask_btn)
+        phone_number = findViewById(R.id.login_number_edt)
+        password_edt = findViewById(R.id.login_password_edt)
+        password_edt_lay = findViewById(R.id.login_password_lay)
+        send_sms_tv = findViewById(R.id.login_send_sms_tv)
+        img_code_iv = findViewById(R.id.login_img_code_iv)
+        sms_code_edt = findViewById(R.id.login_sms_code_edt)
+
+
         login_sms_target?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                login_sms_target_lay?.setVisibility(View.GONE)
-                password_target_lay?.setVisibility(View.VISIBLE)
-                login_send_sms_lay?.setVisibility(View.VISIBLE)
-                sms_code!!.setText("")
-                sms_code!!.hint = "请输入验证码"
-                sms_code!!.inputType = InputType.TYPE_CLASS_NUMBER
-                val filters = arrayOf<InputFilter>(InputFilter.LengthFilter(4))
-                sms_code!!.filters = filters
+                login_sms_target_lay?.visibility = View.GONE
+                password_target_lay?.visibility = View.VISIBLE
+                code_divider?.visibility = View.VISIBLE
+                send_sms_tv?.visibility = View.VISIBLE
+                password_edt_lay?.visibility = View.GONE
                 isSMSLogin = true
             }
 
@@ -116,26 +106,14 @@ class LoginActivity() : BaseActivity() {
 
             override fun OnMoreErrorClick() {}
         })
-        ask_btn = findViewById(R.id.login_ask_btn)
-        phone_number = findViewById(R.id.login_number_edt)
-        send_sms = findViewById(R.id.login_send_sms_tv)
-        sms_code = findViewById(R.id.login_sms_code_edt)
-        sms_code?.setInputType(InputType.TYPE_CLASS_NUMBER)
-        val filters = arrayOf<InputFilter>(InputFilter.LengthFilter(4))
-        sms_code?.setFilters(filters)
-        sms_code?.setHint("请输入验证码")
+
         password_target?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                login_send_sms_lay?.setVisibility(View.GONE)
-                password_target_lay?.setVisibility(View.GONE)
-                login_sms_target_lay?.setVisibility(View.VISIBLE)
-                sms_code?.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT)
-                sms_code?.setTypeface(Typeface.DEFAULT)
-                sms_code?.setTransformationMethod(PasswordTransformationMethod())
-                sms_code?.setText("")
-                sms_code?.setHint("请输入登录密码")
-                val filters = arrayOf<InputFilter>(InputFilter.LengthFilter(25))
-                sms_code?.setFilters(filters)
+                code_divider?.visibility = View.GONE
+                send_sms_tv?.visibility = View.GONE
+                password_edt_lay?.visibility = View.VISIBLE
+                password_target_lay?.visibility = View.GONE
+                login_sms_target_lay?.visibility = View.VISIBLE
                 isSMSLogin = false
             }
 
@@ -149,16 +127,16 @@ class LoginActivity() : BaseActivity() {
             override fun afterTextChanged(s: Editable) {
                 val pattern = Pattern.compile("^1[0-9]{10}$")
                 if (pattern.matcher(s).matches()) {
-                    send_sms?.setClickable(true)
-                    send_sms?.setTextColor(resources.getColor(R.color.colorAccent))
+                    send_sms_tv?.setClickable(true)
+                    send_sms_tv?.setTextColor(resources.getColor(R.color.colorAccent))
                 } else {
-                    send_sms?.setClickable(false)
-                    send_sms?.setTextColor(resources.getColor(R.color.grayText))
+                    send_sms_tv?.setClickable(false)
+                    send_sms_tv?.setTextColor(resources.getColor(R.color.grayText))
                 }
                 if (isSMSLogin) {
                     val pasPattern = Pattern.compile("[0-9]{4}$")
                     if (pattern.matcher(s).matches() && pasPattern.matcher(
-                            sms_code?.getText().toString().trim { it <= ' ' }).matches()
+                            sms_code_edt?.getText().toString().trim { it <= ' ' }).matches()
                     ) {
                         ask_btn?.setClickable(true)
                         ask_btn?.setEnabled(true)
@@ -172,7 +150,7 @@ class LoginActivity() : BaseActivity() {
                     }
                 } else {
                     if (pattern.matcher(s).matches() && !StringUtil.isEmpty(
-                            sms_code?.getText().toString().trim { it <= ' ' })
+                            sms_code_edt?.getText().toString().trim { it <= ' ' })
                     ) {
                         ask_btn?.setClickable(true)
                         ask_btn?.setEnabled(true)
@@ -187,8 +165,8 @@ class LoginActivity() : BaseActivity() {
                 }
             }
         })
-        send_sms?.setClickable(false)
-        sms_code?.addTextChangedListener(object : TextWatcher {
+        send_sms_tv?.setClickable(false)
+        sms_code_edt?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
@@ -209,7 +187,7 @@ class LoginActivity() : BaseActivity() {
                 } else {
                     if (pattern.matcher(phone_number?.getText().toString().trim { it <= ' ' })
                             .matches() && !StringUtil.isEmpty(
-                            sms_code?.getText().toString().trim { it <= ' ' })
+                            sms_code_edt?.getText().toString().trim { it <= ' ' })
                     ) {
                         ask_btn?.setClickable(true)
                         ask_btn?.setEnabled(true)
@@ -220,19 +198,10 @@ class LoginActivity() : BaseActivity() {
                         ask_btn?.setBackground(resources.getDrawable(R.drawable.gray_bg_shape))
                     }
                 }
-                //                if (!StringUtil.isEmpty(s.toString().trim()) && !StringUtil.isEmpty(phone_number.getText().toString().trim())){
-//                    ask_btn.setClickable(true);
-//                    ask_btn.setEnabled(true);
-//                    ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
-//                }else {
-//                    ask_btn.setClickable(false);
-//                    ask_btn.setEnabled(false);
-//                    ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
-//                }
             }
         })
-        timer = SMSCountDownTimer(send_sms!!, 60 * 1000 * 2, 1000)
-        send_sms?.setOnClickListener(object : NoMoreClickListener() {
+        timer = SMSCountDownTimer(send_sms_tv!!, 60 * 1000 * 2, 1000)
+        send_sms_tv?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 val form = Form()
                 val phoneValiv = Validate(phone_number)
@@ -253,7 +222,7 @@ class LoginActivity() : BaseActivity() {
                 val phoneValiv = Validate(phone_number)
                 phoneValiv.addValidator(PhoneValidator(this@LoginActivity))
                 form.addValidates(phoneValiv)
-                val smsValiv = Validate(sms_code)
+                val smsValiv = Validate(sms_code_edt)
                 smsValiv.addValidator(NotEmptyValidator(this@LoginActivity))
                 form.addValidates(smsValiv)
                 val isOk = form.validate()
@@ -292,7 +261,7 @@ class LoginActivity() : BaseActivity() {
                             "暂不使用"
                         )
                             .setCancelable(false)
-                            .setOkButton(OnDialogButtonClickListener { baseDialog, v ->
+                            .setOkButton { baseDialog, v ->
                                 baseDialog.doDismiss()
                                 isFirstShow = false
                                 val editor = sp?.edit()
@@ -300,7 +269,7 @@ class LoginActivity() : BaseActivity() {
                                 editor?.apply()
                                 editor?.commit()
                                 false
-                            }).setCancelButton(object : OnDialogButtonClickListener {
+                            }.setCancelButton(object : OnDialogButtonClickListener {
                                 override fun onClick(baseDialog: BaseDialog, v: View): Boolean {
                                     baseDialog.doDismiss()
                                     finish()
@@ -353,11 +322,11 @@ class LoginActivity() : BaseActivity() {
         val imei: String? = KWApplication.instance.oidImei
         reqDateMap["imei"]= imei?:""
         if (isSMSLogin) {
-            reqDateMap["code"] = sms_code!!.text.toString().trim { it <= ' ' }
+            reqDateMap["code"] = sms_code_edt!!.text.toString().trim { it <= ' ' }
         } else {
-            reqDateMap["password"] = sms_code!!.text.toString().trim { it <= ' ' }
+            reqDateMap["password"] = sms_code_edt!!.text.toString().trim { it <= ' ' }
         }
-        //        reqDateMap.put("code",sms_code.getText().toString().trim());
+        //        reqDateMap.put("code",sms_code_edt.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap
         reqInfo.handler = object : Handler() {
             override fun handleMessage(msg: Message) {

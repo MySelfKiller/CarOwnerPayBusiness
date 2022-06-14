@@ -37,7 +37,7 @@ class ForgetPasswordActivity : BaseActivity() {
         setContentView(R.layout.activity_forget_password)
 
         //标题栏
-        val title_lay: LinearLayout = findViewById(R.id.title_lay)
+//        val title_lay: LinearLayout = findViewById(R.id.title_lay)
         //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
         val title_name: TextView = findViewById(R.id.title_name_tv)
         title_name.setText("忘记密码")

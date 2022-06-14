@@ -102,7 +102,7 @@ class SetPasswordActivity constructor() : BaseActivity() {
             TipGifDialog.TYPE.OTHER,
             R.drawable.loading_gif
         )
-        val reqInfo: RequestInfo = RequestInfo()
+        val reqInfo = RequestInfo()
         reqInfo.context = this@SetPasswordActivity
         reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SET_PASSWORD
         reqInfo.parser = NormalParse()
