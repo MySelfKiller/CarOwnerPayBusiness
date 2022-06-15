@@ -7,7 +7,6 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".activity.login.LoginActivity">
-    <!--<include layout="@layout/titlebar"/>-->
     <LinearLayout
         android:id="@+id/id_tag_login_bg"
         android:layout_width="match_parent"

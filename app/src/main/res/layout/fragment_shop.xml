@@ -88,30 +88,11 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-            <LinearLayout
-                android:id="@+id/llWebView"
+            <WebView
+                android:id="@+id/wvWebView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/white"
-                android:splitMotionEvents="false">
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <WebView
-                        android:id="@+id/wvWebView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layerType="hardware" />
-
-                </RelativeLayout>
-            </LinearLayout>
+                android:layerType="hardware" />
 
 
         </LinearLayout>

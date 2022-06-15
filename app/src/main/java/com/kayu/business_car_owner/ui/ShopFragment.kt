@@ -124,14 +124,14 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AndroidBug5497Workaround.assistActivity(requireActivity())
-        val webLay: LinearLayout = view.findViewById(R.id.llWebView)
-        if (AppUtil.hasNavBar(requireContext())) {
-            val bottom: Int = AppUtil.getNavigationBarHeight(requireActivity())
-            val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
-            lp.setMargins(0, 0, 0, bottom + 80)
-            webLay.setLayoutParams(lp)
-        }
+//        AndroidBug5497Workaround.assistActivity(requireActivity())
+//        val webLay: LinearLayout = view.findViewById(R.id.llWebView)
+//        if (AppUtil.hasNavBar(requireContext())) {
+//            val bottom: Int = AppUtil.getNavigationBarHeight(requireActivity())
+//            val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
+//            lp.setMargins(0, 0, 0, bottom + 80)
+//            webLay.setLayoutParams(lp)
+//        }
         title_back_btu = view.findViewById(R.id.title_back_btu)
         title_back_btu?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
