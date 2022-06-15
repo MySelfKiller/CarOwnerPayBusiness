@@ -51,7 +51,7 @@ open class BaseActivity : AppCompatActivity(), PermissionWithDialogCallbacks {
         StatusBarUtil.setRootViewFitsSystemWindows(this, true)
         //设置状态栏透明
 //        StatusBarUtil.setTranslucentStatus(this);
-        StatusBarUtil.setColor(this, getColor(this,R.color.grayText))
+        StatusBarUtil.setColor(this, getColor(this,R.color.white))
 
 //        StatusBarUtil.setTranslucent(this, 0);
 //        StatusBarUtil.setColor(this, getResources().getColor(R.color.white));

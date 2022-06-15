@@ -24,7 +24,6 @@ import com.kayu.business_car_owner.activity.AppManager
 import com.kayu.business_car_owner.http.parser.NormalParse
 import com.kayu.business_car_owner.model.UserBean
 import com.kayu.utils.location.LocationManagerUtil
-import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.http.*
 import com.kayu.form_verify.Form

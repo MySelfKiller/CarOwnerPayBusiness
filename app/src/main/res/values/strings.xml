@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">省省联盟</string>
     <string name="title_home">首页</string>
-    <string name="title_shop">商城</string>
+    <string name="title_shop">团购</string>
     <string name="title_consult">咨询</string>
     <string name="title_notifications">我的</string>
     <string name="messages_header">Messages</string>

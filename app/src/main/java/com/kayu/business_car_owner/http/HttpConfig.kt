@@ -11,8 +11,6 @@ object HttpConfig {
     const val INTERFACE_ORDER_CODE = "api/aodsms?phone=" //查询订单验证码
     const val INTERFACE_ORDER_DETAIL = "api/v1/ua/detail" //查询订单详情
     const val INTERFACE_ACTVINFO = "api/v1/user/actvinfo" //查询激活卡
-    const val INTERFACE_SET_PASSWORD = "" //设置密码
-    const val INTERFACE_RESET_PASSWORD = "" //重置密码
     const val CLOSE_WEB_VIEW = "https://www.ky808.cn/close"
     const val CLOSE_WEB_VIEW1 = "https://www.kakayuy.com/close"
     const val INTERFACE_GET_CATEGORY = "api/v1/nav/list" //获取首页项目类别列表
@@ -52,6 +50,10 @@ object HttpConfig {
     const val INTERFACE_MESSAGE_NUM = "api/v1/notify/getUnreadCnt" //消息列表
     const val INTERFACE_AD_COMPLETE = "api/v1/ad/complete" //看完广告回调
     const val INTERFACE_SHOP_URL = "api/v1/poi/getIndexUrl" //周边生活主页面链接地址
+    const val INTERFACE_IMG_CODE = "api/getImgCaptcha" //197、	密码登陆-获取图片验证码
+    const val INTERFACE_SET_PASSWORD_SMS = "api/pwd/smsCode/" //198、	设置密码-获取短信验证码
+    const val INTERFACE_SET_PASSWORD = "api/v1/user/setPwd" //199、	用户设置密码
+    const val INTERFACE_RESET_PASSWORD = "api/v1/user/resetPwd" //200、	用户重置密码
 
     //    public String authorization = "";
     //    public static final MediaType JSON =MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");

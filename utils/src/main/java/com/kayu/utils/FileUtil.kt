@@ -1260,8 +1260,10 @@ class FileUtil private constructor() {
             var bitmap: Bitmap? = null
             return try {
                 // out = new FileOutputStream("/sdcard/aa.jpg");
+
+                val newStr = str?.replace("data:image/png;base64,", "")
                 val bitmapArray: ByteArray
-                bitmapArray = Base64.decode(str, Base64.DEFAULT)
+                bitmapArray = Base64.decode(newStr, Base64.DEFAULT)
                 bitmap = BitmapFactory.decodeByteArray(
                     bitmapArray, 0,
                     bitmapArray.size

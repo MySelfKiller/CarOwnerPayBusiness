@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Message
 import android.view.View
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import com.kayu.utils.SMSCountDownTimer
@@ -40,7 +39,7 @@ class ForgetPasswordActivity : BaseActivity() {
 //        val title_lay: LinearLayout = findViewById(R.id.title_lay)
         //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
         val title_name: TextView = findViewById(R.id.title_name_tv)
-        title_name.setText("忘记密码")
+        title_name.setText("设置密码")
         findViewById<View>(R.id.title_back_btu).setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 onBackPressed()
@@ -104,12 +103,12 @@ class ForgetPasswordActivity : BaseActivity() {
         )
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ForgetPasswordActivity
-        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_RESET_PASSWORD
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SET_PASSWORD
         reqInfo.parser = NormalParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("phone", phone_edt!!.getText().toString().trim({ it <= ' ' }))
-        reqDateMap.put("code", code_edt!!.getText().toString().trim({ it <= ' ' }))
-        reqDateMap.put("newPwd", new_password2_edt!!.getText().toString().trim({ it <= ' ' }))
+        reqDateMap.put("smsCode", code_edt!!.getText().toString().trim({ it <= ' ' }))
+        reqDateMap.put("password", new_password2_edt!!.getText().toString().trim({ it <= ' ' }))
         //        reqDateMap.put("code",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap
         reqInfo.handler = object : Handler() {
@@ -117,7 +116,7 @@ class ForgetPasswordActivity : BaseActivity() {
                 TipGifDialog.dismiss()
                 val resInfo: ResponseInfo = msg.obj as ResponseInfo
                 if (resInfo.status == 1) {
-                    ToastUtils.show("密码已经重置成功！")
+                    ToastUtils.show("密码设置成功！")
                     finish()
                 } else {
                     ToastUtils.show(resInfo.msg)
@@ -140,7 +139,7 @@ class ForgetPasswordActivity : BaseActivity() {
         )
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@ForgetPasswordActivity
-        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_VERIFICATION_CODE
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SET_PASSWORD_SMS
         reqInfo.parser = NormalParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("", phone_edt!!.getText().toString().trim({ it <= ' ' }))

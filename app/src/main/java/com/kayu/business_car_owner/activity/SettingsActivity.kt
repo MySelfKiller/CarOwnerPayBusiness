@@ -26,8 +26,8 @@ import com.kayu.utils.callback.ImageCallback
 import com.kayu.business_car_owner.activity.login.LogOffActivity
 import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.R
+import com.kayu.business_car_owner.activity.login.ForgetPasswordActivity
 import com.kayu.business_car_owner.activity.login.LoginAutoActivity
-import com.kayu.business_car_owner.activity.login.SetPasswordActivity
 import com.kayu.utils.*
 
 class SettingsActivity : BaseActivity() {
@@ -90,7 +90,7 @@ class SettingsActivity : BaseActivity() {
         findViewById<View>(R.id.setting_password_setting_tv).setOnClickListener(object :
             NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
-                val intent = Intent(this@SettingsActivity, SetPasswordActivity::class.java)
+                val intent = Intent(this@SettingsActivity, ForgetPasswordActivity::class.java)
                 startActivity(intent)
             }
 
