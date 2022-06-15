@@ -287,7 +287,7 @@ class PersonalFragment : Fragment() {
                                 if (null == systemParam) return@Observer
                                 isOnline = systemParam.blank1
                                 //todo isOnline 是判断正在上线审核标志
-                                val ion = StringUtil.equals(isOnline, "isOnline")
+                                val ion = StringUtil.equals(isOnline, "isOnline1")
                                 val uer = KWApplication.instance.userRole == -2
                                 if (!ion && !uer) {
                                     if (!StringUtil.isEmpty(jsonObject.getString("name"))) {
@@ -415,7 +415,7 @@ class PersonalFragment : Fragment() {
                     }
                 }
                 categoryListNew.add(categoryBeans1)
-                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole != -2
+                if (StringUtil.equals(isOnline, "isOnline1") || KWApplication.instance.userRole != -2
                 ) {
                     categoryListNew = categoryBeans
                 }

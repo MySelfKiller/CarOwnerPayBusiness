@@ -252,7 +252,7 @@ class HomeFragmentNew
                 editor.commit()
                 //todo 上线应用商店审核作的判断
                 isOnline = systemParam.blank1
-                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole ==-2) {
+                if (StringUtil.equals(isOnline, "isOnline1") || KWApplication.instance.userRole ==-2) {
                     refreshLayout!!.setEnableAutoLoadMore(true)
                     refreshLayout!!.setEnableLoadMore(true)
                     refreshLayout!!.setOnLoadMoreListener(OnLoadMoreListener {
@@ -478,7 +478,7 @@ class HomeFragmentNew
                 }
                 categoryListNew.add(categoryBeans1)
                 //当前是游客模式展示3个
-                if (StringUtil.equals(isOnline, "isOnline") || KWApplication.instance.userRole != -2
+                if (StringUtil.equals(isOnline, "isOnline1") || KWApplication.instance.userRole != -2
                 ) {
                     categoryListNew = categoryBeans
                 }
