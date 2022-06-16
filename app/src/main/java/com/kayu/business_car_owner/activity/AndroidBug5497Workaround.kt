@@ -12,26 +12,20 @@ class AndroidBug5497Workaround private constructor(activity: Activity) {
     private var usableHeightPrevious: Int = 0
     private val frameLayoutParams: FrameLayout.LayoutParams
     private fun possiblyResizeChildOfContent() {
-        val usableHeightNow: Int = computeUsableHeight()
+        val usableHeightNow = computeUsableHeight()
         if (usableHeightNow != usableHeightPrevious) {
-            val usableHeightSansKeyboard: Int = mChildOfContent.getRootView().getHeight()
-            val heightDifference: Int = usableHeightSansKeyboard - usableHeightNow
-            if (heightDifference > (usableHeightSansKeyboard / 4)) {
-                // keyboard probably just became visible
-                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference
-            } else {
-                // keyboard probably just became hidden
-                frameLayoutParams.height = usableHeightSansKeyboard
-            }
-            mChildOfContent.requestLayout()
+            //如果两次高度不一致
+            //将计算的可视高度设置成视图的高度
+            frameLayoutParams.height = usableHeightNow
+            mChildOfContent.requestLayout() //请求重新布局
             usableHeightPrevious = usableHeightNow
         }
     }
 
     private fun computeUsableHeight(): Int {
-        val r: Rect = Rect()
+        val r = Rect()
         mChildOfContent.getWindowVisibleDisplayFrame(r)
-        return (r.bottom - r.top)
+        return r.bottom
     }
 
     companion object {

@@ -21,8 +21,8 @@ android {
         applicationId "com.kayu.business_car_owner"
         minSdk 21
         targetSdk 31
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7"
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
             abiFilters  'arm64-v8a', 'armeabi', 'armeabi-v7a'

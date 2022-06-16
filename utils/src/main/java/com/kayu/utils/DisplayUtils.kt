@@ -16,13 +16,13 @@ object DisplayUtils {
     }
 
     // 将px值转换为dip或dp值
-    fun px2dip(context: Context, pxValue: Float): Int {
+    fun px2dp(context: Context, pxValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
     }
 
     // 将dip或dp值转换为px值
-    fun dip2px(context: Context, dipValue: Float): Int {
+    fun dp2px(context: Context, dipValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dipValue * scale + 0.5f).toInt()
     }

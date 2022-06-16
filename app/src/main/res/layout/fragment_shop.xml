@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/colorAccent"
     android:layout_height="match_parent">
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
@@ -43,7 +42,8 @@
                         android:layout_height="@dimen/dp_25"
                         android:layout_marginStart="@dimen/dp_8"
                         android:padding="@dimen/dp_2"
-                        android:src="@mipmap/normal_btu_white" />
+                        android:src="@mipmap/normal_btu_white"
+                        app:tint="@color/colorAccent" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -65,7 +65,7 @@
                         android:ellipsize="end"
                         android:text="标题"
                         android:textStyle="bold"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/colorAccent"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -83,7 +83,8 @@
                         android:layout_height="@dimen/dp_25"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@mipmap/btn_close" />
+                        android:src="@mipmap/btn_close"
+                        app:tint="@color/colorAccent"/>
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

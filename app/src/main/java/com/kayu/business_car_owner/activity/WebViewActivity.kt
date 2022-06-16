@@ -149,12 +149,16 @@ class WebViewActivity : BaseActivity() {
 //        StatusBarUtil.setTranslucentStatus(this);
         StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.white))
         setContentView(R.layout.activity_webview)
-        AndroidBug5497Workaround.Companion.assistActivity(this)
+        AndroidBug5497Workaround.assistActivity(this)
         val webLay: LinearLayout = findViewById(R.id.llWebView)
         if (AppUtil.hasNavBar(this)) {
             val bottom: Int = AppUtil.getNavigationBarHeight(this)
             val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
-            lp.setMargins(0, 0, 0, bottom + 80)
+            lp.setMargins(0, 0, 0, bottom)
+            webLay.setLayoutParams(lp)
+        } else {
+            val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
+            lp.setMargins(0, 0, 0, DisplayUtils.dp2px(this,35.0f))
             webLay.setLayoutParams(lp)
         }
         val intent: Intent = intent

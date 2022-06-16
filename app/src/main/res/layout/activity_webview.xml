@@ -11,8 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white"
-        android:splitMotionEvents="false"
-        android:layout_marginBottom="@dimen/dp_40">
+        android:splitMotionEvents="false">
 
         <include layout="@layout/titlebar_whit_close"/>
 

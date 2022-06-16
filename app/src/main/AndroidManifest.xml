@@ -121,7 +121,8 @@
             android:name="com.amap.api.v2.apikey"
             android:value="1e16d9c1ded9f32d6710b35c5ae0307c" />
 
-        <activity android:name=".activity.WebViewActivity" />
+        <activity android:name=".activity.WebViewActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name=".activity.AgentWebViewActivity" />
         <activity
             android:name=".activity.ActivationActivity"
