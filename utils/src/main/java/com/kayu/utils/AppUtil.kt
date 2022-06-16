@@ -5,9 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.util.DisplayMetrics
+import android.view.Display
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.WindowManager
@@ -15,7 +18,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import java.io.File
-import java.lang.Exception
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -205,13 +207,50 @@ object AppUtil {
             return sNavBarOverride
         }
 
-    fun getNavigationBarHeight(activity: Activity): Int {
-        val resources = activity.resources
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        val height = resources.getDimensionPixelSize(resourceId)
-        LogUtil.e("hm", "Navi height:$height")
-        return height
+//    fun getNavigationBarHeight(activity: Activity): Int {
+//        val resources = activity.resources
+//        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+//        val height = resources.getDimensionPixelSize(resourceId)
+//        LogUtil.e("hm", "Navi height:$height")
+//        return height
+//    }
+
+    /**
+     * 判断是否有NavigationBar
+     *
+     * @param activity
+     * @return
+     */
+    fun checkHasNavigationBar(activity: Activity): Boolean {
+        val windowManager = activity.windowManager
+        val d: Display = windowManager.defaultDisplay
+        val realDisplayMetrics = DisplayMetrics()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            d.getRealMetrics(realDisplayMetrics)
+        }
+        val realHeight: Int = realDisplayMetrics.heightPixels
+        val realWidth: Int = realDisplayMetrics.widthPixels
+        val displayMetrics = DisplayMetrics()
+        d.getMetrics(displayMetrics)
+        val displayHeight: Int = displayMetrics.heightPixels
+        val displayWidth: Int = displayMetrics.widthPixels
+        return realWidth - displayWidth > 0 || realHeight - displayHeight > 0
     }
+
+    /**
+     * 获得NavigationBar的高度
+     */
+    fun getNavigationBarHeight(activity: Activity): Int {
+        var result = 0
+        val resources: Resources = activity.resources
+        val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceId > 0 && checkHasNavigationBar(activity)) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        LogUtil.e("hm", "NavigationBar height:$result")
+        return result
+    }
+
 
     fun getStringAmount(amuont: Long): String {
         val format = DecimalFormat("0.00")

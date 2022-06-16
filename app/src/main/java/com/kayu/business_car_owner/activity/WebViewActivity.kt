@@ -151,14 +151,18 @@ class WebViewActivity : BaseActivity() {
         setContentView(R.layout.activity_webview)
         AndroidBug5497Workaround.assistActivity(this)
         val webLay: LinearLayout = findViewById(R.id.llWebView)
-        if (AppUtil.hasNavBar(this)) {
+        if (AppUtil.getNavigationBarHeight(this)>0) {
             val bottom: Int = AppUtil.getNavigationBarHeight(this)
             val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
-            lp.setMargins(0, 0, 0, bottom)
+            if (bottom < 50) {
+                lp.setMargins(0, 0, 0, bottom + DisplayUtils.dp2px(this,25.0f))
+            } else {
+                lp.setMargins(0, 0, 0, bottom)
+            }
             webLay.setLayoutParams(lp)
         } else {
             val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(webLay.getLayoutParams())
-            lp.setMargins(0, 0, 0, DisplayUtils.dp2px(this,35.0f))
+            lp.setMargins(0, 0, 0, DisplayUtils.dp2px(this,40.0f))
             webLay.setLayoutParams(lp)
         }
         val intent: Intent = intent
