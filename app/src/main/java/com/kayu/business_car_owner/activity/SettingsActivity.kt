@@ -9,26 +9,27 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckedTextView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.hjq.toast.ToastUtils
-import com.kongzue.dialog.v3.TipGifDialog
-import com.kayu.business_car_owner.model.SystemParam
 import com.kayu.business_car_owner.KWApplication
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
-import com.kongzue.dialog.util.BaseDialog
-import com.kayu.business_car_owner.model.UserBean
-import com.kayu.utils.location.LocationManagerUtil
-import com.kongzue.dialog.v3.MessageDialog
-import com.kongzue.dialog.v3.CustomDialog
-import com.kayu.utils.callback.ImageCallback
-import com.kayu.business_car_owner.activity.login.LogOffActivity
-import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.activity.login.ForgetPasswordActivity
+import com.kayu.business_car_owner.activity.login.LogOffActivity
 import com.kayu.business_car_owner.activity.login.LoginAutoActivity
+import com.kayu.business_car_owner.model.SystemParam
+import com.kayu.business_car_owner.model.UserBean
 import com.kayu.utils.*
+import com.kayu.utils.callback.ImageCallback
+import com.kayu.utils.location.LocationManagerUtil
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener
+import com.kongzue.dialog.util.BaseDialog
+import com.kongzue.dialog.v3.CustomDialog
+import com.kongzue.dialog.v3.MessageDialog
+import com.kongzue.dialog.v3.TipGifDialog
 
 class SettingsActivity : BaseActivity() {
     private var app_version: TextView? = null
@@ -98,6 +99,8 @@ class SettingsActivity : BaseActivity() {
         })
         app_version = findViewById(R.id.setting_app_version_tv)
         app_new_version = findViewById(R.id.setting_app_new_version_tv)
+        val checkedTextView = findViewById<CheckedTextView>(R.id.setting_message_setting_tv)
+        checkedTextView.setOnClickListener { checkedTextView.toggle() }
         app_new_version?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
 //                reqUpdate();
