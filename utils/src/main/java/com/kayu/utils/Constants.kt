@@ -8,6 +8,7 @@ object Constants {
     const val SharedPreferences_name = "login_info"
     const val login_info = "login_info"
     const val isLogin = "isLogin"
+    const val isOpenMessage = "isOpenMessage"
     const val token = "token"
     const val isSetPsd = "isSetPsd"
     const val isShowDialog = "isShowDialog"

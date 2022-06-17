@@ -100,7 +100,15 @@ class SettingsActivity : BaseActivity() {
         app_version = findViewById(R.id.setting_app_version_tv)
         app_new_version = findViewById(R.id.setting_app_new_version_tv)
         val checkedTextView = findViewById<CheckedTextView>(R.id.setting_message_setting_tv)
-        checkedTextView.setOnClickListener { checkedTextView.toggle() }
+        val ischddd = sp.getBoolean(Constants.isOpenMessage,true)
+        checkedTextView.isChecked = ischddd
+        checkedTextView.setOnClickListener {
+            checkedTextView.toggle()
+            val editor = sp.edit()
+            editor.putBoolean(Constants.isOpenMessage,checkedTextView.isChecked)
+            editor.apply()
+            editor.commit()
+        }
         app_new_version?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
 //                reqUpdate();
