@@ -154,11 +154,14 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
         refreshLayout!!.setOnRefreshListener(OnRefreshListener {
             if (isRefresh ) return@OnRefreshListener
             isRefresh = true
-            initData()
-            loadServiceUrl(requireContext())
-        })
 
-        refreshLayout!!.autoRefresh()
+            wvWebView!!.loadUrl((URL))
+            refreshLayout!!.finishRefresh()
+//            loadServiceUrl(requireContext())
+        })
+        initData()
+        loadServiceUrl(requireContext())
+    //        refreshLayout!!.autoRefresh()
 
 
     }
