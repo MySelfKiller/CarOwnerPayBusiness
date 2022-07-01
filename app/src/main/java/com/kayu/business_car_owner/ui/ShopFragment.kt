@@ -17,7 +17,6 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -27,11 +26,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
-import com.kayu.business_car_owner.activity.AndroidBug5497Workaround
 import com.kayu.business_car_owner.activity.BaseActivity
 import com.kayu.business_car_owner.activity.WebViewActivity
 import com.kayu.business_car_owner.http.*
@@ -48,7 +45,7 @@ import java.io.File
 import java.lang.Exception
 import java.util.HashMap
 
-class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
+class ShopFragment : Fragment() {
     var wvWebView: WebView? = null
 //    private val titleName: String = "加载中..."
     private var title_name: TextView? = null
@@ -87,11 +84,12 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
                         "js调用方法",
                         " getLocation==" + location?.longitude + "," + location?.latitude
                     )
-                    wvWebView?.evaluateJavascript(
-                        "window.CurrentLocation(" + location!!.latitude + "," + location.longitude + ")",
-                        null
-                    )
-
+                    if (null != location) {
+                        wvWebView?.evaluateJavascript(
+                            "window.CurrentLocation(" + location.latitude + "," + location.longitude + ")",
+                            null
+                        )
+                    }
                 }
             }
             super.handleMessage(msg)
@@ -443,12 +441,12 @@ class ShopFragment(private val navigation: BottomNavigationView) : Fragment() {
                     URL = url
                     hasBack = false
                     title_back_btu?.visibility =View.GONE
-                    navigation.visibility = View.VISIBLE
+//                    navigation.visibility = View.VISIBLE
 
                 } else {
                     hasBack = true
                     title_back_btu?.visibility =View.VISIBLE
-                    navigation.visibility = View.GONE
+//                    navigation.visibility = View.GONE
                 }
                 if (url != URL) {
                     val intent = Intent(requireContext(), WebViewActivity::class.java)

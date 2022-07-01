@@ -105,8 +105,8 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
     private val fragments: List<Fragment>
         get() {
             val list: MutableList<Fragment> = ArrayList()
-            navigation?.let { HomeFragmentNew(it) }?.let { list.add(it) }
-            navigation?.let { ShopFragment(it) }?.let { list.add(it) }
+            list.add(HomeFragmentNew())
+            list.add(ShopFragment())
             list.add(PersonalFragment())
             return list
         }

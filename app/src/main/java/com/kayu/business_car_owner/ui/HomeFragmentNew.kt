@@ -1,18 +1,14 @@
 package com.kayu.business_car_owner.ui
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -23,12 +19,10 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.amap.api.location.AMapLocation
 import com.gcssloop.widget.PagerGridLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kayu.business_car_owner.KWApplication
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.activity.*
 import com.kayu.business_car_owner.model.*
-import com.kayu.business_car_owner.popupWindow.CustomPopupWindow
 import com.kayu.business_car_owner.text_banner.TextBannerView
 import com.kayu.business_car_owner.ui.adapter.Category2Adapter
 import com.kayu.business_car_owner.ui.adapter.CategoryRootAdapter
@@ -48,11 +42,8 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.Banner
 import com.youth.banner.BannerConfig
 import com.youth.banner.listener.OnBannerListener
-import org.json.JSONException
-import org.json.JSONObject
 
-class HomeFragmentNew
-    (private val navigation: BottomNavigationView) : Fragment() {
+class HomeFragmentNew : Fragment() {
     private var mainViewModel: MainViewModel? = null
     private var banner: Banner? = null
     private var category_rv: RecyclerView? = null
@@ -100,6 +91,10 @@ class HomeFragmentNew
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         return inflater.inflate(R.layout.fragment_home_new, container, false)
     }
+
+//    companion object {
+//        fun newInstance() = HomeFragmentNew()
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -225,18 +220,18 @@ class HomeFragmentNew
                 }
             }
         }
-        if (null != popWindow && !hasClose) {
-            if (isVisibleToUser) {
-                popWindow!!.showAtLocation(
-                    navigation,
-                    Gravity.NO_GRAVITY,
-                    (KWApplication.instance.displayWidth - navigation.measuredWidth) / 2,
-                    KWApplication.instance.displayHeight - navigation.measuredHeight - navigation.measuredHeight / 3
-                )
-            } else {
-                popWindow!!.dismiss()
-            }
-        }
+//        if (null != popWindow && !hasClose) {
+//            if (isVisibleToUser) {
+//                popWindow!!.showAtLocation(
+//                    navigation,
+//                    Gravity.NO_GRAVITY,
+//                    (KWApplication.instance.displayWidth - navigation.measuredWidth) / 2,
+//                    KWApplication.instance.displayHeight - navigation.measuredHeight - navigation.measuredHeight / 3
+//                )
+//            } else {
+//                popWindow!!.dismiss()
+//            }
+//        }
     }
 
     private fun initListView() {
@@ -591,68 +586,68 @@ class HomeFragmentNew
     private var latitude = 0.0
     private var longitude = 0.0
     private var cityName: String? = null
-    private var popWindow: CustomPopupWindow? = null
-    private var regTips: String? = null
-    fun showApplyCardDialog(activity: Activity?, context: Context?, v: View) {
-        val regDialogTip = KWApplication.instance.regDialogTip
-        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)) {
-            return
-        }
-        regTips = try {
-            val contentJSon = JSONObject(regDialogTip.content)
-            contentJSon.getString("regTips")
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            return
-        }
-        val tips = regTips?.split("#".toRegex())?.toTypedArray()
-        if (!StringUtil.isEmpty(regTips)) {
-            if (null == tips || tips.size != 2) return
-        }
-        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_apply_card, null)
-        val dia_close = view.findViewById<ImageView>(R.id.dia_close_iv)
-        dia_close.setOnClickListener(object : NoMoreClickListener() {
-            override fun OnMoreClick(view: View) {
-                popWindow!!.dismiss()
-                hasClose = true
-            }
-
-            override fun OnMoreErrorClick() {}
-        })
-        val dia_content = view.findViewById<TextView>(R.id.dia_act_context)
-        dia_content.text = tips!![0]
-        val dia_btn_handle: AppCompatButton = view.findViewById(R.id.dia_act_btn_handle)
-        dia_btn_handle.text = tips[1]
-        dia_btn_handle.setOnClickListener(object : NoMoreClickListener() {
-            override fun OnMoreClick(view: View) {
-                if (StringUtil.isEmpty(regDialogTip.url)) return
-                val intent = Intent(context, WebViewActivity::class.java)
-                intent.putExtra("url", regDialogTip.url)
-                context!!.startActivity(intent)
-            }
-
-            override fun OnMoreErrorClick() {}
-        })
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        popWindow = CustomPopupWindow.PopupWindowBuilder(requireContext()) //.setView(R.layout.pop_layout)
-            .setView(view)
-            .size(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            .setFocusable(false) //弹出popWindow时，背景是否变暗
-            .enableBackgroundDark(false) //控制亮度
-            .setBgDarkAlpha(0.0f)
-            .setOutsideTouchable(false) //                            .setAnimationStyle(R.style.popWindowStyle)
-            .setOnDissmissListener {
-                //对话框销毁时
-            }
-            .create()
-        popWindow?.showAtLocation(
-            v,
-            Gravity.NO_GRAVITY,
-            (KWApplication.instance.displayWidth - view.measuredWidth) / 2,
-            KWApplication.instance.displayHeight - v.measuredHeight - v.measuredHeight / 3
-        )
-    }
+//    private var popWindow: CustomPopupWindow? = null
+//    private var regTips: String? = null
+//    fun showApplyCardDialog(activity: Activity?, context: Context?, v: View) {
+//        val regDialogTip = KWApplication.instance.regDialogTip
+//        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)) {
+//            return
+//        }
+//        regTips = try {
+//            val contentJSon = JSONObject(regDialogTip.content)
+//            contentJSon.getString("regTips")
+//        } catch (e: JSONException) {
+//            e.printStackTrace()
+//            return
+//        }
+//        val tips = regTips?.split("#".toRegex())?.toTypedArray()
+//        if (!StringUtil.isEmpty(regTips)) {
+//            if (null == tips || tips.size != 2) return
+//        }
+//        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_apply_card, null)
+//        val dia_close = view.findViewById<ImageView>(R.id.dia_close_iv)
+//        dia_close.setOnClickListener(object : NoMoreClickListener() {
+//            override fun OnMoreClick(view: View) {
+//                popWindow!!.dismiss()
+//                hasClose = true
+//            }
+//
+//            override fun OnMoreErrorClick() {}
+//        })
+//        val dia_content = view.findViewById<TextView>(R.id.dia_act_context)
+//        dia_content.text = tips!![0]
+//        val dia_btn_handle: AppCompatButton = view.findViewById(R.id.dia_act_btn_handle)
+//        dia_btn_handle.text = tips[1]
+//        dia_btn_handle.setOnClickListener(object : NoMoreClickListener() {
+//            override fun OnMoreClick(view: View) {
+//                if (StringUtil.isEmpty(regDialogTip.url)) return
+//                val intent = Intent(context, WebViewActivity::class.java)
+//                intent.putExtra("url", regDialogTip.url)
+//                context!!.startActivity(intent)
+//            }
+//
+//            override fun OnMoreErrorClick() {}
+//        })
+//        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+//        popWindow = CustomPopupWindow.PopupWindowBuilder(requireContext()) //.setView(R.layout.pop_layout)
+//            .setView(view)
+//            .size(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            .setFocusable(false) //弹出popWindow时，背景是否变暗
+//            .enableBackgroundDark(false) //控制亮度
+//            .setBgDarkAlpha(0.0f)
+//            .setOutsideTouchable(false) //                            .setAnimationStyle(R.style.popWindowStyle)
+//            .setOnDissmissListener {
+//                //对话框销毁时
+//            }
+//            .create()
+//        popWindow?.showAtLocation(
+//            v,
+//            Gravity.NO_GRAVITY,
+//            (KWApplication.instance.displayWidth - view.measuredWidth) / 2,
+//            KWApplication.instance.displayHeight - v.measuredHeight - v.measuredHeight / 3
+//        )
+//    }
 }
