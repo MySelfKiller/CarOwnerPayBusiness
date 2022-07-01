@@ -164,6 +164,9 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
 
+    implementation "com.tencent.bugly:crashreport:latest.release"//腾讯异常上报
+    implementation "com.tencent.bugly:nativecrashreport:latest.release"//腾讯异常上报
+
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖
     implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
     implementation  'com.scwang.smart:refresh-header-radar:2.0.1'       //雷达刷新头

@@ -57,6 +57,7 @@ import com.kongzue.dialog.v3.BottomMenu
 import com.kongzue.dialog.v3.MessageDialog
 import com.kongzue.dialog.v3.TipGifDialog
 import com.squareup.leakcanary.LeakCanary
+import com.tencent.bugly.crashreport.CrashReport
 import java.io.File
 import java.net.URISyntaxException
 import java.util.concurrent.atomic.AtomicInteger
@@ -104,6 +105,7 @@ class KWApplication() : MultiDexApplication() {
         val isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
         if (!isFirstShow) {
             initSDKs()
+            initTencentBugly()
         }
 //        initJPushSetting()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -158,6 +160,17 @@ class KWApplication() : MultiDexApplication() {
     fun initSDKs() {
         LocationManagerUtil.init(this)
     }
+
+    /**
+     * 初始化 腾讯Bugly
+     * 测试环境应该与正式环境的日志收集渠道分隔开
+     * 目前有两个渠道 测试版本/正式版本
+     */
+    private fun initTencentBugly(): String {
+        // 第三个参数为SDK调试模式开关
+        CrashReport.initCrashReport(this, getString(R.string.BUGLY_APP_ID), true)
+        return "Bugly -->> init complete"
+    }
     //初始化广告SDK
 //    fun initAdSdk() {
 //        //是否弹出过隐私弹框
@@ -180,7 +193,7 @@ class KWApplication() : MultiDexApplication() {
     private var xxx = 1
     private var yyy = 1
 
-    internal inner class LocalReceiver() : BroadcastReceiver() {
+    internal inner class LocalReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
 //            Toast.makeText(context, "received local broadcast", Toast.LENGTH_SHORT).show();
 //            LogUtil.e("接收退出广告","received local broadcast"+yyy);
