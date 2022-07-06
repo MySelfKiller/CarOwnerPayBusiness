@@ -191,7 +191,7 @@ class ActivationActivity : BaseActivity() {
         reqDateMap["code"] = ver_code_et!!.getText().toString().trim({ it <= ' ' })
         reqDateMap["cardNo"] = card_num_et!!.getText().toString().trim({ it <= ' ' })
         reqDateMap["pwd"] = pwd_et!!.getText().toString().trim({ it <= ' ' })
-        val imei: String? = KWApplication.instance.oidImei
+        val imei: String? = null
         reqDateMap["imei"]= imei?:""
 
 //        reqDateMap.put("code",sms_code.getText().toString().trim());

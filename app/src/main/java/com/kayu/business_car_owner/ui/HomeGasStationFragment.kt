@@ -94,11 +94,6 @@ class HomeGasStationFragment//        this.mainViewModel = mainViewModel;
                                     return@Observer
                                 }
                                 val jumpCls: Class<*>
-                                //                            if (oilStationBean.channel.equals("qj")) {
-//                                jumpCls = AgentWebViewActivity.class;
-//                            } else {
-//                                jumpCls = WebViewActivity.class;
-//                            }
                                 jumpCls = WebViewActivity::class.java
                                 val intent = Intent(requireContext(), jumpCls)
                                 intent.putExtra("url", webBean.link)

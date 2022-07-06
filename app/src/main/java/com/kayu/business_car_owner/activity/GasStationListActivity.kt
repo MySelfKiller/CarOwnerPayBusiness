@@ -126,11 +126,6 @@ class GasStationListActivity constructor() : BaseActivity() {
                                         return
                                     }
                                     val jumpCls: Class<*>
-                                    //                            if (oilStationBean.channel.equals("qj")) {
-//                                jumpCls = AgentWebViewActivity.class;
-//                            } else {
-//                                jumpCls = WebViewActivity.class;
-//                            }
                                     jumpCls = WebViewActivity::class.java
                                     val intent: Intent =
                                         Intent(this@GasStationListActivity, jumpCls)

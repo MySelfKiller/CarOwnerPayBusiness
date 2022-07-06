@@ -735,10 +735,6 @@ class KWApplication() : MultiDexApplication() {
         return spannableString
     }
 
-    fun GetDataPath(): String? {
-        return Utils.getEnaviBaseStorage(this)
-    }
-
     fun permissionsCheck(
         baseActivity: BaseActivity,
         perms: Array<String>,
@@ -867,19 +863,19 @@ class KWApplication() : MultiDexApplication() {
 //    }
 
     //                    aid = Md5Util.getStringMD5(aid);
-    val oidImei: String?
-        get() {
-            var imei: String? = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                if (!StringUtil.isEmpty(oid)) {
-//                    aid = Md5Util.getStringMD5(aid);
-                    imei = "oid#$oid"
-                }
-            } else {
-                imei = DeviceIdUtils.getIMEI(this)
-            }
-            return imei
-        }
+//    val oidImei: String?
+//        get() {
+//            var imei: String? = null
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                if (!StringUtil.isEmpty(oid)) {
+////                    aid = Md5Util.getStringMD5(aid);
+//                    imei = "oid#$oid"
+//                }
+//            } else {
+//                imei = DeviceIdUtils.getIMEI(this)
+//            }
+//            return imei
+//        }
 
     companion object {
         var instance:KWApplication by Delegates.notNull()

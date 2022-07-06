@@ -323,7 +323,7 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
         )
         val messageDialog: MessageDialog = MessageDialog.build(this@MainActivity)
         val filMd5: String = Md5Util.getFileMD5(file)
-        val md5Eq: Boolean = updateInfo!!.pathMd5?.let { StringUtil.equals(filMd5, it) } == true
+        val md5Eq: Boolean = updateInfo!!.pathMd5.let { StringUtil.equals(filMd5, it) }
         val fileLength: Long = file.length()
         val lengthEq: Boolean = fileLength == updateInfo!!.pathLength
         if (file.exists() && lengthEq && md5Eq) {
@@ -357,9 +357,9 @@ class MainActivity: BaseActivity(), OnPageChangeListener {
             val url: String = updateInfo!!.url
             messageDialog.setTitle("检测到新版")
             messageDialog.setMessage(updateInfo!!.content)
-            messageDialog.setOkButton("升级")
+            messageDialog.setOkButton("立即更新")
             if (!isMustUpdate) {
-                messageDialog.setCancelButton("取消")
+                messageDialog.setCancelButton("下次再说")
                 messageDialog.setCancelButton { baseDialog: BaseDialog?, v: View? ->
                     messageDialog.doDismiss()
                     false

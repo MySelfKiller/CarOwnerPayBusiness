@@ -260,7 +260,7 @@ class LoginActivity : BaseActivity() {
         reqInfo.parser = LoginDataParse()
         val reqDateMap = HashMap<String, Any>()
         reqDateMap["phone"] = phone_number!!.text.toString().trim { it <= ' ' }
-        val imei: String? = KWApplication.instance.oidImei
+        val imei: String? = null
         reqDateMap["imei"]= imei?:""
         if (isSMSLogin) {
             reqDateMap["code"] = sms_code_edt!!.text.toString().trim { it <= ' ' }

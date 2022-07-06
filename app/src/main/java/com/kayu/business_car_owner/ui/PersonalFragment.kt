@@ -672,7 +672,7 @@ class PersonalFragment : Fragment() {
     private fun startPhotoZoom(uri: Uri) {
         //保存裁剪后的图片
         cropPhoto = "photo.jpg"
-        photoPath = KWApplication.instance.GetDataPath()+ Constants.PATH_PHOTO
+        photoPath = KWApplication.instance.dataPath+ Constants.PATH_PHOTO
         val file = File(photoPath)
         if (!file.exists()) {
             file.mkdirs()

@@ -226,7 +226,7 @@ class LoginAutoActivity : BaseActivity() {
         reqInfo.parser = LoginDataParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("loginToken", loginToken)
-        val imei: String? = KWApplication.instance.oidImei
+        val imei: String? = null
         reqDateMap["imei"]= imei?:""
         //        reqDateMap.put("password",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap
@@ -485,7 +485,7 @@ class LoginAutoActivity : BaseActivity() {
         reqInfo.parser = LoginDataParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
         reqDateMap.put("wxCode", code)
-        val imei: String? = KWApplication.instance.oidImei
+        val imei: String? = null
         reqDateMap["imei"]= imei?:""
 //        reqDateMap.put("code",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap

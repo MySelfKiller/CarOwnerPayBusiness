@@ -123,7 +123,6 @@
 
         <activity android:name=".activity.WebViewActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity android:name=".activity.AgentWebViewActivity" />
         <activity
             android:name=".activity.ActivationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
