@@ -43,7 +43,7 @@ class LoginAutoActivity : BaseActivity() {
     private var activation_btn: AppCompatButton? = null
     private var mViewModel: MainViewModel? = null
     private var user_agreement: TextView? = null
-    private var order_list_tv: TextView? = null
+//    private var order_list_tv: TextView? = null
     private var sp: SharedPreferences? = null
     private var isFirstShow: Boolean = false
     private val titlesStr = "隐私政策@@用户协议"
@@ -70,19 +70,19 @@ class LoginAutoActivity : BaseActivity() {
         ask_btn = findViewById(R.id.login_auto_btn)
         bg_img = findViewById(R.id.login_auto_bg)
         activation_btn = findViewById(R.id.login_activation_btn)
-        order_list_tv = findViewById(R.id.login_order_list_tv)
+//        order_list_tv = findViewById(R.id.login_order_list_tv)
         auto_progress = findViewById(R.id.login_auto_progress)
         auto_progress?.setClickable(false)
         auto_progress?.setFocusable(false)
-        order_list_tv?.setOnClickListener(object : NoMoreClickListener() {
-            override fun OnMoreClick(view: View) {
-                val intent: Intent =
-                    Intent(this@LoginAutoActivity, OrderTrackingActivity::class.java)
-                startActivity(intent)
-            }
-
-            override fun OnMoreErrorClick() {}
-        })
+//        order_list_tv?.setOnClickListener(object : NoMoreClickListener() {
+//            override fun OnMoreClick(view: View) {
+//                val intent: Intent =
+//                    Intent(this@LoginAutoActivity, OrderTrackingActivity::class.java)
+//                startActivity(intent)
+//            }
+//
+//            override fun OnMoreErrorClick() {}
+//        })
         activation_btn?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 val intent: Intent = Intent(this@LoginAutoActivity, ActivationActivity::class.java)

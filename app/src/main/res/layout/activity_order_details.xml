@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/app_color_f6"
-    tools:context=".activity.OrderDetailsActivity">
+    android:background="@color/app_color_f6">
     <include layout="@layout/titlebar_white"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/white"
