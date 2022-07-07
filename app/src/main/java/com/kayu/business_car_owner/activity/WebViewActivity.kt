@@ -37,7 +37,6 @@ import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.LocationManagerUtil
 import com.kongzue.dialog.interfaces.OnDismissListener
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener
-import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -54,29 +53,6 @@ class WebViewActivity : BaseActivity() {
     @SuppressLint("HandlerLeak")
     private val jsHandler: Handler = object : Handler() {
         public override fun handleMessage(msg: Message) {
-//            LogUtil.e("WebViewActivity", "advert----what:" + msg.what + "------arg1:" + msg.arg1)
-//            if (msg.what == 1) {
-//                adID = msg.obj as Long
-//                loadAd(TTAdManagerHolder.videoID)
-            //                if (mttRewardVideoAd != null&&mIsLoaded) {
-//                    //step6:在获取到广告后展示,强烈建议在onRewardVideoCached回调后，展示广告，提升播放体验
-//                    //该方法直接展示广告
-////                    mttRewardVideoAd.showRewardVideoAd(RewardVideoActivity.this);
-//
-//                    //展示广告，并传入广告展示的场景
-
-//                } else {
-////                    TToast.show(com.union_test.toutiao.activity.RewardVideoActivity.this, "请先加载广告");
-//            mContext.finish();
-//                }
-//            } else if (msg.what == 2) {
-//                mttRewardVideoAd!!.showRewardVideoAd(
-//                    this@WebViewActivity,
-//                    TTAdConstant.RitScenes.CUSTOMIZE_SCENES,
-//                    "scenes_test"
-//                )
-//                mttRewardVideoAd = null
-//            }
             when (msg.what) {
                 2 -> {   //关闭加载框
                     isOpenDialog = msg.obj as String
@@ -836,7 +812,6 @@ class WebViewActivity : BaseActivity() {
         //    ProgressBar pbWebView;
         val URL: String = "https://www.baidu.com"
 
-        //        private val TAG: String = "RewardVideoActivity"
         private val FILE_CAMERA_RESULT_CODE: Int = 0
     }
 

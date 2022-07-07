@@ -99,15 +99,12 @@ class KWApplication() : MultiDexApplication() {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             var sRefWatcher = LeakCanary.install(this)
         }
-//        initAdSdk()
-        //        setFornts();
         initDialogSetting()
         val isFirstShow = sp!!.getBoolean(Constants.isShowDialog, true)
         if (!isFirstShow) {
             initSDKs()
             initTencentBugly()
         }
-//        initJPushSetting()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 //        ZoomMediaLoader.getInstance().init(new TestImageLoader());
@@ -171,22 +168,6 @@ class KWApplication() : MultiDexApplication() {
         CrashReport.initCrashReport(this, getString(R.string.BUGLY_APP_ID), true)
         return "Bugly -->> init complete"
     }
-    //初始化广告SDK
-//    fun initAdSdk() {
-//        //是否弹出过隐私弹框
-//        val isLogin = sp!!.getBoolean(Constants.isLogin, false)
-//        if (isLogin) {
-//            //腾讯广告SDK
-//            var appID: String? = "1200140135"
-//            if (null != systemArgs && !StringUtil.isEmpty(systemArgs!!.android!!.ylhAppid)) {
-//                appID = systemArgs!!.android!!.ylhAppid
-//            }
-//            GDTAdSdk.init(this, appID)
-//            //穿山甲SDK初始化
-//            //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
-//            init(this)
-//        }
-//    }
 
     //记录首次异常时间
     private var firstTime: Long = 0

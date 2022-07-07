@@ -741,7 +741,6 @@ class ShopFragment : Fragment() {
         var URL: String = "http://www.sslm03.com/static/llvy/index.html#/tour"
         //http://www.sslm03.com/static/llvy/index.html#/tour?locationName=%E5%94%90%E5%B1%B1%E5%B8%82
 
-        //        private val TAG: String = "RewardVideoActivity"
         private val FILE_CAMERA_RESULT_CODE: Int = 0
     }
 
