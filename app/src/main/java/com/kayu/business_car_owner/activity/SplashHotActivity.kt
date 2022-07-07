@@ -19,10 +19,6 @@ import com.kayu.utils.*
 class SplashHotActivity : AppCompatActivity() {
     private var mSplashContainer: FrameLayout? = null
 
-    //是否强制跳转到主页面
-//    private val mForceGoMain: Boolean = false
-
-    //    private boolean mIsExpress = false; //是否请求模板广告
     private var splash_img: LinearLayout? = null
 
     public override fun onConfigurationChanged(newConfig: Configuration) {

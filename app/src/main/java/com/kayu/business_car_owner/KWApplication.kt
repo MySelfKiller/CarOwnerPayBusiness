@@ -176,8 +176,6 @@ class KWApplication() : MultiDexApplication() {
 
     internal inner class LocalReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-//            Toast.makeText(context, "received local broadcast", Toast.LENGTH_SHORT).show();
-//            LogUtil.e("接收退出广告","received local broadcast"+yyy);
             yyy++
             val secondTime = System.currentTimeMillis()
             if (firstTime == 0L || secondTime - firstTime > 1000 * 30) {

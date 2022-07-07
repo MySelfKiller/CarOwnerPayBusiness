@@ -468,7 +468,6 @@ class PersonalFragment : Fragment() {
                                 )
                                 val sb = StringBuilder()
                                 sb.append(target)
-                                //                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising"); 测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
                                     if (target!!.contains("?")) {
                                         sb.append("&token=")

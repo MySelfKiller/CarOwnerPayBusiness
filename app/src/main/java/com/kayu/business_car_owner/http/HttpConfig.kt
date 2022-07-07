@@ -48,7 +48,6 @@ object HttpConfig {
     const val INTERFACE_CHECK_UPDAGE = "api/parameter/editionAndroid" //检查版本更新接口
     const val INTERFACE_MESSAGE_LIST = "api/v1/notify/list" //消息列表
     const val INTERFACE_MESSAGE_NUM = "api/v1/notify/getUnreadCnt" //消息列表
-    const val INTERFACE_AD_COMPLETE = "api/v1/ad/complete" //看完广告回调
     const val INTERFACE_SHOP_URL = "api/v1/poi/getIndexUrl" //周边生活主页面链接地址
     const val INTERFACE_IMG_CODE = "api/getImgCaptcha" //197、	密码登陆-获取图片验证码
     const val INTERFACE_SET_PASSWORD_SMS = "api/pwd/smsCode/" //198、	设置密码-获取短信验证码
