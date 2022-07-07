@@ -81,10 +81,12 @@ class WebViewActivity : BaseActivity() {
                         "js调用方法",
                         " getLocation==" + location?.longitude + "," + location?.latitude
                     )
-                    wvWebView?.evaluateJavascript(
-                        "window.CurrentLocation(" + location!!.latitude + "," + location.longitude + ")",
-                        null
-                    )
+                    if (null != location) {
+                        wvWebView?.evaluateJavascript(
+                            "window.CurrentLocation(" + location.latitude + "," + location.longitude + ")",
+                            null
+                        )
+                    }
 
                 }
             }
