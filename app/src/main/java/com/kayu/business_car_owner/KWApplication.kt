@@ -202,30 +202,6 @@ class KWApplication() : MultiDexApplication() {
             }
         }
     }
-    //    public Picasso getPicasso(){
-    //        return picasso;
-    //    }
-    //    private void initPicasso(Context context){
-    //        LocationManager.init(this);
-    //        Picasso.Builder builder = new Picasso.Builder(context);
-    //        builder.downloader(new OkHttp3Downloader(OkHttpManager.getInstance().getHttpClient()));
-    //        picasso = builder.listener(new Picasso.Listener() {
-    //            @Override
-    //            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-    //                exception.printStackTrace();
-    //            }
-    //        })
-    //                .loggingEnabled(true)// 打log
-    //                .build();
-    //    }
-    /**
-     * 初始化极光认证
-     */
-//    private fun initJPushSetting() {
-//        // 打开调试模式
-//        JVerificationInterface.setDebugMode(true)
-//        JVerificationInterface.init(this) { i, s -> LogUtil.e("JPush", "code:$i,msg:$s") }
-//    }
 
     private fun initDialogSetting() {
         ToastUtils.init(this, ToastWhiteStyle(this))
