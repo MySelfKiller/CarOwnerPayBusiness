@@ -11,7 +11,7 @@ import java.util.LinkedHashMap
 
 class AdaptiveHeightViewPager : ViewPager {
     private var current = 0
-    private var height = 0
+    private var mheight = 0
 
     /**
      * 保存position与对于的View
@@ -34,7 +34,7 @@ class AdaptiveHeightViewPager : ViewPager {
                     widthMeasureSpec,
                     MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
                 )
-                height = child.measuredHeight
+                mheight = child.measuredHeight
             }
         }
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
@@ -47,9 +47,9 @@ class AdaptiveHeightViewPager : ViewPager {
             var layoutParams = layoutParams as LinearLayout.LayoutParams
             if (layoutParams == null) {
                 layoutParams =
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, height)
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, mheight)
             } else {
-                layoutParams.height = height
+                layoutParams.height = mheight
             }
             setLayoutParams(layoutParams)
         }

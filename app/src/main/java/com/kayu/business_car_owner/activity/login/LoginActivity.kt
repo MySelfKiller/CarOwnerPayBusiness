@@ -198,7 +198,7 @@ class LoginActivity : BaseActivity() {
                             titles.get(0) + "与" + titles[1],
                             KWApplication.instance.getClickableSpan(this@LoginActivity, titles, urls),
                             "同意",
-                            "暂不使用"
+                            "拒接并退出"
                         )
                             .setCancelable(false)
                             .setOkButton { baseDialog, v ->

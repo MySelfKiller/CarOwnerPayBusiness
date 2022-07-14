@@ -1,5 +1,6 @@
 package com.kayu.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
@@ -1262,8 +1263,7 @@ class FileUtil private constructor() {
                 // out = new FileOutputStream("/sdcard/aa.jpg");
 
                 val newStr = str?.replace("data:image/png;base64,", "")
-                val bitmapArray: ByteArray
-                bitmapArray = Base64.decode(newStr, Base64.DEFAULT)
+                val bitmapArray: ByteArray = Base64.decode(newStr, Base64.DEFAULT)
                 bitmap = BitmapFactory.decodeByteArray(
                     bitmapArray, 0,
                     bitmapArray.size

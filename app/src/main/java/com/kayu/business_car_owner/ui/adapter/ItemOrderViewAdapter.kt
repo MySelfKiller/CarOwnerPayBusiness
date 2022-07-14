@@ -55,11 +55,10 @@ class ItemOrderViewAdapter(
         @SuppressLint("RecyclerView") position: Int
     ) {
         if (holder is ViewHolder) {
-            val vh = holder
             val oilOrderData = dataList!![position]
             //92#(2号枪)
-            vh.order_name.text = oilOrderData.gasName
-            vh.order_number.text = oilOrderData.orderNo
+            holder.order_name.text = oilOrderData.gasName
+            holder.order_number.text = oilOrderData.orderNo
 //            var orderStatusName = "未知"
 //            when (oilOrderData.state) {
 //                0 -> orderStatusName = "未支付"
@@ -69,16 +68,17 @@ class ItemOrderViewAdapter(
 //                4 -> orderStatusName = "待退款"
 //                5 -> orderStatusName = "退款失败"
 //            }
-            vh.oil_state.text = oilOrderData.stateName
-            vh.pay_model.text = oilOrderData.payType
-            vh.pay_time.text = oilOrderData.createTime
-            vh.oil_info.text = oilOrderData.oilNo + "(" + oilOrderData.gunNo + "号枪)"
-            vh.full_price.text = AppUtil.getStringDouble(oilOrderData.totalAmt) //订单总金额
-            vh.rebate_price.text = AppUtil.getStringDouble((oilOrderData.totalAmt - oilOrderData.payAmt)) //优惠金额
-            vh.sale_price.text = AppUtil.getStringDouble(oilOrderData.payAmt) //实际支付金额
+            holder.oil_state.text = oilOrderData.stateName
+            holder.pay_model.text = oilOrderData.payType
+            holder.pay_time.text = oilOrderData.createTime
+            holder.oil_info.text = oilOrderData.oilNo + "(" + oilOrderData.gunNo + "号枪)"
+            holder.full_price.text = AppUtil.getStringDouble(oilOrderData.totalAmt) //订单总金额
+            holder.rebate_price.text =
+                AppUtil.getStringDouble((oilOrderData.totalAmt - oilOrderData.payAmt)) //优惠金额
+            holder.sale_price.text = AppUtil.getStringDouble(oilOrderData.payAmt) //实际支付金额
             if (!StringUtil.isEmpty(oilOrderData.qrCode)) {
-                vh.qr_btn.visibility = View.VISIBLE
-                vh.qr_btn.setOnClickListener(object : NoMoreClickListener() {
+                holder.qr_btn.visibility = View.VISIBLE
+                holder.qr_btn.setOnClickListener(object : NoMoreClickListener() {
                     override fun OnMoreClick(view: View) {
                         itemCallback.onItemCallback(position, oilOrderData.qrCode)
                     }
@@ -86,7 +86,7 @@ class ItemOrderViewAdapter(
                     override fun OnMoreErrorClick() {}
                 })
             } else {
-                vh.qr_btn.visibility = View.GONE
+                holder.qr_btn.visibility = View.GONE
             }
         } else {
             if (!isShowEmptyPage) {
