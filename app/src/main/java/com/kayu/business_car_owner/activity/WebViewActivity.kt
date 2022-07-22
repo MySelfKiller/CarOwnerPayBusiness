@@ -31,7 +31,9 @@ import com.kayu.business_car_owner.*
 import com.kayu.business_car_owner.R
 import com.kayu.business_car_owner.data_parser.ParameterDataParser
 import com.kayu.business_car_owner.http.*
+import com.kayu.business_car_owner.http.parser.NormalStringParse
 import com.kayu.business_car_owner.model.SystemParam
+import com.kayu.business_car_owner.ui.ShopFragment
 import com.kayu.utils.*
 import com.kayu.utils.callback.Callback
 import com.kayu.utils.location.LocationManagerUtil
@@ -88,6 +90,9 @@ class WebViewActivity : BaseActivity() {
                         )
                     }
 
+                }
+                5 -> {
+                    loadServiceUrl(this@WebViewActivity)
                 }
             }
             super.handleMessage(msg)
@@ -812,10 +817,46 @@ class WebViewActivity : BaseActivity() {
 
     companion object {
         //    ProgressBar pbWebView;
-        val URL: String = "https://www.baidu.com"
+        var URL: String = "https://www.baidu.com"
 
         private val FILE_CAMERA_RESULT_CODE: Int = 0
     }
+
+    @SuppressLint("HandlerLeak")
+    private fun loadServiceUrl(context: Context) {
+        val request = RequestInfo()
+        request.context = context
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SHOP_URL
+        val dataMap: HashMap<String, Any> = HashMap()
+        request.reqDataMap = dataMap
+        request.parser = NormalStringParse()
+        request.handler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val response: ResponseInfo = msg.obj as ResponseInfo
+                val serviceUrl: String?
+                if (response.status == 1) {
+                    serviceUrl = response.responseData as String?
+//                    val jsonContent = systemParam?.content
+                    if (!serviceUrl.isNullOrEmpty()) {
+                        ShopFragment.URL = serviceUrl
+                        URL = serviceUrl
+                        wvWebView!!.loadUrl((serviceUrl))
+                    } else {
+                        ToastUtils.show("链接地址不存在！")
+                    }
+
+
+                } else {
+                    ToastUtils.show(response.msg)
+                }
+
+                super.handleMessage(msg)
+            }
+        }
+        ReqUtil.setReqInfo(request)
+        ReqUtil.requestGetJSON(ResponseCallback(request))
+    }
+
 
     @SuppressLint("HandlerLeak")
     private fun loadSysParameter(context: Context, type: Int) {

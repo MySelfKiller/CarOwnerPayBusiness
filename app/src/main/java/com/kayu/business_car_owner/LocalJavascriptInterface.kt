@@ -28,6 +28,11 @@ class LocalJavascriptInterface constructor(
         mHandler.sendMessage(mHandler.obtainMessage(4 ))
 
     }
+    @JavascriptInterface
+    fun ToLogIn() {//刷新token请求
+        mHandler.sendMessage(mHandler.obtainMessage(5 ))
+    }
+
 
     @JavascriptInterface
     fun OpenMap(args: String) {

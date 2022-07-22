@@ -15,19 +15,28 @@ import java.nio.channels.CompletionHandler
 class JsXiaojuappApi(private val mContext: Context, private val mHandler: Handler) {
 
     @JavascriptInterface
-    fun getLocation(args: Any?, handler: CompletionHandler<*, *>?) {
-        // handler.complete("");
-        val location = LocationManagerUtil.self?.loccation
-        //        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                webView.evaluateJavascript("window.locationCallback(" + location.getLongitude() + "," + location.getLatitude() + ")", null);
-//            }
-//        });
-        LogUtil.e(
-            "qingju",
-            "JsXiaojuappApi getLocation==" + location?.longitude + "," + location?.latitude
-        )
+    fun GetLocation( ) {//获取本地定位点
+        mHandler.sendMessage(mHandler.obtainMessage(4 ))
+
+    }
+
+    @JavascriptInterface
+    fun OpenMap(args: String) {
+        LogUtil.e("js调用方法", "OpenMap-------$args")
+        mHandler.post {
+            //{"fromLng":118.180237,"fromLat":39.623863,"toLng":"118.02162","toLat":"39.7285","toName":"红利加油站"}
+            try {
+                val jsonObject = JSONObject(args)
+                KWApplication.instance.toNavi(
+                    mContext,
+                    jsonObject.getString("toLat"),
+                    jsonObject.getString("toLng"),
+                    jsonObject.getString("toName"), "GCJ02"
+                )
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     @JavascriptInterface
