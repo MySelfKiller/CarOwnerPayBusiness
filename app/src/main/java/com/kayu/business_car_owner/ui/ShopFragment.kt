@@ -761,7 +761,7 @@ class ShopFragment : Fragment() {
 //                    val jsonContent = systemParam?.content
                     if (!serviceUrl.isNullOrEmpty()) {
                         URL = serviceUrl
-                        wvWebView!!.loadUrl((URL))
+                        wvWebView!!.loadUrl(URL)
                     } else {
                         ToastUtils.show("链接地址不存在！")
                     }

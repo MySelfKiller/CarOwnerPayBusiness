@@ -12,8 +12,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hjq.toast.ToastUtils
 import com.kayu.business_car_owner.R
 import com.kayu.utils.*
+import com.tencent.mm.opensdk.constants.Build
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
+import com.tencent.mm.opensdk.modelbiz.WXOpenCustomerServiceChat
 import com.tencent.mm.opensdk.modelmsg.*
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.IWXAPI
@@ -104,6 +106,20 @@ class WXShare(context: Context) {
         req.path = path ////拉起小程序页面的可带参路径，不填默认拉起小程序首页，对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"。
         req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE // 可选打开 开发版，体验版和正式版
         api.sendReq(req)
+
+    }
+
+    /**
+     * 打开微信客服
+     *
+     */
+    fun openWeChatCustomer(corpId:String, url:String ){
+        if (api.wxAppSupportAPI >= Build.SUPPORT_OPEN_CUSTOMER_SERVICE_CHAT) {
+            val req = WXOpenCustomerServiceChat.Req()
+            req.corpId = corpId // 企业ID
+            req.url = url // 客服URL
+            api.sendReq(req)
+        }
 
     }
 

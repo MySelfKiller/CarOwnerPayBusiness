@@ -142,6 +142,14 @@ class LocalJavascriptInterface constructor(
     }
 
     @JavascriptInterface
+    fun openWeChatCustomer(corpId: String?,url:String?) {
+        if (corpId.isNullOrEmpty() || url.isNullOrEmpty())
+            return
+        val wxShare =  WXShare(mContext)
+        wxShare.openWeChatCustomer(corpId,url)
+    }
+
+    @JavascriptInterface
     fun sharedWechat(jsonStr: String?) {
         if (null == jsonStr) {
             TipGifDialog.show(mContext as AppCompatActivity?, "分享数据错误！", TipGifDialog.TYPE.ERROR)
