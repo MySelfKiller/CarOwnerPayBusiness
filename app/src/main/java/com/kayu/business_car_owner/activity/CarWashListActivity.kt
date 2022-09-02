@@ -319,21 +319,27 @@ class CarWashListActivity constructor() : BaseActivity() {
                     param_recycle_view!!.setVisibility(View.GONE)
                     pageIndex = 1
                     isRefresh = true
-                    val location: AMapLocation = LocationManagerUtil.self?.loccation!!
-                    val bddfsdfs: DoubleArray = CoordinateTransformUtil.gcj02tobd09(
-                        location.getLongitude(),
-                        location.getLatitude()
-                    )
+                    val location: AMapLocation? = LocationManagerUtil.self?.loccation
+                    val bddfsdfs: DoubleArray? = location?.let {
+                        CoordinateTransformUtil.gcj02tobd09(
+                            it.getLongitude(),
+                            location.getLatitude()
+                        )
+                    }
                     if (null != stationAdapter) {
                         stationAdapter!!.removeAllData(true)
                     }
-                    reqData(
-                        null,
-                        pageIndex,
-                        bddfsdfs.get(1),
-                        bddfsdfs.get(0),
-                        location.getCity()
-                    )
+                    location?.getCity()?.let {
+                        bddfsdfs?.get(1)?.let { it1 ->
+                            reqData(
+                                null,
+                                pageIndex,
+                                it1,
+                                bddfsdfs.get(0),
+                                it
+                            )
+                        }
+                    }
                 }
 
                 override fun onDetailCallBack(position: Int, obj: Any?) {}

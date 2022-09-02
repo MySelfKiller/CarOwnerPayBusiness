@@ -98,6 +98,8 @@ class ShopFragment : Fragment() {
 
     private var jsCloseStatus: String = ""
     private var isOpenDialog: String = ""
+    private var mHasLoadedOnce = false // 页面已经加载过
+    private var isCreated = false
 
     public override fun onConfigurationChanged(newConfig: Configuration) {
         //非默认值
@@ -131,6 +133,7 @@ class ShopFragment : Fragment() {
 //            webLay.setLayoutParams(lp)
 //        }
         title_back_btu = view.findViewById(R.id.title_back_btu)
+        title_back_btu?.visibility =View.GONE
         title_back_btu?.setOnClickListener(object : NoMoreClickListener() {
             override fun OnMoreClick(view: View) {
                 onBackPressed()
@@ -161,7 +164,7 @@ class ShopFragment : Fragment() {
         loadServiceUrl(requireContext())
     //        refreshLayout!!.autoRefresh()
 
-
+        isCreated = true
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -727,6 +730,14 @@ class ShopFragment : Fragment() {
         super.onResume()
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser && isCreated && !mHasLoadedOnce) {
+            wvWebView!!.loadUrl(URL)
+            mHasLoadedOnce = true
+        }
+    }
+
     override fun onDestroy() {
         LogUtil.e("ShopFragment--------","======onDestroy")
         if (wvWebView != null) {
@@ -761,7 +772,6 @@ class ShopFragment : Fragment() {
 //                    val jsonContent = systemParam?.content
                     if (!serviceUrl.isNullOrEmpty()) {
                         URL = serviceUrl
-                        wvWebView!!.loadUrl(URL)
                     } else {
                         ToastUtils.show("链接地址不存在！")
                     }

@@ -112,40 +112,40 @@ class OilStationActivity : BaseActivity() {
                         return
                     }
                     TipGifDialog.dismiss()
-                    station_name!!.setText(oilStationBean.gasName)
-                    station_location!!.setText(oilStationBean.gasAddress)
+                    station_name!!.text = oilStationBean.gasName
+                    station_location!!.text = oilStationBean.gasAddress
                     KWApplication.instance.loadImg(oilStationBean.gasLogoSmall, station_img!!)
-                    val rootParamItemCallback: RootParamItemCallback = RootParamItemCallback()
-                    val parentParamItemCallback: ParentParamItemCallback = ParentParamItemCallback()
-                    val childParamItemCallback: ChildParamItemCallback = ChildParamItemCallback()
+                    val rootParamItemCallback = RootParamItemCallback()
+                    val parentParamItemCallback = ParentParamItemCallback()
+                    val childParamItemCallback = ChildParamItemCallback()
                     rootTypeAdapter = ProductTypeAdapter(
                         this@OilStationActivity,
                         ArrayList<Any>(oilStationBean.oilsTypeList),
                         0,
                         rootParamItemCallback
                     )
-                    select_oil_type_rv!!.setAdapter(rootTypeAdapter)
+                    select_oil_type_rv!!.adapter = rootTypeAdapter
                     parentTypeAdapter = ProductTypeAdapter(
                         this@OilStationActivity,
-                        ArrayList<Any>(oilStationBean.oilsTypeList?.get(0)?.oilsParamList),
+                        oilStationBean.oilsTypeList?.get(0)?.oilsParamList?.let { ArrayList<Any>(it) },
                         1,
                         parentParamItemCallback
                     )
                     select_oil_rv!!.adapter = parentTypeAdapter
-                    val defultOilParam: OilsParam =
+                    val defaultOilParam: OilsParam =
                         oilStationBean.oilsTypeList?.get(0)?.oilsParamList?.get(0)!!
-                    oil_price!!.setText(defultOilParam.priceYfq.toString())
-                    selectedOilNo = defultOilParam.oilNo
+                    oil_price!!.setText(defaultOilParam.priceYfq.toString())
+                    selectedOilNo = defaultOilParam.oilNo
                     oil_price_sub1!!.text = "比国标价降" + DoubleUtils.sub(
-                        defultOilParam.priceOfficial,
-                        defultOilParam.priceYfq
+                        defaultOilParam.priceOfficial,
+                        defaultOilParam.priceYfq
                     ) + "元"
                     oil_price_sub2!!.text = "比油站降" + DoubleUtils.sub(
-                        defultOilParam.priceGun,
-                        defultOilParam.priceYfq
+                        defaultOilParam.priceGun,
+                        defaultOilParam.priceYfq
                     ) + "元"
                     val gunArrs: Array<String> =
-                        defultOilParam.gunNos.split(",".toRegex()).toTypedArray()
+                        defaultOilParam.gunNos.split(",".toRegex()).toTypedArray()
                     //                gunNo = gunArrs[0];
                     childTypeAdapter = ProductTypeAdapter(
                         this@OilStationActivity, ArrayList<Any>(
@@ -163,30 +163,32 @@ class OilStationActivity : BaseActivity() {
                                 )
                                 return
                             }
-                            val location: AMapLocation =
-                                LocationManagerUtil.self?.loccation!!
-                            mainViewModel!!.getPayUrl(
-                                this@OilStationActivity, gasId, gunNo!!.toInt(), selectedOilNo,
-                                location.getLatitude(), location.getLongitude()
-                            )
-                                .observe(this@OilStationActivity, object : Observer<WebBean?> {
-                                    public override fun onChanged(webBean: WebBean?) {
-                                        if (null == webBean) {
-                                            ToastUtils.show("未获取到支付信息")
-                                            return
+                            val location: AMapLocation? =
+                                LocationManagerUtil.self?.loccation
+                            location?.getLatitude()?.let {
+                                mainViewModel!!.getPayUrl(
+                                    this@OilStationActivity, gasId, gunNo!!.toInt(), selectedOilNo,
+                                    it, location.getLongitude()
+                                )
+                                    .observe(this@OilStationActivity, object : Observer<WebBean?> {
+                                        public override fun onChanged(webBean: WebBean?) {
+                                            if (null == webBean) {
+                                                ToastUtils.show("未获取到支付信息")
+                                                return
+                                            }
+                                            val intent: Intent = Intent(
+                                                this@OilStationActivity,
+                                                WebViewActivity::class.java
+                                            )
+                                            intent.putExtra("url", webBean.link)
+                                            intent.putExtra("title", "订单")
+                                            intent.putExtra("data", webBean.data)
+                                            intent.putExtra("gasId", oilStationBean.gasId)
+                                            //                                intent.putExtra("from", "首页");
+                                            startActivityForResult(intent, 111)
                                         }
-                                        val intent: Intent = Intent(
-                                            this@OilStationActivity,
-                                            WebViewActivity::class.java
-                                        )
-                                        intent.putExtra("url", webBean.link)
-                                        intent.putExtra("title", "订单")
-                                        intent.putExtra("data", webBean.data)
-                                        intent.putExtra("gasId", oilStationBean.gasId)
-                                        //                                intent.putExtra("from", "首页");
-                                        startActivityForResult(intent, 111)
-                                    }
-                                })
+                                    })
+                            }
                         }
 
                         override fun OnMoreErrorClick() {}

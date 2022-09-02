@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    tools:context=".ui.HomeFragment">
+    android:focusableInTouchMode="true">
+<!--    tools:context=".ui.HomeFragment">-->
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"

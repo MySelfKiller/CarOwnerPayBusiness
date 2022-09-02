@@ -113,31 +113,33 @@ class GasStationListActivity constructor() : BaseActivity() {
                 override fun onItemCallback(position: Int, obj: Any?) {
                     val oilStationBean: OilStationBean = obj as OilStationBean
                     if (oilStationBean.nextIsBuy == 1) {
-                        val location: AMapLocation = LocationManagerUtil.self?.loccation!!
-                        mainViewModel!!.getPayUrl(
-                            this@GasStationListActivity,
-                            oilStationBean.gasId, -1, selectOilParam!!.oilNo,
-                            location.getLatitude(), location.getLongitude()
-                        )
-                            .observe(this@GasStationListActivity, object : Observer<WebBean?> {
-                                public override fun onChanged(webBean: WebBean?) {
-                                    if (null == webBean) {
-                                        ToastUtils.show("未获取到支付信息")
-                                        return
+                        val location: AMapLocation? = LocationManagerUtil.self?.loccation
+                        location?.getLatitude()?.let {
+                            mainViewModel!!.getPayUrl(
+                                this@GasStationListActivity,
+                                oilStationBean.gasId, -1, selectOilParam!!.oilNo,
+                                it, location.getLongitude()
+                            )
+                                .observe(this@GasStationListActivity, object : Observer<WebBean?> {
+                                    public override fun onChanged(webBean: WebBean?) {
+                                        if (null == webBean) {
+                                            ToastUtils.show("未获取到支付信息")
+                                            return
+                                        }
+                                        val jumpCls: Class<*>
+                                        jumpCls = WebViewActivity::class.java
+                                        val intent: Intent =
+                                            Intent(this@GasStationListActivity, jumpCls)
+                                        intent.putExtra("url", webBean.link)
+                                        intent.putExtra("title", "订单")
+                                        intent.putExtra("data", webBean.data)
+                                        intent.putExtra("channel", oilStationBean.channel)
+                                        intent.putExtra("gasId", oilStationBean.gasId)
+                                        //                                intent.putExtra("from", "首页");
+                                        startActivityForResult(intent, 111)
                                     }
-                                    val jumpCls: Class<*>
-                                    jumpCls = WebViewActivity::class.java
-                                    val intent: Intent =
-                                        Intent(this@GasStationListActivity, jumpCls)
-                                    intent.putExtra("url", webBean.link)
-                                    intent.putExtra("title", "订单")
-                                    intent.putExtra("data", webBean.data)
-                                    intent.putExtra("channel", oilStationBean.channel)
-                                    intent.putExtra("gasId", oilStationBean.gasId)
-                                    //                                intent.putExtra("from", "首页");
-                                    startActivityForResult(intent, 111)
-                                }
-                            })
+                                })
+                        }
                     } else {
 //                        val userRole: Int = KWApplication.instance.userRole
 //                        val isPublic: Int = KWApplication.instance.isGasPublic
@@ -374,8 +376,9 @@ class GasStationListActivity constructor() : BaseActivity() {
                         isRefresh = true
                         pageIndex = 1
                         if (null != oilStationAdapter) oilStationAdapter!!.removeAllData(true)
-                        val location: AMapLocation = LocationManagerUtil.self?.loccation!!
-                        reqData(null, pageIndex, location.getLatitude(), location.getLongitude())
+                        val location: AMapLocation? = LocationManagerUtil.self?.loccation
+                        location?.latitude
+                            ?.let { reqData(null, pageIndex, it, location.longitude) }
                     }
 
                     override fun onDetailCallBack(position: Int, obj: Any?) {}

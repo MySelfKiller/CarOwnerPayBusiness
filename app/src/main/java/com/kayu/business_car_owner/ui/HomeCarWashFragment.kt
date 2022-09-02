@@ -16,7 +16,6 @@ import com.kayu.business_car_owner.activity.WashStationActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.kayu.business_car_owner.activity.MainViewModel
-import com.kayu.utils.view.AdaptiveHeightViewPager
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,16 +23,11 @@ import com.kayu.business_car_owner.R
 import com.kongzue.dialog.v3.TipGifDialog
 import com.kayu.business_car_owner.ui.adapter.ParamParentAdapter
 import com.kayu.utils.*
-import com.kayu.utils.callback.Callback
 import java.util.HashMap
 import kotlin.collections.ArrayList
 
-class HomeCarWashFragment(
-    private val viewPager: AdaptiveHeightViewPager?,
-    private var fragment_id: Int,
-    private val callback: Callback?
-) : Fragment() {
-    open var mView: View? = null
+class HomeCarWashFragment : Fragment() {
+    var mView: View? = null
     var selectDistanceParam: WashParam? = null
     var selectSortsParam: WashParam? = null
     private var mainViewModel: MainViewModel? = null
@@ -45,10 +39,10 @@ class HomeCarWashFragment(
     private var mCityName: String? = null
     private var mLatitude = 0.0 //纬度
     private var mLongitude = 0.0 //经度
-    fun setFragment_id(fragment_id: Int): HomeCarWashFragment {
-        this.fragment_id = fragment_id
-        return this
-    }
+//    fun setFragment_id(fragment_id: Int): HomeCarWashFragment {
+//        this.fragment_id = fragment_id
+//        return this
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -129,9 +123,9 @@ class HomeCarWashFragment(
                     paramParent.objList = ArrayList(paramWashBean.desList)
                     parents.add(paramParent)
                     showParamViewData(4, parents)
-                    param_distance?.setSelected(true)
+                    param_distance?.isSelected = true
                 })
-                viewPager!!.setObjectForPosition( mView!!, fragment_id)
+                (parentFragment as HomeFragmentNew).mViewPager?.setObjectForPosition( mView!!, 0)
             })
         LogUtil.e("-------HomeCarWashFragment----", "----onViewCreated---")
     }
@@ -179,7 +173,7 @@ class HomeCarWashFragment(
                 }
                 param_recycle_view!!.visibility = View.GONE
                 val pageIndex = 1
-                callback!!.onError()
+                (parentFragment as HomeFragmentNew).pageIndex = 1
                 reqData(null, pageIndex, true, false, mLatitude, mLongitude, mCityName)
             }
 
@@ -229,13 +223,11 @@ class HomeCarWashFragment(
         dataMap["priority"] = selectDistanceParam?.value!!
         dataMap["serviceCode"] = selectSortsParam?.value!!
         mainViewModel!!.getWashStationList(requireContext(), dataMap)
-            .observe(requireActivity(), { oilStationBeans ->
+            .observe(requireActivity()) { oilStationBeans ->
                 if (null == refreshLayout) {
                     TipGifDialog.dismiss()
                 }
-                callback?.onSuccess()
-                //                if (null == oilStationBeans)
-//                    return;
+                (parentFragment as HomeFragmentNew).closeRresh()
                 if (isLoadmore) {
                     if (null != stationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size > 0) {
@@ -249,7 +241,7 @@ class HomeCarWashFragment(
                 } else {
                     stationAdapter!!.addAllData(oilStationBeans, selectSortsParam!!.value, true)
                 }
-                viewPager!!.setObjectForPosition(mView!!, fragment_id)
-            })
+                (parentFragment as HomeFragmentNew).mViewPager?.setObjectForPosition( mView!!, 0)
+            }
     }
 }

@@ -53,33 +53,30 @@ class HomeFragmentNew : Fragment() {
     private var hostTextBanner: TextBannerView? = null
     private var refreshLayout: RefreshLayout? = null
     var isRefresh = false
-    private var pageIndex = 0
+    var pageIndex = 0
     private var location_tv: TextView? = null
     private var notify_show: TextView? = null
     private var title_lay_bg: LinearLayout? = null
     private var home_child_lay: LinearLayout? = null
     private var pageAdapter: PagerAdapter? = null
-    private var mViewPager: AdaptiveHeightViewPager? = null
+    var mViewPager: AdaptiveHeightViewPager? = null
     private var mFragments = ArrayList<Fragment>()
     private var isOnline = ""
     var isLoadmore = false
     var isFirstLoad = true
 //    private var fragIndex = 0
 
-    private val callback: Callback = object : Callback {
-        override fun onSuccess() {
-            if (isRefresh) {
-                refreshLayout!!.finishRefresh()
-                isRefresh = false
-            }
-            if (isLoadmore) {
-                refreshLayout!!.finishLoadMore()
-                isLoadmore = false
-            }
+    /**
+     * 关闭刷新控件状态
+     */
+    fun closeRresh(){
+        if (isRefresh) {
+            refreshLayout!!.finishRefresh()
+            isRefresh = false
         }
-
-        override fun onError() {
-            pageIndex = 1
+        if (isLoadmore) {
+            refreshLayout!!.finishLoadMore()
+            isLoadmore = false
         }
     }
     private var scrollView: FadingScrollView? = null
@@ -124,7 +121,7 @@ class HomeFragmentNew : Fragment() {
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner)
         refreshLayout = view.findViewById<View>(R.id.refreshLayout) as RefreshLayout
         //        refreshLayout.setEnableNestedScroll(false);
-        mFragments.add(HomeCarWashFragment(mViewPager, 0, callback))
+        mFragments.add(HomeCarWashFragment())
         pageAdapter = MyPagerAdapter(childFragmentManager, mFragments)
 
         mViewPager?.setAdapter(pageAdapter)
@@ -180,6 +177,9 @@ class HomeFragmentNew : Fragment() {
         isCreated = true
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
     private var isHasLocation = false
     private var mHasLoadedOnce = false // 页面已经加载过
     private var isCreated = false
@@ -202,11 +202,9 @@ class HomeFragmentNew : Fragment() {
         }
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        //        LogUtil.e("HomeFragment----","----setUserVisibleHint---");
-        if (isVisibleToUser && isCreated) {
-//            LogUtil.e("HomeFragment----","----setUserVisibleHint---isCreated");
+    override fun onResume() {
+        super.onResume()
+        if (isCreated) {
             if (!mHasLoadedOnce) {
 //                LogUtil.e("HomeFragment----","----setUserVisibleHint---mHasLoadedOnce");
                 initView()
@@ -216,22 +214,9 @@ class HomeFragmentNew : Fragment() {
                     initListView()
                     mHasLoadedOnce = true
                     hasAutoRefresh = true
-                    //                LogUtil.e("HomeFragment----","----setUserVisibleHint---isHasLocation");
                 }
             }
         }
-//        if (null != popWindow && !hasClose) {
-//            if (isVisibleToUser) {
-//                popWindow!!.showAtLocation(
-//                    navigation,
-//                    Gravity.NO_GRAVITY,
-//                    (KWApplication.instance.displayWidth - navigation.measuredWidth) / 2,
-//                    KWApplication.instance.displayHeight - navigation.measuredHeight - navigation.measuredHeight / 3
-//                )
-//            } else {
-//                popWindow!!.dismiss()
-//            }
-//        }
     }
 
     private fun initListView() {
