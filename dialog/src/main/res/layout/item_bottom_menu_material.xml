@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="left|center_vertical"
-    android:paddingBottom="13dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
+    android:paddingBottom="@dimen/dp_13"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20"
     android:paddingTop="13dp"
     android:singleLine="true"
     android:text=""
     android:textColor="@color/notificationTipTextColorMaterial"
-    android:textSize="16dp" />
+    android:textSize="@dimen/sp_16" />

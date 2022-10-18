@@ -21,30 +21,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/dp_15"
                 android:gravity="center"
                 android:text="标题"
                 android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:textSize="@dimen/dp_25" />
 
             <TextView
                 android:id="@+id/txt_dialog_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15"
                 android:gravity="center_horizontal"
                 android:text="测试文本"
                 android:textColor="@color/black"
-                android:textSize="14dp" />
+                android:textSize="@dimen/sp_14" />
 
             <RelativeLayout
                 android:id="@+id/box_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:visibility="gone"></RelativeLayout>
 
             <com.kongzue.dialog.util.view.MaxHeightLayout
@@ -57,18 +57,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:visibility="visible"
                     android:scrollbars="vertical"
                     android:background="@drawable/editbox_dialog_bkg"
                     android:gravity="center"
                     android:text=""
                     android:textColor="#000000"
-                    android:textSize="18dp"/>
+                    android:textSize="@dimen/sp_18"/>
 
             </com.kongzue.dialog.util.view.MaxHeightLayout>
 
@@ -77,26 +77,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dp_20"
                 android:background="@color/dialogButtonGrayLightPress"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/btn_selectNegative"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/dp_50"
                     android:layout_weight="1"
                     android:background="@drawable/button_selectdialog_kongzue_gray"
                     android:clickable="true"
                     android:gravity="center"
                     android:text="negative"
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="@dimen/sp_14" />
 
                 <TextView
                     android:id="@+id/btn_selectOther"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/dp_50"
                     android:layout_marginLeft="1px"
                     android:layout_weight="1"
                     android:background="@drawable/button_selectdialog_kongzue_gray"
@@ -104,7 +104,7 @@
                     android:gravity="center"
                     android:text="other"
                     android:textColor="@color/black"
-                    android:textSize="14dp"
+                    android:textSize="@dimen/sp_14"
                     android:visibility="gone" />
 
                 <TextView
@@ -118,7 +118,7 @@
                     android:gravity="center"
                     android:text="positive"
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="@dimen/sp_14" />
             </LinearLayout>
         </LinearLayout>
 

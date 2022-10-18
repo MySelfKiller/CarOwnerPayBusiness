@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/box_body"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="@dimen/dp_250"
         android:background="@mipmap/img_notification_shadow_ios"
         android:clickable="false"
         android:focusable="false"
@@ -20,35 +20,35 @@
             android:background="@drawable/img_notification_ios"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="22dp"
-            android:paddingTop="25dp"
-            android:paddingRight="22dp"
-            android:paddingBottom="32dp">
+            android:paddingLeft="@dimen/dp_22"
+            android:paddingTop="@dimen/dp_25"
+            android:paddingRight="@dimen/dp_22"
+            android:paddingBottom="@dimen/dp_32">
 
             <LinearLayout
                 android:id="@+id/box_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
+                android:layout_marginBottom="@dimen/dp_3"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/img_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_5" />
 
                 <TextView
                     android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="标题"
                     android:textColor="@color/dark"
-                    android:textSize="15dp"
+                    android:textSize="@dimen/dp_15"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -62,14 +62,14 @@
                 android:singleLine="true"
                 android:text="内容"
                 android:textColor="@color/dark"
-                android:textSize="15dp" />
+                android:textSize="@dimen/dp_15" />
 
             <RelativeLayout
                 android:id="@+id/box_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:visibility="gone"></RelativeLayout>
 
         </LinearLayout>

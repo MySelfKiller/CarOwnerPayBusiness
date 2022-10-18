@@ -14,29 +14,29 @@
 
         <ImageView
             android:id="@+id/img_tab"
-            android:layout_width="30dp"
-            android:layout_height="4dp"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_4"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/dp_15"
             android:src="@drawable/rect_share_material_tab"/>
 
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/dp_20"
             android:visibility="gone"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
             android:text=""
             android:textColor="@color/tipTextColor"
-            android:textSize="12dp" />
+            android:textSize="@dimen/sp_12" />
 
         <RelativeLayout
             android:id="@+id/box_custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/dp_10"
             android:visibility="gone"></RelativeLayout>
 
         <ListView
@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@color/empty"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
             android:dividerHeight="1px"></ListView>
 
         <LinearLayout
@@ -62,7 +62,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="@dimen/dp_15"
                 android:background="@color/dialogSplitIOSLight" />
 
             <ImageView
@@ -73,15 +73,15 @@
             <TextView
                 android:id="@+id/btn_cancel"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/dp_50"
                 android:background="@drawable/button_menu_kongzue"
                 android:gravity="center"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/dark"
-                android:textSize="16dp" />
+                android:textSize="@dimen/dp_16" />
 
         </LinearLayout>
 
