@@ -195,7 +195,7 @@ class KWApplication() : MultiDexApplication() {
                 LocationManagerUtil.self?.stopLocation()
                 //                    LocationManager.getSelf().destroyLocation();
                 val inx = Intent(context, LoginAutoActivity::class.java)
-                inx.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                inx.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(inx)
             }
         }
