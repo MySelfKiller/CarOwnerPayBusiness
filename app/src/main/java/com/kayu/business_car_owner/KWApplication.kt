@@ -573,7 +573,7 @@ class KWApplication() : MultiDexApplication() {
         longtitude: String,
         address: String
     ) {
-        if (isNavigationApk(activity, "com.autonavi.minimap")) {
+        if (isNavigationApk(activity, "com.google.android.apps.maps")) {
             try {
                 val intent = Intent(
                     Intent.ACTION_VIEW, Uri.parse(
@@ -609,7 +609,7 @@ class KWApplication() : MultiDexApplication() {
         longtitude: String,
         address: String
     ) {
-        if (isNavigationApk(activity, "com.autonavi.minimap")) {
+        if (isNavigationApk(activity, "com.tencent.map")) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(
                 ("qqmap://map/routeplan?type=bus&from=我的位置&fromcoord=0,0"
