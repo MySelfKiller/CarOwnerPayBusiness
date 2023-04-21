@@ -185,12 +185,12 @@ class LogOffActivity : AppCompatActivity() {
             TipGifDialog.TYPE.OTHER,
             R.drawable.loading_gif
         )
-        val reqInfo: RequestInfo = RequestInfo()
+        val reqInfo = RequestInfo()
         reqInfo.context = this@LogOffActivity
-        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_VERIFICATION_CODE
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOG_OFF_CODE
         reqInfo.parser = NormalParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
-        reqDateMap.put("", "18888888888")
+//        reqDateMap[""] = phone_number!!.text.toString().trim { it <= ' ' }
         reqInfo.reqDataMap = reqDateMap
         reqInfo.handler = object : Handler() {
             public override fun handleMessage(msg: Message) {
@@ -205,7 +205,7 @@ class LogOffActivity : AppCompatActivity() {
                 super.handleMessage(msg)
             }
         }
-        val callback: ResponseCallback = ResponseCallback(reqInfo)
+        val callback = ResponseCallback(reqInfo)
         ReqUtil.setReqInfo(reqInfo)
         ReqUtil.requestGetJSON(callback)
     }
@@ -220,10 +220,10 @@ class LogOffActivity : AppCompatActivity() {
         )
         val reqInfo: RequestInfo = RequestInfo()
         reqInfo.context = this@LogOffActivity
-        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOGIN
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOG_OFF
         reqInfo.parser = LoginDataParse()
         val reqDateMap: HashMap<String, Any> = HashMap()
-        reqDateMap.put("phone", "18888888887")
+//        reqDateMap["phone"] = phone_number!!.text.toString().trim { it <= ' ' }
         reqDateMap.put("code", sms_code!!.getText().toString().trim({ it <= ' ' }))
         reqInfo.reqDataMap = reqDateMap
         reqInfo.handler = object : Handler() {
@@ -238,7 +238,6 @@ class LogOffActivity : AppCompatActivity() {
                     editor.commit()
                     AppManager.appManager?.finishAllActivity()
                     LocationManagerUtil.self?.stopLocation()
-                    //                                LocationManagerUtil.getSelf().destroyLocation();
                     startActivity(Intent(this@LogOffActivity, LoginAutoActivity::class.java))
                     finish()
                 } else {
@@ -247,8 +246,8 @@ class LogOffActivity : AppCompatActivity() {
                 super.handleMessage(msg)
             }
         }
-        val callback: ResponseCallback = ResponseCallback(reqInfo)
+        val callback = ResponseCallback(reqInfo)
         ReqUtil.setReqInfo(reqInfo)
-        ReqUtil.requestPostJSON(callback)
+        ReqUtil.requestForm(callback)
     }
 }

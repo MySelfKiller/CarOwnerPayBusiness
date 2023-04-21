@@ -8,6 +8,9 @@ object HttpConfig {
     val HOST: String = BuildConfig.BASE_URL
     const val INTERFACE_LOGIN = "api/login" //登录
     const val INTERFACE_VERIFICATION_CODE = "api/getSmsCapt/" //登录验证码
+    const val INTERFACE_LOG_OFF = "api/v1/user/logoff" //注销
+    const val INTERFACE_LOG_OFF_CODE = "api/v1/smsCapt/logoff/" //注销验证码
+
     const val INTERFACE_ORDER_CODE = "api/aodsms?phone=" //查询订单验证码
     const val INTERFACE_ORDER_DETAIL = "api/v1/ua/detail" //查询订单详情
     const val INTERFACE_ACTVINFO = "api/v1/user/actvinfo" //查询激活卡
